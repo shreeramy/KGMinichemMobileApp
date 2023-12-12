@@ -62,79 +62,13 @@ const LoginScreen = (props: LoginScreenProps) => {
   // const username = email;
   const password = userpassword;
 
-  // Define the authenticate function
-  // async function authenticate() {
-  //   try {
-  //     const response = await fetch(ApiEndPoints.jsonRpcEndpoint, {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify({
-  //         jsonrpc: "2.0",
-  //         method: "call",
-  //         params: {
-  //           service: "common",
-  //           method: "authenticate",
-  //           args: [ApiEndPoints.odooDatabase, username, password, {}],
-  //         },
-  //       }),
-  //     });
-
-  //     const data = await response.json();
-  //     console.log("jahvscjav>>", data.error);
-  //     if (data.error) {
-  //       console.error("Authentication error:", data.error);
-  //       return null;
-  //     }
-  //     return data.result;
-  //   } catch (error) {
-  //     console.error("Authentication error:", error);
-  //     return null;
-  //   }
-  // }
-
-  // const loginapi = async () => {
-  //   // let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
-  //   // if (!email) {
-  //   //   Utility.showDangerToast("Please enter your username");
-  //   //   return false;
-  //   // } else if (!validate_email(email)) {
-  //   //   Utility.showDangerToast("Please enter valid email");
-  //   //   return false;
-  //   // }
-  //   // if (!password) {
-  //   //   return Utility.showDangerToast("Please enter your password");
-  //   // }
-  //   Loader.isLoading(true);
-  //   try {
-  //     const authenticationResult = await authenticate();
-  //     console.log("Authentication successful?>>>", authenticationResult);
-  //     if (authenticationResult) {
-  //       Loader.isLoading(false);
-  //       const stringValue = JSON.stringify(authenticationResult);
-  //       console.log(">????....", typeof stringValue);
-  //       loc_global.userData = await AsyncStorage.setItem("userId", stringValue);
-  //       console.log(">??>>??>>", loc_global.userData);
-  //       // setIsLoggedIn(true);
-  //       navigation.navigate(Screen.HomeScreen);
-  //     } else {
-  //       Loader.isLoading(false);
-  //       Utility.showDangerToast("Authentication failed");
-  //       console.error("Authentication failed.");
-  //     }
-  //   } catch (error) {
-  //     Utility.showDangerToast("Authentication failed");
-  //     console.error("Authentication error:", error);
-  //   }
-  // };
-
   const loginApi = async () => {
     // Call the authenticate function with the provided username and password
     const authenticationResult = await OdooApi.authenticate(email, password);
     Loader.isLoading(true);
     if (authenticationResult) {
       const stringValue = JSON.stringify(authenticationResult);
+      console.log('stringValue-->',stringValue);
       loc_global.userData = await AsyncStorage.setItem("userId", stringValue);
       // Handle successful authentication
       navigation.navigate(Screen.HomeScreen);

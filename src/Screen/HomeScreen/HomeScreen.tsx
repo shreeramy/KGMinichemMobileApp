@@ -30,6 +30,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ApiEndPoints } from "../../NetworkCall";
 import Geolocation from "@react-native-community/geolocation";
 import moment from "moment";
+import * as OdooApi from "../OdooApi";
 interface HomeScreenProps {
   navigation?: any;
   text?: any;
@@ -38,6 +39,7 @@ interface HomeScreenProps {
 var sttendentdata = [];
 const HomeScreen = (props: HomeScreenProps) => {
   const { navigation, text, commonActions } = props;
+  const [customerdata, setcustomerdata] = useState([]);
 
   const data = [
     {
@@ -129,7 +131,6 @@ const HomeScreen = (props: HomeScreenProps) => {
   };
 
   useEffect(() => {
-    console.log("?>>??.?????");
     if (loggedIn) {
       startTimer();
       setLoginTime(new Date());
@@ -144,7 +145,7 @@ const HomeScreen = (props: HomeScreenProps) => {
   }, [loggedIn]);
 
   useEffect(() => {
-    // getattendance();
+     getattendance();
   });
 
   // useEffect(() => {
@@ -191,8 +192,6 @@ const HomeScreen = (props: HomeScreenProps) => {
   const formattedDateTime1 = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
   const senddatetime = formattedDateTime;
   // Format the date as "YYYY-MM-DD"
-  console.log(">ge call htis...", getattendece[0]?.check_in.slice(10, 20));
-  console.log("send1020000//,..", senddatetime.slice(10, 20)); // Output: "2023-12-05"
 
   const [timeDifferenceInSeconds, setTimeDifferenceInSeconds] = useState<
     number | null
@@ -288,7 +287,6 @@ const HomeScreen = (props: HomeScreenProps) => {
     if (uid) {
       const searchCriteria = [["id", "!=", 0]];
       {
-        console.log(">>>//.>>>>???//..", senddatetime);
       } // Output: "2023-12-05"
       const userData = {
         employee_id: emplotId,
@@ -318,24 +316,19 @@ const HomeScreen = (props: HomeScreenProps) => {
           },
         }),
       });
-      console.log("user.????", userData);
       const responseData = await response.json();
-      console.log(">>>????", responseData);
       if (responseData.result) {
         Loader.isLoading(false);
         Utility.showSuccessToast("Clocked in successfully");
         // navigation.navigate(Screen.ShowOrderScreen);
         const customdata = responseData.result;
-        console.log("?>>......", responseData.result);
         handleLogin();
         setshowtime(`${hours}:${minutes}:${seconds}`);
         setshowdate(`${day}-${month}-${year}`);
-        console.log("create attrhhs>>,,...", responseData.result);
         setattendanceId(customdata);
       } else {
         Loader.isLoading(false);
         Utility.showDangerToast("already clocked in , can't clocked in again");
-        console.error("crea>>>>>", responseData.message);
         return null;
       }
 
@@ -348,17 +341,8 @@ const HomeScreen = (props: HomeScreenProps) => {
   async function editattandece() {
     const uid = await AsyncStorage.getItem("userId");
     const gettimedate = await AsyncStorage.getItem("formattedDateTime1");
-    console.log(gettimedate);
     // Loader.isLoading(true);
     Loader.isLoading(true);
-    console.log(
-      ">>>>>>>>>>////??/",
-      // emplotId,
-      // gettimedate,
-      // senddatetime,
-      attendanceId
-    );
-
     const userData = {
       employee_id: emplotId,
       check_in: gettimedate,
@@ -392,7 +376,6 @@ const HomeScreen = (props: HomeScreenProps) => {
       });
 
       const responseData = await response.json();
-      console.log("......./////////", responseData);
       if (responseData.result) {
         Loader.isLoading(false);
         // Utility.showSuccessToast("profile Edited successfully");
@@ -400,11 +383,9 @@ const HomeScreen = (props: HomeScreenProps) => {
         // navigation.navigate(Screen.CustomerScreen);
         const customdata = responseData.result;
         // setcustomerdata(customdata);
-        console.log("???.......//..", responseData);
       } else {
         Loader.isLoading(false);
         // Utility.showDangerToast("profile not Edited");
-        console.error("search_read........../", responseData.error);
         return null;
       }
 
@@ -476,7 +457,6 @@ const HomeScreen = (props: HomeScreenProps) => {
 
   async function getEmployeesId() {
     const uid = await AsyncStorage.getItem("userId");
-    console.log(">>>>>>??", typeof Number(uid));
     Loader.isLoading(true);
     if (uid) {
       const searchCriteria = [["user_id", "=", Number(uid)]];
@@ -511,13 +491,11 @@ const HomeScreen = (props: HomeScreenProps) => {
         const customdata = responseData.result;
         // setcustomerdata(customdata);
         customdata.forEach((element) => {
-          console.log("......", setemplotId(element.id));
         });
         // Utility.showSuccessToast("create Empolye Id");
         // console.log("se?>>>>", customdata);
       } else {
         Loader.isLoading(false);
-        console.error("search_read error://..", responseData.error);
         return null;
       }
 
@@ -564,21 +542,15 @@ const HomeScreen = (props: HomeScreenProps) => {
           },
         }),
       });
-      console.log("user.>>....", locationData);
       const responseData = await response.json();
-      console.log(">?>?????", responseData);
       if (responseData) {
         Loader.isLoading(false);
         // Utility.showSuccessToast("sellorder created successfully");
         // navigation.navigate(Screen.ShowOrderScreen);
         const customdata = responseData.result;
-        console.log("send atlonhg,llll////", customdata);
-        // setcustomerdata(customdata);
-        console.log("create salallorder_Suucess:", responseData.result);
       } else {
         Loader.isLoading(false);
         // Utility.showDangerToast("profile not created");
-        console.error("create faild:>>", responseData.error);
         return null;
       }
 
@@ -651,7 +623,6 @@ const HomeScreen = (props: HomeScreenProps) => {
         const attendencedata = responseData.result;
         setgetattendece(attendencedata);
 
-        console.log("Varun", responseData.result);
       } else {
         console.error("search_read error://..", responseData.error);
         return null;

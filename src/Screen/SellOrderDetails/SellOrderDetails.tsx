@@ -71,7 +71,7 @@ const SellOrderDetails = (props: SellOrderDetailsProps) => {
     const uid = await AsyncStorage.getItem("userId");
     Loader.isLoading(true);
     if (uid) {
-      const searchCriteria = [["id", "!=", 0]];
+      const searchCriteria = [["id", "!=", 0], ["sale_ok", "=", true]];
       const response = await fetch(ApiEndPoints.jsonRpcEndpoint, {
         method: "POST",
         headers: {

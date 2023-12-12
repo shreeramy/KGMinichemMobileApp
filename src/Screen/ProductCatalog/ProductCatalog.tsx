@@ -114,7 +114,7 @@ const ProductCatalog = (props: ProductCatalogProps) => {
     // Loader.isLoading(true);
 
     if (uid) {
-      const searchCriteria = [["name", "ilike", e]];
+      const searchCriteria = [["name", "ilike", e], ["sale_ok", "=", true]];
       const response = await fetch(ApiEndPoints.jsonRpcEndpoint, {
         method: "POST",
         headers: {

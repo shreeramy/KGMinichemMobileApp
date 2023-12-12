@@ -51,8 +51,8 @@ const AppHeader = (props: AppHeaderProps) => {
     }
   };
 
-  const odooHost = "http://demo.wangoes.com";
-  const odooDatabase = "demo.wangoes.com";
+  const odooHost = "http://kg.wangoes.com";
+  const odooDatabase = "kg.wangoes.com";
   const jsonRpcEndpoint = `${odooHost}/jsonrpc`;
   const odooPassword = "admin";
 
@@ -78,7 +78,7 @@ const AppHeader = (props: AppHeaderProps) => {
               odooPassword,
               "res.users", // Replace with the desired model name
               "search_read",
-              [searchCriteria],
+              [searchCriteria, ["id", "login", "name", "image_1920"]],
               {},
             ],
           },
@@ -142,9 +142,9 @@ const AppHeader = (props: AppHeaderProps) => {
             <View>
               {customerdata[0]?.image_1920 ? (
                 <Image
-                  source={{
-                    uri: `data:image/png;base64,${customerdata[0]?.image_1920}`,
-                  }}
+                source={{
+                  uri: `data:image/png;base64,${customerdata[0]?.image_1920}`,
+                }}
                   style={styles.imageStyle}
                 />
               ) : (

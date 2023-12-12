@@ -39,6 +39,7 @@ import { useEffect } from "react";
 import styles from "./NewCreateOrderScreenstyle";
 import { ApiEndPoints } from "../../NetworkCall";
 import moment from "moment";
+import { cos, log } from "react-native-reanimated";
 
 interface NewCreateOrderScreenstyleProps {
   navigation?: any;
@@ -66,6 +67,8 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
   const [PaymentMode, setPaymentMode] = React.useState("Payment Mode");
   const [customerdata, setcustomerdata] = useState([]);
   const [productdata, setproductdata] = useState([]);
+  const regex = /\(([^)]+)\)/;
+
   const [gstin, setgstin] = useState([
     {
       name: "Registered Business-Regular",
@@ -132,6 +135,10 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
   const [sendorderdata, setsendorderdata] = useState([]);
   const [unitname, setunitname] = useState([]);
   const [orderLines, setOrderLines] = useState([]);
+  const [newUnitIds, setNewUnitIds] = useState([]);
+  const [generateId, setGenerateId] = useState(false);
+  const [newGeneratedIds, setNewGeneratedIds] = useState("");
+
   const [addval, setaddval] = useState([]);
   React.useEffect(() => {
     retrieveData();
@@ -146,15 +153,13 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
     return backScreen;
   }, []);
 
-  console.log("getcustome?>>>>", getcustomeId, "??>>...//", sendCustomerName);
-
   React.useEffect(() => {
     // getcustomer();
   }, []);
 
   const handleDateChange = (event, selectedDate) => {
     const currentDate = selectedDate || date;
-    setShowDatePicker(Platform.OS === "ios"); // For iOS, always show the date picker
+    setShowDatePicker(Platform.OS === "ios");
     setDate(currentDate);
   };
 
@@ -169,11 +174,43 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
     setModalVisible(!isModalVisible);
   };
 
+  const generateTwoDigitUniqueId = (existingIds: string[]): string => {
+    let uniqueId;
+
+    do {
+      uniqueId = Math.floor(Math.random() * 90 + 10).toString();
+    } while (existingIds.includes(uniqueId));
+
+    return uniqueId;
+  };
+
+  const handleUnit = (selectedUnit: string): void => {
+    setGenerateId(true);
+
+    const id = generateTwoDigitUniqueId(newUnitIds);
+    setNewGeneratedIds(id);
+
+    const Unitregex = /\(([^)]+)\)/;
+    const match = selectedUnit.match(Unitregex);
+
+    if (match) {
+      const result = match[1];
+      setSelectUnit(result);
+    } else {
+      console.log("No match found");
+    }
+  };
+
   // >>>>>>????????????....?????????//////????????????????????
 
   useEffect(() => {
     console.log("Order Lines updated:>>>", orderLines);
   }, [orderLines]);
+
+  useEffect(() => {
+    const customUnitIds = unitname.map((item) => item.id);
+    setNewUnitIds(customUnitIds);
+  }, [SelectUnit, unitname]);
 
   const callfinesproduct = async () => {
     // addItem();
@@ -193,7 +230,9 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
           product_id: parseInt(text1),
           product_uom_qty: parseInt(text2),
           price_unit: parseFloat(text3),
-          product_uom: parseInt(SelectUnitid),
+          product_uom: generateId
+            ? parseInt(newGeneratedIds)
+            : parseInt(SelectUnitid),
         },
       ];
 
@@ -467,6 +506,7 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
       if (responseData.result) {
         Loader.isLoading(false);
         const customdata = responseData.result;
+        console.log("Checing custom", customdata);
         setunitname(customdata);
         console.log("search_get>>>??", responseData.result);
       } else {
@@ -563,7 +603,7 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
             onPress={() =>
               refRBSheet3.current.close(
                 // setroll(item?.name),
-                console.log("????>...???.>>>", item?.name),
+                console.log("????>...???.>>>", item),
                 setSelectUnit(item?.name),
                 setSelectUnitid(item?.id)
               )
@@ -844,13 +884,9 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
             onPress={() =>
               refRBSheet2.current.close(
                 setproname(item?.display_name),
-                setText1(item?.id),
-                console.log(
-                  "pro????",
-                  item?.product_template_variant_value_ids,
-                  "product_di",
-                  item?.id
-                )
+                handleUnit(item?.display_name),
+                console.log("Chcking item", item),
+                setText1(item?.id)
               )
             }
             style={{
