@@ -651,7 +651,7 @@ const HomeScreen = (props: HomeScreenProps) => {
         const attendencedata = responseData.result;
         setgetattendece(attendencedata);
 
-        console.log("....//????>>>", responseData.result);
+        console.log("Varun", responseData.result);
       } else {
         console.error("search_read error://..", responseData.error);
         return null;

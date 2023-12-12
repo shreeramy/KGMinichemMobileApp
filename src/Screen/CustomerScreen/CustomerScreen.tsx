@@ -50,81 +50,16 @@ const CustomerScreen = (props: CustomerScreenProps) => {
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [noMoreData, setNoMoreData] = useState(false);
+  const [apiCall, setApicall] = useState(false);
+
   React.useEffect(() => {
-    searchRead();
-    // const backScreen = navigation.addListener("focus", () => {
-    //   searchRead();
-    retrieveData();
-    // });
-    // return backScreen;
+    console.log('useEffect-->','searchReadData');
+    searchReadData();
+  //  retrieveData();
   }, []);
 
-  // const searchcustomerdata = async (e: any) => {
-  //   try {
-  //     // setLoading(true);
-  //     const uid = await AsyncStorage.getItem("userId");
-
-  //     if (uid) {
-  //       const searchCriteria = [["name", "ilike", e]];
-  //       const limit = 10;
-  //       const offset = 0;
-
-  //       const searchData = await OdooApi.searchRead(
-  //         uid,
-  //         "res.partner",
-  //         searchCriteria
-  //         // limit,
-  //         // offset
-  //       );
-  //       if (searchData) {
-  //         setLoading(false);
-  //         // Loader.isLoading(false);
-  //         setcustomerdata(searchData);
-  //         console.log("searchRead result:::::", searchData);
-  //       } else {
-  //         console.error("searchRead error://..");
-  //       }
-  //     }
-  //   } catch (error) {
-  //     console.error("Error:", error);
-  //   } finally {
-  //     Loader.isLoading(false);
-  //   }
-  // };
-
-  // const debouncedSearch = _.debounce(searchcustomerdata, 500);
-
-  const searchcustomerdata = async (e: any) => {
-    try {
-      setLoading(true);
-      const uid = await AsyncStorage.getItem("userId");
-
-      if (uid) {
-        const searchCriteria = [["name", "ilike", e]];
-        const limit = 10;
-        const offset = 0;
-
-        const searchData = await OdooApi.searchRead(
-          uid,
-          "res.partner",
-          searchCriteria
-        );
-        if (searchData) {
-          setLoading(false);
-          setcustomerdata(searchData);
-          console.log("searchRead result:", searchData);
-        } else {
-          console.error("searchRead error:", searchData.error);
-        }
-      }
-    } catch (error) {
-      console.error("Error:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   async function searchRead1(e: any) {
+    console.log('searchRead1-->','searchRead1');
     const uid = await AsyncStorage.getItem("userId");
     // Loader.isLoading(true);
 
@@ -160,7 +95,7 @@ const CustomerScreen = (props: CustomerScreenProps) => {
         Loader.isLoading(false);
         const customdata = responseData.result;
         setcustomerdata(customdata);
-        console.log("search_read result:::::", responseData.result);
+        //console.log("search_read result:::::", responseData.result);
       } else {
         console.error("search_read error://..", responseData.error);
         return null;
@@ -176,7 +111,7 @@ const CustomerScreen = (props: CustomerScreenProps) => {
     try {
       const value = await AsyncStorage.getItem("userId");
       if (value !== null) {
-        console.log("Retrieved data: ", value);
+      //  console.log("Retrieved data: ", value);
       } else {
         console.log("No data found.");
       }
@@ -185,7 +120,8 @@ const CustomerScreen = (props: CustomerScreenProps) => {
     }
   };
 
-  const searchRead = async (pageNumber) => {
+  const searchReadData = async (pageNumber) => {
+    console.log('searchReadData-->','searchReadData');
     try {
       setLoading(true);
       // Loader.isLoading(true);
@@ -193,9 +129,11 @@ const CustomerScreen = (props: CustomerScreenProps) => {
 
       if (uid && !noMoreData) {
         const searchCriteria = [["id", "!=", 0]];
+        const list = ["id"];
+
         const limit = 10;
         const offset = (pageNumber - 1) * 10;
-
+       
         const searchData = await OdooApi.searchRead(
           uid,
           "res.partner",
@@ -205,6 +143,7 @@ const CustomerScreen = (props: CustomerScreenProps) => {
         );
 
         if (searchData) {
+        //  console.log('searchData-->',searchData);
           setcustomerdata((prevData) => {
             if (pageNumber === 1) {
               return [...searchData];
@@ -229,11 +168,17 @@ const CustomerScreen = (props: CustomerScreenProps) => {
   };
 
   const onendreached = () => {
+    console.log('onendreached','onendreached');
     // Assuming you want to load more data only if not already loading
+  if(apiCall){
+   // searchRead1(prosearch);
+  }else{
     if (!loading && !noMoreData) {
       setPage((prevPage) => prevPage + 1);
-      searchRead(page + 1);
+      searchReadData(page + 1);
     }
+  }
+ 
   };
 
   useEffect(() => {
@@ -242,9 +187,9 @@ const CustomerScreen = (props: CustomerScreenProps) => {
       const cachedData = await AsyncStorage.getItem("cachedCustomerData");
 
       if (cachedData) {
-        setcustomerdata(JSON.parse(cachedData));
+        //setcustomerdata(JSON.parse(cachedData));
       } else {
-        searchRead(page);
+        searchReadData(page);
       }
     };
 
@@ -316,8 +261,10 @@ const CustomerScreen = (props: CustomerScreenProps) => {
               value={prosearch}
               onChangeText={(prosearch: any) => {
                 setprosearch(prosearch);
+                setApicall(true);
                 // searchcustomerdata(prosearch);
-                searchRead1(prosearch);
+                
+              //  searchRead1(prosearch);
               }}
               // onChangeText={handleSearchChange}
               placeholderTextColor={Color.text_color}
@@ -329,7 +276,8 @@ const CustomerScreen = (props: CustomerScreenProps) => {
               <TouchableOpacity
                 onPress={() => {
                   setprosearch("");
-                  searchRead();
+                  setApicall(false);
+                  searchReadData();
                 }}
               >
                 <Image
@@ -381,7 +329,7 @@ const CustomerScreen = (props: CustomerScreenProps) => {
               </View>
             </TouchableOpacity>
           )}
-          onEndReached={onendreached}
+         onEndReached={onendreached}
           onEndReachedThreshold={0.1} // Adjust as needed
           ListFooterComponent={() =>
             loading ? <ActivityIndicator size="large" color="#0000ff" /> : null

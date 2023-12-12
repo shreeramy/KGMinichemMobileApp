@@ -86,6 +86,8 @@ const styles = StyleSheet.create({
   },
   listtextheading: { color: Color.text_color, fontWeight: "600", fontSize: 15 },
   listtext: { color: Color.text_color, fontSize: 15 },
+  listtextCell: { color: Color.text_color, fontWeight: "600",fontSize: 13,textAlignVertical:"center",textAlign:"center" },
+
   listtext1: { color: Color.white },
   nameview: {
     width: Responsive.widthPx(90),

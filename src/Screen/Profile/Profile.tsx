@@ -397,7 +397,7 @@ const Profile = (props: ProfileProps) => {
 
   async function getcountrylist() {
     const uid = await AsyncStorage.getItem("userId");
-    Loader.isLoading(true);
+   // Loader.isLoading(true);
     if (uid) {
       const searchCriteria = [["id", "!=", 0]];
       const countryData = await callOdooMethod(
@@ -409,11 +409,11 @@ const Profile = (props: ProfileProps) => {
       );
 
       if (countryData) {
-        Loader.isLoading(false);
+       // Loader.isLoading(false);
         console.error("get>>>>.???", countryData);
         setcountrydata(countryData);
       } else {
-        Loader.isLoading(false);
+        //Loader.isLoading(false);
         console.error("search_read error://..");
       }
     }
