@@ -6,6 +6,7 @@ import {
   FlatList,
   TouchableOpacity,
   ActivityIndicator,
+  TextInput,
 } from "react-native";
 import React, { Component, useState } from "react";
 import { SvgIcon } from "../../Component/SvgIcons";
@@ -37,7 +38,8 @@ const ShowOrderScreen = (props: ShowOrderScreenProps) => {
   const { navigation, text, commonActions, route } = props;
   const [email, setemail] = useState("");
   const [customerdata, setcustomerdata] = useState([]);
-  const [prosearch, setprosearch] = useState("");
+  const [search, setSearch] = useState("");
+  const [searchVisible, setSearchVisible] = useState(false);
   const odooPassword = "admin";
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
@@ -290,6 +292,38 @@ const ShowOrderScreen = (props: ShowOrderScreenProps) => {
             ) : null}
           </View>
           <TouchableOpacity
+            style={{ left: 60 }}
+            onPress={() => {
+              setSearchVisible(!searchVisible);
+            }}
+          >
+            <Image
+              style={{
+                width: Responsive.widthPx(6),
+                height: Responsive.heightPx(4),
+              }}
+              resizeMode="contain"
+              source={Images.Search}
+            />
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={{ left: 25 }}
+            onPress={() => {
+              navigation.navigate("OrderFilterScreen");
+            }}
+          >
+            <Image
+              style={{
+                width: Responsive.widthPx(6),
+                height: Responsive.heightPx(4),
+              }}
+              resizeMode="contain"
+              source={Images.Filter}
+            />
+          </TouchableOpacity>
+
+          <TouchableOpacity
             onPress={() => navigation.navigate(Screen.NewCreateOrderScreen)}
           >
             <View
@@ -308,6 +342,22 @@ const ShowOrderScreen = (props: ShowOrderScreenProps) => {
             </View>
           </TouchableOpacity>
         </View>
+        {searchVisible ? (
+          <TextInput
+            style={{
+              width: "90%",
+              height: 50,
+              borderWidth: 1,
+              alignSelf: "center",
+              borderRadius: 10,
+            }}
+            placeholder={"Search"}
+            value={search}
+            onChangeText={(text) => setSearch(text)}
+          />
+        ) : (
+          <></>
+        )}
         <FlatList
           data={customerdata}
           keyExtractor={(item) => item.id}

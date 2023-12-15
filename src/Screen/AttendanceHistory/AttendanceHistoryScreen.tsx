@@ -119,7 +119,6 @@ const AttendanceHistoryScreen = (props: AttendanceHistoryScreenProps) => {
         Loader.isLoading(false);
         const customdata = responseData.result;
         setcustomerdata(customdata);
-        console.log("?????????????//..", responseData.result);
       } else {
         console.error("search_read error://..", responseData.error);
         return null;

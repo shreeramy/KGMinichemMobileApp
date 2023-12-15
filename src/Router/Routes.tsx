@@ -26,6 +26,7 @@ import { StyleSheet } from "react-native";
 import AppBottomTab from "./AppBottomTab";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useSelector } from "react-redux";
+import OrderFilterScreen from "../Screen/OrderFilterScreen.js";
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -111,6 +112,7 @@ export default function Routes(props: appScrollviewProps) {
         <Stack.Screen name={Screen.ProductCatalog} component={ProductCatalog} />
         <Stack.Screen name={Screen.Profile} component={Profile} />
         <Stack.Screen name={Screen.EditProfile} component={EditProfile} />
+        <Stack.Screen name={Screen.OrderFilterScreen} component={OrderFilterScreen} />
         <Stack.Screen name={Screen.OrderHistory} component={OrderHistory} />
         <Stack.Screen name={Screen.CatalogDetils} component={CatalogDetils} />
         <Stack.Screen

@@ -65,13 +65,14 @@ const SellOrderDetails = (props: SellOrderDetailsProps) => {
     setModalVisible(!isModalVisible);
   };
 
- 
-
   async function ProductCatalogapi() {
     const uid = await AsyncStorage.getItem("userId");
     Loader.isLoading(true);
     if (uid) {
-      const searchCriteria = [["id", "!=", 0], ["sale_ok", "=", true]];
+      const searchCriteria = [
+        ["id", "!=", 0],
+        ["sale_ok", "=", true],
+      ];
       const response = await fetch(ApiEndPoints.jsonRpcEndpoint, {
         method: "POST",
         headers: {
@@ -107,7 +108,6 @@ const SellOrderDetails = (props: SellOrderDetailsProps) => {
         setproductdata(customdata);
         // setcustomerdata([...customdata, ...responseData.result]);
         // setoffsetdata(offsetdata + 5);
-        console.log("search?>>>>>", responseData.result);
       } else {
         console.error("search_read error://..", responseData.error);
         return null;
@@ -125,8 +125,7 @@ const SellOrderDetails = (props: SellOrderDetailsProps) => {
       if (value !== null) {
       } else {
       }
-    } catch (error) {
-    }
+    } catch (error) {}
   };
 
   const ItemSeparatorComponent = () => {
@@ -158,7 +157,7 @@ const SellOrderDetails = (props: SellOrderDetailsProps) => {
           setcustomerdata(customdata);
           const getorderline = result[0].order_line;
           setorderlilne(getorderline);
-          console.log("get sell_order_details:", result[0].order_line);
+          // console.log("get sell_order_details:", result[0].order_line);
         } else {
           console.error("Error fetching data");
         }
@@ -182,7 +181,7 @@ const SellOrderDetails = (props: SellOrderDetailsProps) => {
         if (result) {
           const customdata = result;
           setgetallorders(customdata);
-          console.log("get sell_order_details:", result[0].order_line);
+          // console.log("get sell_order_details:", result[0].order_line);
         } else {
           console.error("Error fetching data");
         }
@@ -238,28 +237,27 @@ const SellOrderDetails = (props: SellOrderDetailsProps) => {
                 </Text>
               </View>
             </View>
-            {customerdata[0]?.delivery_status.length > 0 ? (  <View style={{ marginTop: Responsive.heightPx(2) }}>
-              <Text style={styles.listtextheading}>Delivery Status</Text>
-              <View style={styles.item1}>
-                <Text style={styles.listtext}>
-                  {customerdata[0]?.delivery_status}
-                </Text>
+            {customerdata[0]?.delivery_status.length > 0 ? (
+              <View style={{ marginTop: Responsive.heightPx(2) }}>
+                <Text style={styles.listtextheading}>Delivery Status</Text>
+                <View style={styles.item1}>
+                  <Text style={styles.listtext}>
+                    {customerdata[0]?.delivery_status}
+                  </Text>
+                </View>
               </View>
-            </View>
-            ) : null
-
-          }
-            {customerdata[0]?.invoice_status.length > 0 ? (    <View style={{ marginTop: Responsive.heightPx(2) }}>
-              <Text style={styles.listtextheading}>Invoice Status</Text>
-              <View style={styles.item1}>
-                <Text style={styles.listtext}>
-                  {customerdata[0]?.invoice_status}
-                </Text>
+            ) : null}
+            {customerdata[0]?.invoice_status.length > 0 ? (
+              <View style={{ marginTop: Responsive.heightPx(2) }}>
+                <Text style={styles.listtextheading}>Invoice Status</Text>
+                <View style={styles.item1}>
+                  <Text style={styles.listtext}>
+                    {customerdata[0]?.invoice_status}
+                  </Text>
+                </View>
               </View>
-            </View>) : null
+            ) : null}
 
-            }
-        
             <View style={{ marginTop: Responsive.heightPx(2) }}>
               <Text style={styles.listtextheading}>Paid via</Text>
               <View style={styles.item1}>
@@ -268,7 +266,6 @@ const SellOrderDetails = (props: SellOrderDetailsProps) => {
                 </Text>
               </View>
             </View>
-           
           </View>
           <View
             style={{
@@ -283,9 +280,9 @@ const SellOrderDetails = (props: SellOrderDetailsProps) => {
               <View
                 style={{
                   backgroundColor: Color.text_color,
-                  marginTop: Responsive.heightPx(5),
+                  marginTop: Responsive.heightPx(2),
                   borderRadius: Responsive.widthPx(2.5),
-                  width: Responsive.widthPx(30),
+                  width: Responsive.widthPx(40),
                   alignItems: "center",
                   justifyContent: "center",
                   padding: Responsive.widthPx(3),
@@ -294,38 +291,9 @@ const SellOrderDetails = (props: SellOrderDetailsProps) => {
                 <Text
                   style={{ color: "#fff", fontSize: 15, fontWeight: "900" }}
                 >
-                  Order Lines
+                  Ordered Product
                 </Text>
               </View>
-            </View>
-
-            <View style={{}}>
-              <TouchableOpacity
-                onPress={() =>
-                  navigation.navigate(Screen.EditOrderLineScreen, {
-                    saleorederId: saleorederId,
-                  })
-                }
-                style={{}}
-              >
-                <View
-                  style={{
-                    backgroundColor: Color.text_color,
-                    marginTop: Responsive.heightPx(5),
-                    borderRadius: Responsive.widthPx(2.5),
-                    // width: Responsive.widthPx(30),
-                    alignItems: "center",
-                    justifyContent: "center",
-                    padding: Responsive.widthPx(3),
-                  }}
-                >
-                  <Text
-                    style={{ color: "#fff", fontSize: 15, fontWeight: "900" }}
-                  >
-                    Edit Order Lines
-                  </Text>
-                </View>
-              </TouchableOpacity>
             </View>
           </View>
 
@@ -337,10 +305,14 @@ const SellOrderDetails = (props: SellOrderDetailsProps) => {
                 justifyContent: "space-between",
               }}
             >
-              <Text style={[styles.listtextCell,{width:'40%'}]}>Product</Text>
-              <Text style={[styles.listtextCell,{width:'20%'}]}>Qty</Text>
-              <Text style={[styles.listtextCell,{width:'20%'}]}>Price</Text>
-              <Text style={[styles.listtextCell,{width:'20%'}]}>Subtotal</Text>
+              <Text style={[styles.listtextCell, { width: "40%" }]}>
+                Product
+              </Text>
+              <Text style={[styles.listtextCell, { width: "20%" }]}>Qty</Text>
+              <Text style={[styles.listtextCell, { width: "20%" }]}>Price</Text>
+              <Text style={[styles.listtextCell, { width: "20%" }]}>
+                Subtotal
+              </Text>
             </View>
             <View
               style={{
@@ -351,21 +323,26 @@ const SellOrderDetails = (props: SellOrderDetailsProps) => {
               <FlatList
                 data={getallorders}
                 keyExtractor={(item) => item.id}
-                ItemSeparatorComponent={ItemSeparatorComponent} 
-                nestedScrollEnabled = {true}
+                ItemSeparatorComponent={ItemSeparatorComponent}
+                nestedScrollEnabled={true}
                 renderItem={({ item }) => (
                   <View style={styles.item}>
-                    <View
+                    <TouchableOpacity
                       style={{
                         flexDirection: "row",
                         justifyContent: "space-between",
                         padding: Responsive.widthPx(1),
                         alignItems: "center",
                       }}
+                      onPress={() => {
+                        navigation.navigate(Screen.EditOrderLineScreen, {
+                          item: item,
+                        });
+                      }}
                     >
                       <View
                         style={{
-                          width: '40%',
+                          width: "40%",
                           alignItems: "center",
                           // backgroundColor: "red",
                           padding: Responsive.heightPx(1),
@@ -382,7 +359,7 @@ const SellOrderDetails = (props: SellOrderDetailsProps) => {
                           {item.name}
                         </Text>
                       </View>
-                      <View style={{  width: '20%',alignItems: "center", }}>
+                      <View style={{ width: "20%", alignItems: "center" }}>
                         <Text
                           numberOfLines={2}
                           style={{
@@ -391,11 +368,14 @@ const SellOrderDetails = (props: SellOrderDetailsProps) => {
                             fontWeight: "bold",
                           }}
                         >
-                          {item.product_uom_qty+' ('+item.product_uom[1]+')'}
+                          {item.product_uom_qty +
+                            " (" +
+                            item.product_uom[1] +
+                            ")"}
                         </Text>
                       </View>
 
-                      <View style={{ width: '20%',alignItems: "center",}}>
+                      <View style={{ width: "20%", alignItems: "center" }}>
                         <Text
                           numberOfLines={2}
                           style={{
@@ -407,7 +387,7 @@ const SellOrderDetails = (props: SellOrderDetailsProps) => {
                           {item.price_unit}
                         </Text>
                       </View>
-                      <View style={{  width: '20%',alignItems: "center", }}>
+                      <View style={{ width: "20%", alignItems: "center" }}>
                         <Text
                           numberOfLines={2}
                           style={{
@@ -419,7 +399,7 @@ const SellOrderDetails = (props: SellOrderDetailsProps) => {
                           {item.price_subtotal}
                         </Text>
                       </View>
-                    </View>
+                    </TouchableOpacity>
                   </View>
                 )}
               />

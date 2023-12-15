@@ -40,8 +40,8 @@ interface LoginScreenProps {
 const loc_global: any = global;
 const LoginScreen = (props: LoginScreenProps) => {
   const { navigation, text, commonActions } = props;
-  const [email, setemail] = useState("");
-  const [userpassword, setuserpassword] = useState("");
+  const [email, setemail] = useState("admin");
+  const [userpassword, setuserpassword] = useState("admin");
   const [eyshow, setEyeshow] = useState(true);
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -63,12 +63,13 @@ const LoginScreen = (props: LoginScreenProps) => {
   const password = userpassword;
 
   const loginApi = async () => {
+    Loader.isLoading(true);
+
     // Call the authenticate function with the provided username and password
     const authenticationResult = await OdooApi.authenticate(email, password);
-    Loader.isLoading(true);
     if (authenticationResult) {
       const stringValue = JSON.stringify(authenticationResult);
-      console.log('stringValue-->',stringValue);
+      console.log("stringValue-->");
       loc_global.userData = await AsyncStorage.setItem("userId", stringValue);
       // Handle successful authentication
       navigation.navigate(Screen.HomeScreen);

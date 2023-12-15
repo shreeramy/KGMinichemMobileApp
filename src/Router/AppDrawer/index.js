@@ -134,7 +134,6 @@ const AppDrawer = ({ ...props }) => {
 
   React.useEffect(() => {
     retrieveData();
-    searchRead1();
   }, []);
 
   const retrieveData = async (key) => {
@@ -154,52 +153,6 @@ const AppDrawer = ({ ...props }) => {
   const odooDatabase = "kg.wangoes.com";
   const jsonRpcEndpoint = `${odooHost}/jsonrpc`;
   const odooPassword = "admin";
-
-  async function searchRead1() {
-    const uid = await AsyncStorage.getItem("userId");
-
-    if (uid) {
-      const searchCriteria = [["id", "=", uid]];
-      const response = await fetch(jsonRpcEndpoint, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          jsonrpc: "2.0",
-          method: "call",
-          params: {
-            service: "object",
-            method: "execute_kw",
-            args: [
-              odooDatabase,
-              uid,
-              odooPassword,
-              "res.users", // Replace with the desired model name
-              "search_read",
-              [searchCriteria],
-              {},
-            ],
-          },
-        }),
-      });
-
-      const responseData = await response.json();
-      console.log("search_rea>>>", responseData);
-      if (responseData.result) {
-        const customdata = responseData.result;
-        setcustomerdata(customdata);
-        console.log("search_r,...", customdata);
-      } else {
-        console.error("search_read error://..", responseData.error);
-        return null;
-      }
-
-      // return responseData.result;
-    }
-
-    return null;
-  }
 
   const logout = async () => {
     try {

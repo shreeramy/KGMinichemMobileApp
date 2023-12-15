@@ -127,7 +127,7 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
   const [text1, setText1] = useState("");
   const [text2, setText2] = useState("");
   const [text3, setText3] = useState("");
-  const [SelectUnit, setSelectUnit] = useState("Select Unit");
+  const [SelectUnit, setSelectUnit] = useState("");
   const [SelectUnitid, setSelectUnitid] = useState(Number);
   const [items, setItems] = useState([]);
   const [date, setDate] = useState(new Date());
@@ -186,19 +186,20 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
 
   const handleUnit = (selectedUnit: string): void => {
     setGenerateId(true);
+    setSelectUnit(selectedUnit);
 
-    const id = generateTwoDigitUniqueId(newUnitIds);
-    setNewGeneratedIds(id);
+    // const id = generateTwoDigitUniqueId(newUnitIds);
+    // setNewGeneratedIds(id);
 
-    const Unitregex = /\(([^)]+)\)/;
-    const match = selectedUnit.match(Unitregex);
+    // const Unitregex = /\(([^)]+)\)/;
+    // const match = selectedUnit.match(Unitregex);
 
-    if (match) {
-      const result = match[1];
-      setSelectUnit(result);
-    } else {
-      console.log("No match found");
-    }
+    // if (match) {
+    //   const result = match[1];
+    //   setSelectUnit(result);
+    // } else {
+    //   console.log("No match found");
+    // }
   };
 
   // >>>>>>????????????....?????????//////????????????????????
@@ -285,6 +286,7 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
         validity_date: formattedDate,
         order_line: arrval,
       };
+      console.log("arrval---------->", arrval);
 
       const response = await fetch(ApiEndPoints.jsonRpcEndpoint, {
         method: "POST",
@@ -309,7 +311,7 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
           },
         }),
       });
-      console.log("//?????////", arrval);
+
       const responseData = await response.json();
 
       if (responseData.result) {
@@ -881,14 +883,17 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
             //     console.log("sdjcvh", item.name)
             //   )
             // }
-            onPress={() =>
+            onPress={() => {
+              console.log("uomid------------>", item?.uom_id);
+
               refRBSheet2.current.close(
                 setproname(item?.display_name),
-                handleUnit(item?.display_name),
+                setSelectUnit(item?.uom_id[1]),
+                setSelectUnitid(item?.uom_id[0]),
                 console.log("Chcking item", item),
                 setText1(item?.id)
-              )
-            }
+              );
+            }}
             style={{
               width: Responsive.widthPx(100),
               // height: Responsive.heightPx(3),

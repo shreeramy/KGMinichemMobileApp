@@ -256,9 +256,8 @@ const EditProfile = (props: EditProfileProps) => {
                     ", " +
                     customer.city +
                     ", " +
-                    (customer.state_id.length > 0 ? customer.state_id[1]:'' )}
+                    (customer.state_id.length > 0 ? customer.state_id[1] : "")}
                 </Text>
-                
               </View>
             </View>
             <TouchableOpacity

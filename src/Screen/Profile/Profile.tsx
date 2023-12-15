@@ -104,8 +104,6 @@ const Profile = (props: ProfileProps) => {
     // getstatelist();
   }, []);
 
-  console.log("routeuserId??>>>>///", userId, username);
-
   const imageFilePath = imagepath?.path;
   console.log(">>>imageF>>>>", imageFilePath);
   const onPickImage = () => {
@@ -215,14 +213,17 @@ const Profile = (props: ProfileProps) => {
       if (responseData.result) {
         Loader.isLoading(false);
         Utility.showSuccessToast("profile created successfully");
-        navigation.navigate(Screen.ProductCatalog);
+        navigation.navigate(Screen.NewCreateOrderScreen, {
+          sendcustomerId: responseData.result,
+          sendcustomerName: userData.name,
+        });
         const customdata = responseData.result;
         setcustomerdata(customdata);
         console.log("search_read result::???", responseData.result);
       } else {
         Loader.isLoading(false);
-        Utility.showSuccessToast("profile not created");
-        console.error("search_read error://..", responseData.error);
+        Utility.showDangerToast("profile not created");
+        console.error("ProfileCreateError------->", responseData.error);
         return null;
       }
 
@@ -314,8 +315,8 @@ const Profile = (props: ProfileProps) => {
         console.log("search_read result_Editapi..", responseData.result);
       } else {
         Loader.isLoading(false);
-        Utility.showDangerToast("profile not Edited");
-        console.error("search_read error://..", responseData.error);
+        Utility.showDangerToast("Profile not Edited");
+        console.error("ProfileEditError-------", responseData.error);
         return null;
       }
       Loader.isLoading(false);
@@ -397,7 +398,7 @@ const Profile = (props: ProfileProps) => {
 
   async function getcountrylist() {
     const uid = await AsyncStorage.getItem("userId");
-   // Loader.isLoading(true);
+    // Loader.isLoading(true);
     if (uid) {
       const searchCriteria = [["id", "!=", 0]];
       const countryData = await callOdooMethod(
@@ -409,8 +410,6 @@ const Profile = (props: ProfileProps) => {
       );
 
       if (countryData) {
-       // Loader.isLoading(false);
-        console.error("get>>>>.???", countryData);
         setcountrydata(countryData);
       } else {
         //Loader.isLoading(false);
@@ -434,7 +433,6 @@ const Profile = (props: ProfileProps) => {
 
       if (statedata) {
         Loader.isLoading(false);
-        console.error("get>>>??/...??//", statedata);
         setstatelist(statedata);
       } else {
         Loader.isLoading(false);

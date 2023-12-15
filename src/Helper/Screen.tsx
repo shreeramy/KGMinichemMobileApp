@@ -16,6 +16,7 @@ const Screen = {
   AttendanceHistoryScreen: "AttendanceHistoryScreen",
   Locationsendscreen: "Locationsendscreen",
   EditOrderLineScreen: "EditOrderLineScreen",
+  OrderFilterScreen: "OrderFilterScreen",
 };
 
 export default Screen;

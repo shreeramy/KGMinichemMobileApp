@@ -2,6 +2,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import React from "react";
 import { Text, StyleSheet, Image, View, TouchableOpacity } from "react-native";
 import { Responsive, Images, Color, Fonts } from "../Helper";
+import moment from "moment";
 
 interface AppHeaderProps {
   drawermenu?: boolean;
@@ -34,22 +35,21 @@ const AppHeader = (props: AppHeaderProps) => {
   const onPressBack = () => navigation?.goBack();
   const [customerdata, setcustomerdata] = React.useState([]);
   React.useEffect(() => {
-    retrieveData();
     searchRead1();
   }, []);
 
-  const retrieveData = async (key) => {
-    try {
-      const value = await AsyncStorage.getItem("userId");
-      if (value !== null) {
-        console.log("Retrieved data: ", value);
-      } else {
-        console.log("No data found.");
-      }
-    } catch (error) {
-      console.log("Error retrieving data: ", error);
-    }
-  };
+  // const retrieveData = async (key) => {
+  //   try {
+  //     const value = await AsyncStorage.getItem("userId");
+  //     if (value !== null) {
+  //       console.log("Retrieved data: ", value);
+  //     } else {
+  //       console.log("No data found.");
+  //     }
+  //   } catch (error) {
+  //     console.log("Error retrieving data: ", error);
+  //   }
+  // };
 
   const odooHost = "http://kg.wangoes.com";
   const odooDatabase = "kg.wangoes.com";
@@ -78,7 +78,19 @@ const AppHeader = (props: AppHeaderProps) => {
               odooPassword,
               "res.users", // Replace with the desired model name
               "search_read",
-              [searchCriteria, ["id", "login", "name", "image_1920"]],
+              // [searchCriteria],
+              [
+                searchCriteria,
+                [
+                  "id",
+                  "login",
+                  "name",
+                  "last_check_in",
+                  "last_check_out",
+                  "attendance_id",
+                  // "image_1920",
+                ],
+              ],
               {},
             ],
           },
@@ -86,11 +98,32 @@ const AppHeader = (props: AppHeaderProps) => {
       });
 
       const responseData = await response.json();
-      console.log("search_rea>>>", responseData);
+      // console.log("search_rea>>>", responseData);
       if (responseData.result) {
         const customdata = responseData.result;
         setcustomerdata(customdata);
-        console.log("search_r,...", customdata);
+        console.log("searchRead-------->", responseData.result);
+
+        // const updatedDate = new Date(
+        //   initialDate.getTime() + 5 * 60 * 60 * 1000 + 30 * 60 * 1000
+        // );
+        AsyncStorage.setItem(
+          "checkIn",
+          responseData.result[0].last_check_in
+            ? responseData.result[0].last_check_in
+            : false
+        );
+        AsyncStorage.setItem("checkOut", responseData.result[0].last_check_out);
+        AsyncStorage.setItem(
+          "attendanceId",
+          responseData.result[0].attendance_id[0].toString()
+        );
+        const attendance_id = await AsyncStorage.getItem("attendanceId");
+        console.log(
+          "SessionData1111",
+          attendance_id,
+          responseData.result[0].attendance_id[0]
+        );
       } else {
         console.error("search_read error://..", responseData.error);
         return null;
@@ -142,9 +175,9 @@ const AppHeader = (props: AppHeaderProps) => {
             <View>
               {customerdata[0]?.image_1920 ? (
                 <Image
-                source={{
-                  uri: `data:image/png;base64,${customerdata[0]?.image_1920}`,
-                }}
+                  source={{
+                    uri: `data:image/png;base64,${customerdata[0]?.image_1920}`,
+                  }}
                   style={styles.imageStyle}
                 />
               ) : (

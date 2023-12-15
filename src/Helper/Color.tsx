@@ -1,7 +1,7 @@
 const Color = {
   text_input_borderColor: "#62676B",
   white: "#ffff",
-
+  grey: "#E8E9EB",
   red: "red",
   black: "#000000",
   greenShade5A: "#61B15A",
