@@ -58,7 +58,7 @@ const AppHeader = (props: AppHeaderProps) => {
 
   async function searchRead1() {
     const uid = await AsyncStorage.getItem("userId");
-
+    console.log("uid in App header::::", uid)
     if (uid) {
       const searchCriteria = [["id", "=", uid]];
       const response = await fetch(jsonRpcEndpoint, {
@@ -88,6 +88,7 @@ const AppHeader = (props: AppHeaderProps) => {
                   "last_check_in",
                   "last_check_out",
                   "attendance_id",
+                  "employee_id"
                   // "image_1920",
                 ],
               ],
@@ -98,11 +99,11 @@ const AppHeader = (props: AppHeaderProps) => {
       });
 
       const responseData = await response.json();
-      // console.log("search_rea>>>", responseData);
+      console.log("search_rea>>> in app header", responseData);
       if (responseData.result) {
         const customdata = responseData.result;
         setcustomerdata(customdata);
-        console.log("searchRead-------->", responseData.result);
+        // console.log("searchRead-------->", responseData.result);
 
         // const updatedDate = new Date(
         //   initialDate.getTime() + 5 * 60 * 60 * 1000 + 30 * 60 * 1000
@@ -117,6 +118,10 @@ const AppHeader = (props: AppHeaderProps) => {
         AsyncStorage.setItem(
           "attendanceId",
           responseData.result[0].attendance_id[0].toString()
+        );
+        AsyncStorage.setItem(
+          "employId",
+          responseData.result[0].employee_id[0].toString()
         );
         const attendance_id = await AsyncStorage.getItem("attendanceId");
         console.log(

@@ -9,6 +9,8 @@ import {
   Button,
   KeyboardAvoidingView,
   Platform,
+  Alert,
+  ActivityIndicator,
 } from "react-native";
 import React, { Component, useRef, useState } from "react";
 import DateTimePicker from "@react-native-community/datetimepicker";
@@ -40,6 +42,7 @@ import styles from "./NewCreateOrderScreenstyle";
 import { ApiEndPoints } from "../../NetworkCall";
 import moment from "moment";
 import { cos, log } from "react-native-reanimated";
+import * as OdooApi from "../OdooApi";
 
 interface NewCreateOrderScreenstyleProps {
   navigation?: any;
@@ -68,7 +71,11 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
   const [customerdata, setcustomerdata] = useState([]);
   const [productdata, setproductdata] = useState([]);
   const regex = /\(([^)]+)\)/;
-
+  // useEffect(() => {
+  //   if (sendCustomerName) {
+  //     sendCustomerName.map(ele => console.log("ele", ele))
+  //   }
+  // }, [sendCustomerName])
   const [gstin, setgstin] = useState([
     {
       name: "Registered Business-Regular",
@@ -138,6 +145,9 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
   const [newUnitIds, setNewUnitIds] = useState([]);
   const [generateId, setGenerateId] = useState(false);
   const [newGeneratedIds, setNewGeneratedIds] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [noMoreData, setNoMoreData] = useState(false);
+  console.log("")
 
   const [addval, setaddval] = useState([]);
   React.useEffect(() => {
@@ -154,7 +164,8 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
   }, []);
 
   React.useEffect(() => {
-    // getcustomer();
+    getcustomer();
+    // searchReadData()
   }, []);
 
   const handleDateChange = (event, selectedDate) => {
@@ -168,7 +179,7 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
   };
 
   const formattedDate = moment(date).format("YYYY-MM-DD");
-  console.log(">>?formattedDate...", formattedDate);
+  // console.log(">>?formattedDate...", formattedDate);
 
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
@@ -320,7 +331,7 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
         navigation.navigate(Screen.ShowOrderScreen);
         const customdata = responseData.result;
         setcustomerdata(customdata);
-        console.log("create salallorder_Suucess:", responseData.result);
+        // console.log("create salallorder_Suucess:", responseData.result);
       } else {
         Loader.isLoading(false);
         Utility.showDangerToast("sellorder not created");
@@ -461,9 +472,9 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
         Loader.isLoading(false);
         const customdata = responseData.result;
         setcustomerdata(customdata);
-        console.log("search_read result:::::", responseData.result);
+        // console.log("search_read result:::::", responseData.result);
       } else {
-        console.error("search_read error://..", responseData.error);
+        // console.error("search_read error://..", responseData.error);
         return null;
       }
 
@@ -508,11 +519,11 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
       if (responseData.result) {
         Loader.isLoading(false);
         const customdata = responseData.result;
-        console.log("Checing custom", customdata);
+        // console.log("Checing custom", customdata);
         setunitname(customdata);
-        console.log("search_get>>>??", responseData.result);
+        // console.log("search_get>>>??", responseData.result);
       } else {
-        console.error("search_read error://..", responseData.error);
+        // console.error("search_read error://..", responseData.error);
         return null;
       }
 
@@ -573,20 +584,22 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
       });
 
       const responseData = await response.json();
-
+      console.log("responseData.result in getcustomer", responseData)
       if (responseData.result) {
+
         Loader.isLoading(false);
         const customdata = responseData.result;
         setcustomerdata(customdata);
-        console.log("search_read result:::::", responseData.result);
+        // console.log("search_read result:::::", responseData.result);
       } else {
-        console.error("search_read error://..", responseData.error);
+        // console.error("search_read error://..", responseData.error);
+        Loader.isLoading(false);
         return null;
       }
 
       // return responseData.result;
     }
-
+    Loader.isLoading(false);
     return null;
   }
 
@@ -704,57 +717,69 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
           </View>
         ) : null}
       </View> */}
-      <FlatList
-        data={customerdata}
-        renderItem={({ item }) => (
-          <TouchableOpacity
-            // onPress={() =>
-            //   refRBSheet.current.close(
-            //     setroll(item.name),
-            //     console.log("sdjcvh", item.name)
-            //   )
-            // }
-            onPress={() =>
-              refRBSheet.current.close(
-                setroll(item?.name),
-                setcutomerId(item?.id)
+      {
+        customerdata.length === 0 ?
+          <View>
+            <ActivityIndicator size="large" color="#0000ff" />
+          </View>
+          :
+          <FlatList
+            data={customerdata}
+            renderItem={({ item }) => {
+              // console.log("item::::::", item)
+              return (
+
+                <TouchableOpacity
+                  // onPress={() =>
+                  //   refRBSheet.current.close(
+                  //     setroll(item.name),
+                  //     console.log("sdjcvh", item.name)
+                  //   )
+                  // }
+                  onPress={() =>
+                    refRBSheet.current.close(
+                      setroll(item?.name),
+                      setcutomerId(item?.id)
+                    )
+                  }
+                  style={{
+                    width: Responsive.widthPx(100),
+                    height: Responsive.heightPx(10),
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <View
+                    style={{
+                      // backgroundColor: "red",
+                      width: Responsive.widthPx(90),
+                      justifyContent: "center",
+                      alignItems: "center",
+                      // height: Responsive.heightPx(3),
+                      // borderWidth: 1,
+                      borderColor: Color.text_input_borderColor,
+                      marginTop: Responsive.heightPx(3),
+                      borderRadius: Responsive.widthPx(3),
+                    }}
+                  >
+                    <Text
+                      style={{
+                        color: Color.text_color,
+                        // fontSize: 20,
+                        marginHorizontal: 12,
+                        marginVertical: 5,
+                      }}
+                    >
+                      {item.name}
+                    </Text>
+                  </View>
+                </TouchableOpacity>
               )
-            }
-            style={{
-              width: Responsive.widthPx(100),
-              height: Responsive.heightPx(10),
-              justifyContent: "center",
-              alignItems: "center",
             }}
-          >
-            <View
-              style={{
-                // backgroundColor: "red",
-                width: Responsive.widthPx(90),
-                justifyContent: "center",
-                alignItems: "center",
-                // height: Responsive.heightPx(3),
-                // borderWidth: 1,
-                borderColor: Color.text_input_borderColor,
-                marginTop: Responsive.heightPx(3),
-                borderRadius: Responsive.widthPx(3),
-              }}
-            >
-              <Text
-                style={{
-                  color: Color.text_color,
-                  // fontSize: 20,
-                  marginHorizontal: 12,
-                  marginVertical: 5,
-                }}
-              >
-                {item.name}
-              </Text>
-            </View>
-          </TouchableOpacity>
-        )}
-        numColumns={1}
-      />
+            numColumns={1}
+          />
+      }
+
     </View>
   );
 
@@ -884,7 +909,7 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
             //   )
             // }
             onPress={() => {
-              console.log("uomid------------>", item?.uom_id);
+              // console.log("uomid------------>", item?.uom_id);
 
               refRBSheet2.current.close(
                 setproname(item?.display_name),
@@ -972,8 +997,9 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
       });
 
       const responseData = await response.json();
-
+      console.log("responseData.result.length in ProductCatalogapi", responseData)
       if (responseData.result.length > 0) {
+
         Loader.isLoading(false);
         // if (responseData.result.length == 0) {
         //   setLoading(false);
@@ -982,9 +1008,10 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
         setproductdata(customdata);
         // setcustomerdata([...customdata, ...responseData.result]);
         // setoffsetdata(offsetdata + 5);
-        console.log("search?>>>>>", responseData.result);
+        // console.log("search?>>>>>", responseData.result);
       } else {
         console.error("search_read error://..", responseData.error);
+        Loader.isLoading(false);
         return null;
       }
 
@@ -1039,7 +1066,7 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
               container: {
                 justifyContent: "center",
                 alignItems: "center",
-                backgroundColor: Color.black,
+                backgroundColor: Color.white,
                 borderTopLeftRadius: 10,
               },
             }}
@@ -1122,6 +1149,7 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
         <View style={styles.textinputstyle}>
           <View style={styles.textinputstyle}>
             <Text style={styles.labeltext}>Customer</Text>
+
             <TouchableOpacity
               onPress={() => {
                 refRBSheet.current.open();
@@ -1162,6 +1190,7 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
                 source={Images.downig}
               />
             </TouchableOpacity>
+
           </View>
 
           <View style={styles.textinputstyle}>

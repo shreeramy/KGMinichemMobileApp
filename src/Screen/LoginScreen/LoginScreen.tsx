@@ -67,6 +67,7 @@ const LoginScreen = (props: LoginScreenProps) => {
 
     // Call the authenticate function with the provided username and password
     const authenticationResult = await OdooApi.authenticate(email, password);
+    console.log("authenticationResult", authenticationResult)
     if (authenticationResult) {
       const stringValue = JSON.stringify(authenticationResult);
       console.log("stringValue-->");

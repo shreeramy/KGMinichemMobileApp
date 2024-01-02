@@ -33,6 +33,7 @@ export async function authenticate(username, password) {
       console.error("Authentication error:", data.error);
       return null;
     }
+
     return data.result;
   } catch (error) {
     console.error("Authentication error:", error);
@@ -79,7 +80,6 @@ export async function searchRead(
     });
 
     const responseData = await response.json();
-
     if (responseData.result) {
       return responseData.result;
     } else {

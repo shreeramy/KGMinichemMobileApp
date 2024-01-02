@@ -1,5 +1,5 @@
 apply plugin: "com.android.application"
-
+apply plugin: "com.facebook.react"
 import com.android.build.OutputFile
 
 /**
@@ -156,6 +156,12 @@ android {
             keyAlias 'androiddebugkey'
             keyPassword 'android'
         }
+        release {
+            storeFile file('ScannerFile.jks')
+            storePassword 'ScannerFile'
+            keyAlias 'ScannerFile'
+            keyPassword 'ScannerFile'
+        }
     }
     buildTypes {
         debug {
@@ -196,6 +202,8 @@ dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
     //noinspection GradleDynamicVersion
     implementation "com.facebook.react:react-native:+"  // From node_modules
+           implementation 'androidx.appcompat:appcompat:1.5.1'    
+        implementation 'com.google.android.material:material:1.7.0'
 
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
 

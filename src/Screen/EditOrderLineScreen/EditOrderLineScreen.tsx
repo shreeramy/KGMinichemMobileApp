@@ -28,6 +28,7 @@ const EditOrderLineScreen = (props: EditOrderLineScreenProps) => {
   // State to hold the form values
   const [productName, setProductName] = useState(route.params.item.name);
   const [quantity, setQuantity] = useState(route.params.item.product_uom_qty);
+
   const [unitOfMeasure, setUnitOfMeasure] = useState(
     route.params.item.product_uom[1]
   );
@@ -48,6 +49,7 @@ const EditOrderLineScreen = (props: EditOrderLineScreenProps) => {
         id: lineId,
         product_id: productId,
         product_uom_qty: parseFloat(quantity),
+        price_unit: parseFloat(price)
       },
     ];
 
@@ -99,6 +101,8 @@ const EditOrderLineScreen = (props: EditOrderLineScreenProps) => {
           keyboardType="numeric"
         />
 
+
+
         <Text style={styles.textStyle}>Unit of Measure</Text>
         <TextInput
           style={styles.inputText}
@@ -107,14 +111,14 @@ const EditOrderLineScreen = (props: EditOrderLineScreenProps) => {
           onChangeText={(text) => setUnitOfMeasure(text)}
         />
 
-        {/* <Text style={styles.textStyle}>Price</Text>
+        <Text style={styles.textStyle}>Price</Text>
         <TextInput
           style={styles.inputText}
           placeholder={"Enter price"}
           value={price.toString()}
           onChangeText={(text) => setPrice(text)}
           keyboardType="numeric"
-        /> */}
+        />
 
         <TouchableOpacity
           style={styles.buttonStyle}

@@ -125,7 +125,7 @@ const SellOrderDetails = (props: SellOrderDetailsProps) => {
       if (value !== null) {
       } else {
       }
-    } catch (error) {}
+    } catch (error) { }
   };
 
   const ItemSeparatorComponent = () => {
@@ -180,6 +180,7 @@ const SellOrderDetails = (props: SellOrderDetailsProps) => {
 
         if (result) {
           const customdata = result;
+          // console.log("customdata:::::", customdata)
           setgetallorders(customdata);
           // console.log("get sell_order_details:", result[0].order_line);
         } else {
@@ -325,85 +326,116 @@ const SellOrderDetails = (props: SellOrderDetailsProps) => {
                 keyExtractor={(item) => item.id}
                 ItemSeparatorComponent={ItemSeparatorComponent}
                 nestedScrollEnabled={true}
-                renderItem={({ item }) => (
-                  <View style={styles.item}>
-                    <TouchableOpacity
-                      style={{
-                        flexDirection: "row",
-                        justifyContent: "space-between",
-                        padding: Responsive.widthPx(1),
-                        alignItems: "center",
-                      }}
-                      onPress={() => {
-                        navigation.navigate(Screen.EditOrderLineScreen, {
-                          item: item,
-                        });
-                      }}
-                    >
-                      <View
+                renderItem={({ item }) => {
+
+                  return (
+                    <View style={styles.item}>
+                      <TouchableOpacity
                         style={{
-                          width: "40%",
+                          flexDirection: "row",
+                          justifyContent: "space-between",
+                          padding: Responsive.widthPx(1),
                           alignItems: "center",
-                          // backgroundColor: "red",
-                          padding: Responsive.heightPx(1),
+                        }}
+                        onPress={() => {
+                          navigation.navigate(Screen.EditOrderLineScreen, {
+                            item: item,
+                          });
                         }}
                       >
-                        <Text
-                          numberOfLines={2}
+                        <View
                           style={{
-                            color: Color.choclatetex,
-                            fontSize: 11,
-                            fontWeight: "bold",
+                            width: "40%",
+                            alignItems: "center",
+                            // backgroundColor: "red",
+                            padding: Responsive.heightPx(1),
                           }}
                         >
-                          {item.name}
-                        </Text>
-                      </View>
-                      <View style={{ width: "20%", alignItems: "center" }}>
-                        <Text
-                          numberOfLines={2}
-                          style={{
-                            color: Color.choclatetex,
-                            fontSize: 11,
-                            fontWeight: "bold",
-                          }}
-                        >
-                          {item.product_uom_qty +
-                            " (" +
-                            item.product_uom[1] +
-                            ")"}
-                        </Text>
-                      </View>
+                          <Text
+                            numberOfLines={2}
+                            style={{
+                              color: Color.choclatetex,
+                              fontSize: 11,
+                              fontWeight: "bold",
+                            }}
+                          >
+                            {item.name}
+                          </Text>
+                        </View>
+                        <View style={{ width: "20%", alignItems: "center" }}>
+                          <Text
+                            numberOfLines={2}
+                            style={{
+                              color: Color.choclatetex,
+                              fontSize: 11,
+                              fontWeight: "bold",
+                            }}
+                          >
+                            {item.product_uom_qty +
+                              " (" +
+                              item.product_uom[1] +
+                              ")"}
+                          </Text>
+                        </View>
 
-                      <View style={{ width: "20%", alignItems: "center" }}>
-                        <Text
-                          numberOfLines={2}
-                          style={{
-                            color: Color.choclatetex,
-                            fontSize: 11,
-                            fontWeight: "bold",
-                          }}
-                        >
-                          {item.price_unit}
-                        </Text>
-                      </View>
-                      <View style={{ width: "20%", alignItems: "center" }}>
-                        <Text
-                          numberOfLines={2}
-                          style={{
-                            color: Color.choclatetex,
-                            fontSize: 11,
-                            fontWeight: "bold",
-                          }}
-                        >
-                          {item.price_subtotal}
-                        </Text>
-                      </View>
-                    </TouchableOpacity>
-                  </View>
-                )}
+                        <View style={{ width: "20%", alignItems: "center" }}>
+                          <Text
+                            numberOfLines={2}
+                            style={{
+                              color: Color.choclatetex,
+                              fontSize: 11,
+                              fontWeight: "bold",
+                            }}
+                          >
+                            {item.price_unit}
+                          </Text>
+                        </View>
+                        <View style={{ width: "20%", alignItems: "center" }}>
+                          <Text
+                            numberOfLines={2}
+                            style={{
+                              color: Color.choclatetex,
+                              fontSize: 11,
+                              fontWeight: "bold",
+                            }}
+                          >
+                            {item.price_subtotal}
+                          </Text>
+                        </View>
+                      </TouchableOpacity>
+                    </View>
+                  )
+                }}
               />
             </View>
+          </View>
+          <View style={{
+            paddingBottom: 20, flexDirection: 'row', alignSelf: 'flex-end',
+            paddingRight: 30
+          }}>
+            <Text
+              style={{
+                color: Color.black,
+                fontSize: 14,
+                fontWeight: "bold",
+              }}
+            >
+              Sub total
+            </Text>
+            <Text
+              style={{
+                color: Color.choclatetex,
+                fontSize: 14,
+                fontWeight: "bold",
+                paddingLeft: 15
+              }}
+            >
+              {
+                getallorders.reduce((acc, next) => {
+                  return acc + next.price_subtotal
+                }, 0)
+              }
+            </Text>
           </View>
         </View>
       </AppScrollview>

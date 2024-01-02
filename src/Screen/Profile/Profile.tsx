@@ -11,6 +11,7 @@ import {
 } from "react-native";
 import React, { Component, useRef, useState } from "react";
 import { SvgIcon } from "../../Component/SvgIcons";
+import RNFS from 'react-native-fs';
 import {
   Color,
   Const,
@@ -133,7 +134,7 @@ const Profile = (props: ProfileProps) => {
                 if (response.didCancel) {
                   // User canceled the image selection
                 } else {
-                  const imagedata = response.assets[0];
+                  const imagedata = response?.assets[0];
                   setIMagespath({
                     path: imagedata?.uri,
                     ...imagedata,
@@ -149,7 +150,7 @@ const Profile = (props: ProfileProps) => {
   };
 
   // Define the authenticate function
-  async function handleCreatePartner(e: any) {
+  async function handleCreatePartner() {
     const uid = await AsyncStorage.getItem("userId");
 
     // Loader.isLoading(true);
@@ -162,11 +163,12 @@ const Profile = (props: ProfileProps) => {
 
     Loader.isLoading(true);
 
-    const imageResponse = await RNFetchBlob.fs.readFile(
-      imageFilePath,
-      "base64"
-    );
-    console.log("jhc>>//", setbaseimg(imageResponse));
+    // const imageResponse = await RNFetchBlob.fs.readFile(
+    //   imageFilePath,
+    //   "base64"
+    // );
+    let imageResponse = await RNFS.readFile(imagepath?.path, 'base64').then(res => { return res });
+    // console.log("jhc>>//", setbaseimg(imageResponse));
 
     const userData = {
       name: name,
@@ -181,7 +183,7 @@ const Profile = (props: ProfileProps) => {
       image_1920: imageResponse,
     };
 
-    if (uid) {
+    if (uid !== null) {
       const searchCriteria = [["id", "!=", 0]];
 
       const response = await fetch(ApiEndPoints.jsonRpcEndpoint, {
@@ -245,10 +247,11 @@ const Profile = (props: ProfileProps) => {
     // }
     if (imageFilePath) {
       console.log(">>>imageF>>>>111000", imageFilePath);
-      const imageResponse = await RNFetchBlob.fs.readFile(
-        imageFilePath,
-        "base64"
-      );
+      // const imageResponse = await RNFetchBlob.fs.readFile(
+      //   imageFilePath,
+      //   "base64"
+      // );
+      let imageResponse = await RNFS.readFile(imagepath?.path, 'base64').then(res => { return res });
       userData.image_1920 = imageResponse;
       console.log("i>>>>/", imageResponse);
     }
