@@ -224,6 +224,7 @@ const HomeScreen = (props: HomeScreenProps) => {
 
   async function getattendance() {
     const uid = await AsyncStorage.getItem("userId");
+    const odooPassword = await AsyncStorage.getItem("@odopassword");
     // console.log("emplotId in getattendance function>>>>>>>>>>>>>>", emplotId)
     // Loader.isLoading(true);
 
@@ -253,7 +254,7 @@ const HomeScreen = (props: HomeScreenProps) => {
             args: [
               ApiEndPoints.odooDatabase,
               uid,
-              "admin",
+              odooPassword,
               "hr.attendance", // Replace with the desired model name
               "search_read",
               [searchCriteria],
@@ -534,8 +535,9 @@ const HomeScreen = (props: HomeScreenProps) => {
       "formattedDateTime1",
       formattedDateTime1
     );
-    const uid = await AsyncStorage.getItem("userId");
 
+    const uid = await AsyncStorage.getItem("userId");
+    const odooPassword = await AsyncStorage.getItem("@odopassword");
     // console.log("formtaedDateTime:::", formattedDateTime1)
     // Loader.isLoading(true);
     Loader.isLoading(true);
@@ -565,7 +567,7 @@ const HomeScreen = (props: HomeScreenProps) => {
             args: [
               ApiEndPoints.odooDatabase,
               uid,
-              "admin",
+              odooPassword,
               "hr.attendance", // Replace with the desired model name
               "create",
               [userData],
@@ -612,6 +614,7 @@ const HomeScreen = (props: HomeScreenProps) => {
   async function editattandece() {
     const uid = await AsyncStorage.getItem("userId");
     const gettimedate = await AsyncStorage.getItem("formattedDateTime1");
+    const odooPassword = await AsyncStorage.getItem("@odopassword");
     // console.log("gettimedate in clockout======", gettimedate);
     console.log("senddatetime in clockout=======", senddatetime);
     console.log("attendanceId in clockout=======", attendanceId);
@@ -648,7 +651,7 @@ const HomeScreen = (props: HomeScreenProps) => {
             args: [
               ApiEndPoints.odooDatabase,
               uid,
-              "admin",
+              odooPassword,
               "hr.attendance", // Replace with the desired model name
               "write",
               [attendanceId],
@@ -748,6 +751,7 @@ const HomeScreen = (props: HomeScreenProps) => {
 
   async function getEmployeesId() {
     const uid = await AsyncStorage.getItem("userId");
+    const odooPassword = await AsyncStorage.getItem("@odopassword");
     console.log("uid in App Home screen -----------::::", uid)
     // console.log(">>>>>>??", uid);
     Loader.isLoading(true);
@@ -767,7 +771,7 @@ const HomeScreen = (props: HomeScreenProps) => {
             args: [
               ApiEndPoints.odooDatabase,
               uid,
-              "admin",
+              odooPassword,
               "hr.employee", // Replace with the desired model name
               "search_read",
               [searchCriteria],
@@ -812,6 +816,7 @@ const HomeScreen = (props: HomeScreenProps) => {
 
   async function sendlatlong() {
     const uid = await AsyncStorage.getItem("userId");
+    const odooPassword = await AsyncStorage.getItem("@odopassword");
     // console.log("createorder=--array", createorder);
     // Loader.isLoading(true);
     Loader.isLoading(true);
@@ -839,7 +844,7 @@ const HomeScreen = (props: HomeScreenProps) => {
             args: [
               ApiEndPoints.odooDatabase,
               uid,
-              "admin",
+              odooPassword,
               "hr.attendance", // Replace with the desired model name
               "create_location",
               [1, userData],

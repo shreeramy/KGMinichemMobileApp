@@ -51,6 +51,7 @@ export async function searchRead(
   fields
 ) {
   try {
+    const odooPassword = await AsyncStorage.getItem("@odopassword");
     const response = await fetch(ApiEndPoints.jsonRpcEndpoint, {
       method: "POST",
       headers: {
@@ -65,7 +66,7 @@ export async function searchRead(
           args: [
             ApiEndPoints.odooDatabase,
             uid,
-            "admin",
+            odooPassword,
             model,
             "search_read",
             [searchCriteria],
@@ -94,6 +95,7 @@ export async function searchRead(
 
 export async function get_all_product_details(uid, searchCriteria) {
   try {
+    const odooPassword = await AsyncStorage.getItem("@odopassword");
     const response = await fetch(ApiEndPoints.jsonRpcEndpoint, {
       method: "POST",
       headers: {
@@ -108,7 +110,7 @@ export async function get_all_product_details(uid, searchCriteria) {
           args: [
             ApiEndPoints.odooDatabase,
             uid,
-            "admin",
+            odooPassword,
             "product.template",
             "get_all_product_details",
             [searchCriteria],
@@ -141,6 +143,7 @@ export async function callOdooMethod(
   kwargs = {}
 ) {
   try {
+    const odooPassword = await AsyncStorage.getItem("@odopassword");
     const response = await fetch(ApiEndPoints.jsonRpcEndpoint, {
       method: "POST",
       headers: {
@@ -155,7 +158,7 @@ export async function callOdooMethod(
           args: [
             ApiEndPoints.odooDatabase,
             uid,
-            "admin",
+            odooPassword,
             model,
             methodName,
             methodArgs,

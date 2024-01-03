@@ -288,6 +288,7 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
 
   async function createsellorder() {
     const uid = await AsyncStorage.getItem("userId");
+    const odooPassword = await AsyncStorage.getItem("@odopassword");
     Loader.isLoading(true);
     if (uid) {
       const userData = {
@@ -313,7 +314,7 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
             args: [
               ApiEndPoints.odooDatabase,
               uid,
-              "admin",
+              odooPassword,
               "sale.order",
               "create",
               [userData],
@@ -349,6 +350,7 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
 
   // async function createsellorder(order) {
   //   const uid = await AsyncStorage.getItem("userId");
+  // const odooPassword = await AsyncStorage.getItem("@odopassword");
   //   console.log("createorder=--array", createorder);
   //   // Loader.isLoading(true);
   //   Loader.isLoading(true);
@@ -376,7 +378,7 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
   //           args: [
   //             ApiEndPoints.odooDatabase,
   //             uid,
-  //             "admin",
+  //             odooPassword,
   //             "sale.order", // Replace with the desired model name
   //             "create",
   //             [userData],
@@ -438,6 +440,7 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
 
   async function searchRead1(e: any) {
     const uid = await AsyncStorage.getItem("userId");
+    const odooPassword = await AsyncStorage.getItem("@odopassword");
     // Loader.isLoading(true);
 
     if (uid) {
@@ -456,7 +459,7 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
             args: [
               ApiEndPoints.jsonRpcEndpoint,
               uid,
-              "admin",
+              odooPassword,
               "res.partner", // Replace with the desired model name
               "search_read",
               [searchCriteria],
@@ -486,6 +489,7 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
 
   async function getmatricunit(e: any) {
     const uid = await AsyncStorage.getItem("userId");
+    const odooPassword = await AsyncStorage.getItem("@odopassword");
     // Loader.isLoading(true);
 
     if (uid) {
@@ -504,7 +508,7 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
             args: [
               ApiEndPoints.odooDatabase,
               uid,
-              "admin",
+              odooPassword,
               "uom.uom", // Replace with the desired model name
               "search_read",
               [searchCriteria],
@@ -549,6 +553,7 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
   // Function to perform a search_read operation
   async function getcustomer() {
     const uid = await AsyncStorage.getItem("userId");
+    const odooPassword = await AsyncStorage.getItem("@odopassword");
     Loader.isLoading(true);
 
     if (uid) {
@@ -573,7 +578,7 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
             args: [
               ApiEndPoints.odooDatabase,
               uid,
-              "admin",
+              odooPassword,
               "res.partner", // Replace with the desired model name
               "search_read",
               [searchCriteria],
@@ -961,6 +966,7 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
 
   async function ProductCatalogapi() {
     const uid = await AsyncStorage.getItem("userId");
+    const odooPassword = await AsyncStorage.getItem("@odopassword");
     Loader.isLoading(true);
     // setLoading(true);
 
@@ -986,7 +992,7 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
             args: [
               ApiEndPoints.odooDatabase,
               uid,
-              "admin",
+              odooPassword,
               "product.product", // Replace with the desired model name
               "search_read",
               [searchCriteria],

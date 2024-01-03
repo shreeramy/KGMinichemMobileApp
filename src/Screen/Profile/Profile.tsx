@@ -152,6 +152,7 @@ const Profile = (props: ProfileProps) => {
   // Define the authenticate function
   async function handleCreatePartner() {
     const uid = await AsyncStorage.getItem("userId");
+    const odooPassword = await AsyncStorage.getItem("@odopassword");
 
     // Loader.isLoading(true);
 
@@ -200,7 +201,7 @@ const Profile = (props: ProfileProps) => {
             args: [
               ApiEndPoints.odooDatabase,
               uid,
-              "admin",
+              odooPassword,
               "res.partner", // Replace with the desired model name
               "create",
               [userData],
@@ -239,6 +240,7 @@ const Profile = (props: ProfileProps) => {
     let userData = {};
     console.log(">>>>>>.13246??>>");
     const uid = await AsyncStorage.getItem("userId");
+    const odooPassword = await AsyncStorage.getItem("@odopassword");
     // Loader.isLoading(true);
     // Load the image file
     // if (!imagepath) {
@@ -294,7 +296,7 @@ const Profile = (props: ProfileProps) => {
             args: [
               ApiEndPoints.odooDatabase,
               uid,
-              "admin",
+              odooPassword,
               "res.partner", // Replace with the desired model name
               "write",
               [userId],

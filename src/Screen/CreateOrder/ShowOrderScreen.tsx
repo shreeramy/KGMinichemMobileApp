@@ -40,7 +40,7 @@ const ShowOrderScreen = (props: ShowOrderScreenProps) => {
   const [customerdata, setcustomerdata] = useState([]);
   const [search, setSearch] = useState("");
   const [searchVisible, setSearchVisible] = useState(false);
-  const odooPassword = "admin";
+  // const odooPassword = "admin";
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [noMoreData, setNoMoreData] = useState(false);
@@ -57,6 +57,7 @@ const ShowOrderScreen = (props: ShowOrderScreenProps) => {
   console.log("callstatus....", callstatus);
   async function searchRead1(e: any) {
     const uid = await AsyncStorage.getItem("userId");
+    const odooPassword = await AsyncStorage.getItem("@odopassword");
     // Loader.isLoading(true);
 
     if (uid) {
@@ -121,6 +122,7 @@ const ShowOrderScreen = (props: ShowOrderScreenProps) => {
   // Function to perform a search_read operation
   // async function searchRead() {
   //   const uid = await AsyncStorage.getItem("userId");
+  // const odooPassword = await AsyncStorage.getItem("@odopassword");
   //   Loader.isLoading(true);
   //   if (uid) {
   //     // for quotation
@@ -198,22 +200,22 @@ const ShowOrderScreen = (props: ShowOrderScreenProps) => {
         const searchCriteria =
           callstatus === "orderhistry"
             ? [
-                ["id", "!=", 0],
-                ["user_id", "=", Number(uid)],
-                ["partner_id", "=", Number(customerid)],
-              ]
+              ["id", "!=", 0],
+              ["user_id", "=", Number(uid)],
+              ["partner_id", "=", Number(customerid)],
+            ]
             : callstatus === "Quotation"
-            ? [
+              ? [
                 ["id", "!=", 0],
                 ["state", "in", ["draft", "sent"]],
                 ["user_id", "=", Number(uid)],
               ]
-            : callstatus === "Order"
-            ? [
-                ["id", "!=", 0],
-                ["state", "not in", ["draft", "sent"]],
-              ]
-            : []; // Default criteria when the status is not recognized
+              : callstatus === "Order"
+                ? [
+                  ["id", "!=", 0],
+                  ["state", "not in", ["draft", "sent"]],
+                ]
+                : []; // Default criteria when the status is not recognized
 
         const limit = 10;
         const offset = (pageNumber - 1) * 10;
@@ -397,10 +399,10 @@ const ShowOrderScreen = (props: ShowOrderScreenProps) => {
                         item.state === "draft"
                           ? "#8B8000"
                           : item.state === "sale"
-                          ? "#C67C4E"
-                          : item.state === "completed"
-                          ? "#0DD157"
-                          : "gray",
+                            ? "#C67C4E"
+                            : item.state === "completed"
+                              ? "#0DD157"
+                              : "gray",
                       padding: Responsive.widthPx(2),
                       borderRadius: Responsive.widthPx(10),
                       width: Responsive.widthPx(32),

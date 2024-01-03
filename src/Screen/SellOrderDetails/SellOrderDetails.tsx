@@ -67,6 +67,7 @@ const SellOrderDetails = (props: SellOrderDetailsProps) => {
 
   async function ProductCatalogapi() {
     const uid = await AsyncStorage.getItem("userId");
+    const odooPassword = await AsyncStorage.getItem("@odopassword");
     Loader.isLoading(true);
     if (uid) {
       const searchCriteria = [
@@ -87,7 +88,7 @@ const SellOrderDetails = (props: SellOrderDetailsProps) => {
             args: [
               ApiEndPoints.odooDatabase,
               uid,
-              "admin",
+              odooPassword,
               "product.product", // Replace with the desired model name
               "search_read",
               [searchCriteria],

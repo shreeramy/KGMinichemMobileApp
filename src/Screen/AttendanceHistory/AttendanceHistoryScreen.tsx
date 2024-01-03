@@ -73,11 +73,12 @@ const AttendanceHistoryScreen = (props: AttendanceHistoryScreenProps) => {
   const odooHost = "http://kg.wangoes.com";
   const odooDatabase = "kg.wangoes.com";
   const jsonRpcEndpoint = `${odooHost}/jsonrpc`;
-  const odooPassword = "admin";
+  // const odooPassword = "admin";
 
   // Function to perform a search_read operation
   async function searchRead() {
     const uid = await AsyncStorage.getItem("userId");
+    const odooPassword = await AsyncStorage.getItem("@odopassword");
     Loader.isLoading(true);
 
     if (uid) {
@@ -222,7 +223,7 @@ const AttendanceHistoryScreen = (props: AttendanceHistoryScreenProps) => {
           renderItem={({ item }) => (
             <TouchableOpacity
               onPress={
-                () => {}
+                () => { }
                 // navigation.navigate(Screen.EditProfile, { userid: item.id })
               }
               style={{}}

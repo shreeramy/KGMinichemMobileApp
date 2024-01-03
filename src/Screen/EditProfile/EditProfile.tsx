@@ -62,10 +62,11 @@ const EditProfile = (props: EditProfileProps) => {
     }
   };
 
-  const odooPassword = "admin";
+  // const odooPassword = "admin";
 
   async function searchRead(e: any) {
     const uid = await AsyncStorage.getItem("userId");
+    const odooPassword = await AsyncStorage.getItem("@odopassword");
     Loader.isLoading(true);
 
     if (uid) {

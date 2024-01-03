@@ -111,6 +111,7 @@ const ProductCatalog = (props: ProductCatalogProps) => {
   // Wroking code
   async function searchRead1(e: any) {
     const uid = await AsyncStorage.getItem("userId");
+    const odooPassword = await AsyncStorage.getItem("@odopassword");
     // Loader.isLoading(true);
 
     if (uid) {
@@ -129,7 +130,7 @@ const ProductCatalog = (props: ProductCatalogProps) => {
             args: [
               ApiEndPoints.odooDatabase,
               uid,
-              "admin",
+              odooPassword,
               "product.template", // Replace with the desired model name
               "search_read",
               [searchCriteria],
@@ -369,14 +370,14 @@ const ProductCatalog = (props: ProductCatalogProps) => {
             data={customerdata}
             keyExtractor={(item) => item.id}
             renderItem={renderItem}
-            // onEndReached={onendreached}
-            // onEndReached={onEndReached}
-            // onEndReachedThreshold={0.1} // Adjust as needed
-            // ListFooterComponent={() =>
-            //   loading ? (
-            //     <ActivityIndicator size="large" color="#0000ff" />
-            //   ) : null
-            // }
+          // onEndReached={onendreached}
+          // onEndReached={onEndReached}
+          // onEndReachedThreshold={0.1} // Adjust as needed
+          // ListFooterComponent={() =>
+          //   loading ? (
+          //     <ActivityIndicator size="large" color="#0000ff" />
+          //   ) : null
+          // }
           />
 
           {/* {loading ? (

@@ -61,6 +61,7 @@ const CustomerScreen = (props: CustomerScreenProps) => {
   async function searchRead1(e: any) {
     console.log('searchRead1-->', 'searchRead1');
     const uid = await AsyncStorage.getItem("userId");
+    const odooPassword = await AsyncStorage.getItem("@odopassword");
     // Loader.isLoading(true);
 
     if (uid) {
@@ -79,7 +80,7 @@ const CustomerScreen = (props: CustomerScreenProps) => {
             args: [
               ApiEndPoints.odooDatabase,
               uid,
-              "admin",
+              odooPassword,
               "res.partner", // Replace with the desired model name
               "search_read",
               [searchCriteria],
