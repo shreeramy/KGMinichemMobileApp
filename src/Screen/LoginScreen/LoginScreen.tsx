@@ -72,6 +72,7 @@ const LoginScreen = (props: LoginScreenProps) => {
       const stringValue = JSON.stringify(authenticationResult);
       console.log("stringValue-->");
       loc_global.userData = await AsyncStorage.setItem("userId", stringValue);
+      await AsyncStorage.setItem("@odopassword", password);
       // Handle successful authentication
       navigation.navigate(Screen.HomeScreen);
       console.log("Authentication successful");

@@ -3,6 +3,7 @@ import React from "react";
 import { Text, StyleSheet, Image, View, TouchableOpacity } from "react-native";
 import { Responsive, Images, Color, Fonts } from "../Helper";
 import moment from "moment";
+import { ApiEndPoints } from "../NetworkCall";
 
 interface AppHeaderProps {
   drawermenu?: boolean;
@@ -51,17 +52,21 @@ const AppHeader = (props: AppHeaderProps) => {
   //   }
   // };
 
-  const odooHost = "http://kg.wangoes.com";
-  const odooDatabase = "kg.wangoes.com";
-  const jsonRpcEndpoint = `${odooHost}/jsonrpc`;
-  const odooPassword = "admin";
+  // const odooHost = "http://kg.wangoes.com";
+  // const odooDatabase = "kg.wangoes.com";
+  // const jsonRpcEndpoint = `${odooHost}/jsonrpc`;
+  // const odooPassword = "admin";
 
   async function searchRead1() {
     const uid = await AsyncStorage.getItem("userId");
+    const odooPassword = await AsyncStorage.getItem("@odopassword");
+    console.log("odooPassword=====>", odooPassword)
+
     console.log("uid in App header::::", uid)
     if (uid) {
       const searchCriteria = [["id", "=", uid]];
-      const response = await fetch(jsonRpcEndpoint, {
+      // const odooPassword = uid;
+      const response = await fetch(ApiEndPoints.jsonRpcEndpoint, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -73,7 +78,7 @@ const AppHeader = (props: AppHeaderProps) => {
             service: "object",
             method: "execute_kw",
             args: [
-              odooDatabase,
+              ApiEndPoints.odooDatabase,
               uid,
               odooPassword,
               "res.users", // Replace with the desired model name
@@ -88,8 +93,8 @@ const AppHeader = (props: AppHeaderProps) => {
                   "last_check_in",
                   "last_check_out",
                   "attendance_id",
-                  "employee_id"
-                  // "image_1920",
+                  "employee_id",
+                  "image_1920",
                 ],
               ],
               {},
@@ -99,7 +104,7 @@ const AppHeader = (props: AppHeaderProps) => {
       });
 
       const responseData = await response.json();
-      console.log("search_rea>>> in app header", responseData);
+      // console.log("search_rea>>> in app header", responseData);
       if (responseData.result) {
         const customdata = responseData.result;
         setcustomerdata(customdata);

@@ -96,7 +96,7 @@ const HomeScreen = (props: HomeScreenProps) => {
   const [loggedIn, setLoggedIn] = useState<boolean>();
   console.log("loggedIn::::", loggedIn)
   const [toggleForTimer, setToggleForTimer] = useState(false)
-  console.log("toggleForTimer", toggleForTimer)
+  // console.log("toggleForTimer", toggleForTimer)
   const [loginTime, setLoginTime] = useState(null);
   const [totalLoggedInTime, setTotalLoggedInTime] = useState(0);
   const [timerInterval, setTimerInterval] = useState(null);
@@ -106,29 +106,33 @@ const HomeScreen = (props: HomeScreenProps) => {
   const [showdate, setshowdate] = useState(moment().format('DD-MM-YYYY') || "");
   const [emplotId, setemplotId] = useState();
   const [customerdata, setcustomerdata] = React.useState([]);
-  // console.log("showtime", showtime)
-  const [attendanceId, setattendanceId] = useState();
   // console.log("emplotId", emplotId)
+  const [attendanceId, setattendanceId] = useState();
+  // console.log("attendanceId", attendanceId)
   const [getattendece, setgetattendece] = useState([]);
   // const [attendeceid, setattendeceid] = useState();
   // console.log("attendeceid",attendeceid)
   const [lastCheckout, setLastCheckout] = useState<string>('')
+  const [lastCheckoutDate, setLastCheckoutDate] = useState<string>('')
+  const [lastCheckinDate, setLastCheckinDate] = useState<string>('')
   const [lastCheckoutFromEmploy, setLastCheckoutFromEmploy] = useState<string>('')
   const [lastCheckIn, setLastCheckedIn] = useState<string>('')
-  console.log("attendanceId::::::", attendanceId)
+  // console.log("attendanceId::::::", attendanceId)
   // console.log("lastCheckIn======>", lastCheckIn)
+  console.log("lastCheckout======>", lastCheckout)
 
   const odooHost = "http://kg.wangoes.com";
   const odooDatabase = "kg.wangoes.com";
   const jsonRpcEndpoint = `${odooHost}/jsonrpc`;
-  const odooPassword = "admin";
+
 
   async function searchRead1() {
     const uid = await AsyncStorage.getItem("userId");
-    console.log("uid in App header::::", uid)
+    const odooPassword = await AsyncStorage.getItem("@odopassword");
+    console.log("uid", uid)
     if (uid) {
       const searchCriteria = [["id", "=", uid]];
-      const response = await fetch(jsonRpcEndpoint, {
+      const response = await fetch(ApiEndPoints.jsonRpcEndpoint, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -140,7 +144,7 @@ const HomeScreen = (props: HomeScreenProps) => {
             service: "object",
             method: "execute_kw",
             args: [
-              odooDatabase,
+              ApiEndPoints.odooDatabase,
               uid,
               odooPassword,
               "res.users", // Replace with the desired model name
@@ -166,19 +170,35 @@ const HomeScreen = (props: HomeScreenProps) => {
       });
 
       const responseData = await response.json();
-      console.log("search_rea>>> in home screen", responseData);
+      // console.log("search_rea>>> in home screen", responseData);
       if (responseData.result) {
         const customdata = responseData.result;
         setemplotId(responseData.result[0].employee_id[0])
         setattendanceId(responseData.result[0].attendance_id[0])
 
-        if (responseData.result[0].last_check_out === false) {
+        if (responseData.result[0].last_check_out === false && responseData.result[0].last_check_in === false) {
+          setLoggedIn(true)
+          setLastCheckout("00:00:00")
+          setLastCheckedIn("00:00:00")
+        } else if (responseData.result[0].last_check_out === false) {
           setLoggedIn(false)
-        } else {
+        } else if (responseData.result[0].last_check_out !== false) {
           setLoggedIn(true)
         }
-        setLastCheckout(responseData.result[0].last_check_out)
-        setLastCheckedIn(responseData.result[0].last_check_in)
+
+        const lastLocalCheckoutTime = moment(responseData.result[0].last_check_out).add({ hours: 5, minutes: 30 }).format('hh:mm:ss')
+        const lastLocalCheckinTime = moment(responseData.result[0].last_check_in).add({ hours: 5, minutes: 30 }).format('hh:mm:ss')
+        if (responseData.result[0].last_check_out === false && responseData.result[0].last_check_in === false) {
+
+          setLastCheckout("00:00:00")
+          setLastCheckedIn("00:00:00")
+        } else {
+          setLastCheckout(lastLocalCheckoutTime)
+          setLastCheckedIn(lastLocalCheckinTime)
+        }
+
+        setLastCheckinDate(responseData.result[0].last_check_in)
+        setLastCheckoutDate(responseData.result[0].last_check_out)
         setcustomerdata(customdata);
       } else {
         console.error("search_read error://..", responseData.error);
@@ -204,7 +224,7 @@ const HomeScreen = (props: HomeScreenProps) => {
 
   async function getattendance() {
     const uid = await AsyncStorage.getItem("userId");
-    console.log("emplotId in getattendance function>>>>>>>>>>>>>>", emplotId)
+    // console.log("emplotId in getattendance function>>>>>>>>>>>>>>", emplotId)
     // Loader.isLoading(true);
 
     if (uid) {
@@ -245,7 +265,7 @@ const HomeScreen = (props: HomeScreenProps) => {
 
 
       const responseData = await response.json();
-      console.log("responseData for getattendance ::", responseData);
+      // console.log("responseData for getattendance ::", responseData);
       if (responseData.result.length !== 0) {
         // console.log("getattendance inner function_______")
         // Loader.isLoading(false);
@@ -592,9 +612,9 @@ const HomeScreen = (props: HomeScreenProps) => {
   async function editattandece() {
     const uid = await AsyncStorage.getItem("userId");
     const gettimedate = await AsyncStorage.getItem("formattedDateTime1");
-    console.log("gettimedate in clockout======", gettimedate);
+    // console.log("gettimedate in clockout======", gettimedate);
     console.log("senddatetime in clockout=======", senddatetime);
-    console.log("emplotId in clockout=======", emplotId);
+    console.log("attendanceId in clockout=======", attendanceId);
     // Loader.isLoading(true);
     Loader.isLoading(true);
     // console.log(
@@ -606,8 +626,8 @@ const HomeScreen = (props: HomeScreenProps) => {
     // );
     // const utcTime = moment(currentDate, "YYYY-MM-DDTHH:mm").utc()
     const userData = {
-      employee_id: emplotId,
-      check_in: gettimedate,
+      // employee_id: emplotId,
+      // check_in: gettimedate,
       check_out: senddatetime,
     };
     // console.log("userData editattandece:::", userData)
@@ -1059,7 +1079,7 @@ const HomeScreen = (props: HomeScreenProps) => {
                         color: Color.black,
                       }}
                     >
-                      {lastCheckout !== "false" ? lastCheckout?.slice(10, 20) : ''}
+                      {lastCheckout !== "false" ? lastCheckout : ''}
                     </Text>
                   ) : (
                     <Text
@@ -1069,7 +1089,7 @@ const HomeScreen = (props: HomeScreenProps) => {
                         color: Color.black,
                       }}
                     >
-                      {lastCheckIn !== "false" ? lastCheckIn?.slice(10, 20) : ''}
+                      {lastCheckIn !== "false" ? lastCheckIn : ''}
                     </Text>
                   )}
                 </View>
@@ -1081,7 +1101,7 @@ const HomeScreen = (props: HomeScreenProps) => {
                   {!loggedIn ? (
                     <Text style={{ color: Color.text_color, fontSize: 18 }}>
                       {/* {getattendece[0]?.check_in.slice(0, 10)} */}
-                      {lastCheckIn !== "false" ? moment(lastCheckIn?.slice(0, 10)).format(
+                      {lastCheckinDate !== "false" ? moment(lastCheckinDate?.slice(0, 10)).format(
                         "DD-MM-YYYY"
                       ) : null}
                     </Text>
@@ -1090,7 +1110,10 @@ const HomeScreen = (props: HomeScreenProps) => {
                       {/* {moment(senddatetime.slice(0, 10)).format(
                         "DD-MM-YYYY"
                       )} */}
-                      {moment.utc(resultUTC).tz('Asia/Kolkata').format('DD-MM-YYYY')}
+                      {/* {moment.utc(resultUTC).tz('Asia/Kolkata').format('DD-MM-YYYY')} */}
+                      {lastCheckoutDate !== "false" ? moment(lastCheckoutDate?.slice(0, 10)).format(
+                        "DD-MM-YYYY"
+                      ) : null}
                     </Text>
                   )}
                 </View>
