@@ -117,7 +117,7 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
     },
     {
       id: 2,
-      name: "Card",
+      name: "Credit Card",
     },
     {
       id: 3,
@@ -127,6 +127,19 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
       id: 4,
       name: "PhonePe",
     },
+    {
+      id: 5,
+      name: "Debit Card",
+    },
+    {
+      id: 6,
+      name: "Net Banking",
+    },
+    {
+      id: 7,
+      name: "Other UPI",
+    },
+
     // Add more payment methods as needed
   ]);
 
@@ -438,10 +451,15 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
   //   }
   // };
 
+  // useEffect(() => {
+  //   searchRead1()
+  // }, [])
+
   async function searchRead1(e: any) {
+    console.log('searchRead1-->', 'searchRead1');
     const uid = await AsyncStorage.getItem("userId");
     const odooPassword = await AsyncStorage.getItem("@odopassword");
-    // Loader.isLoading(true);
+    Loader.isLoading(true);
 
     if (uid) {
       const searchCriteria = [["name", "ilike", e]];
@@ -457,7 +475,7 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
             service: "object",
             method: "execute_kw",
             args: [
-              ApiEndPoints.jsonRpcEndpoint,
+              ApiEndPoints.odooDatabase,
               uid,
               odooPassword,
               "res.partner", // Replace with the desired model name
@@ -475,9 +493,9 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
         Loader.isLoading(false);
         const customdata = responseData.result;
         setcustomerdata(customdata);
-        // console.log("search_read result:::::", responseData.result);
+        //console.log("search_read result:::::", responseData.result);
       } else {
-        // console.error("search_read error://..", responseData.error);
+        console.error("search_read error://..", responseData.error);
         return null;
       }
 
@@ -486,6 +504,7 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
 
     return null;
   }
+
 
   async function getmatricunit(e: any) {
     const uid = await AsyncStorage.getItem("userId");
@@ -589,7 +608,7 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
       });
 
       const responseData = await response.json();
-      console.log("responseData.result in getcustomer", responseData)
+      // console.log("responseData.result in getcustomer", responseData)
       if (responseData.result) {
 
         Loader.isLoading(false);
@@ -1003,7 +1022,7 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
       });
 
       const responseData = await response.json();
-      console.log("responseData.result.length in ProductCatalogapi", responseData)
+      // console.log("responseData.result.length in ProductCatalogapi", responseData)
       if (responseData.result.length > 0) {
 
         Loader.isLoading(false);

@@ -21,6 +21,7 @@ import {
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import Odoo from "react-native-odoo-promise-based";
+import moment from 'moment-timezone';
 import {
   AppButton,
   AppContainer,
@@ -44,6 +45,7 @@ interface AttendanceHistoryScreenProps {
 const AttendanceHistoryScreen = (props: AttendanceHistoryScreenProps) => {
   const { navigation, text, commonActions } = props;
   const [customerdata, setcustomerdata] = useState([]);
+  // console.log("customerdata AttendanceHistoryScreen:::", customerdata)
   const [prosearch, setprosearch] = useState("");
 
   React.useEffect(() => {
@@ -115,7 +117,7 @@ const AttendanceHistoryScreen = (props: AttendanceHistoryScreenProps) => {
       });
 
       const responseData = await response.json();
-
+      // console.log("responseData:::", responseData.result)
       if (responseData.result) {
         Loader.isLoading(false);
         const customdata = responseData.result;
@@ -127,6 +129,66 @@ const AttendanceHistoryScreen = (props: AttendanceHistoryScreenProps) => {
 
       // return responseData.result;
     }
+
+    return null;
+  }
+
+  const getLocationData = async (item) => {
+    Loader.isLoading(true);
+    const uid = await AsyncStorage.getItem("userId");
+    const odooPassword = await AsyncStorage.getItem("@odopassword");
+
+
+    if (uid) {
+      const searchCriteria = [
+        ["attendance_id", "=", item.id]
+      ];
+      // const searchCriteria = [["check_out", "!=", false]];
+      // if (name){
+      //   searchCriteria.append(["name", "=", name])
+      // }
+      // const searchCriteria = [];
+      // Replace with your search criteria
+
+      const response = await fetch(ApiEndPoints.jsonRpcEndpoint, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          jsonrpc: "2.0",
+          method: "call",
+          params: {
+            service: "object",
+            method: "execute_kw",
+            args: [
+              ApiEndPoints.odooDatabase,
+              uid,
+              odooPassword,
+              "hrm.location", // Replace with the desired model name
+              "search_read",
+              [searchCriteria],
+              {},
+            ],
+          },
+        }),
+      });
+
+      const responseData = await response.json();
+      // console.log("responseData:::", responseData.result)
+      if (responseData.result) {
+        Loader.isLoading(false);
+        navigation.navigate(Screen.LiveLocationScreen, { attendanceData: responseData.result })
+        // const customdata = responseData.result;
+        // setcustomerdata(customdata);
+      } else {
+        console.error("search_read error://..", responseData.error);
+        return null;
+      }
+
+      // return responseData.result;
+    }
+
 
     return null;
   }
@@ -219,50 +281,64 @@ const AttendanceHistoryScreen = (props: AttendanceHistoryScreenProps) => {
         </View> */}
         <FlatList
           data={customerdata}
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) => (
-            <TouchableOpacity
-              onPress={
-                () => { }
-                // navigation.navigate(Screen.EditProfile, { userid: item.id })
-              }
-              style={{}}
-            >
-              <View style={styles.item}>
-                <View
-                  style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                    justifyContent: "space-around",
-                    width: Responsive.widthPx(85),
-                  }}
-                >
-                  <View style={styles.attendanceview}>
-                    <Image
-                      resizeMode="contain"
-                      style={{ width: Responsive.widthPx(10) }}
-                      source={Images.checkin}
-                    />
-                    <View>
-                      <Text style={styles.listheadingtext}>Chock In</Text>
-                      <Text style={styles.listtext}>{item.check_in}</Text>
+          keyExtractor={(item: any) => item.id}
+          renderItem={({ item }) => {
+
+            return (
+              <TouchableOpacity
+                onPress={
+                  () => { getLocationData(item) }
+                  // navigation.navigate(Screen.EditProfile, { userid: item.id })
+                }
+                style={{}}
+              >
+                <View style={styles.item}>
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      alignItems: "center",
+                      justifyContent: "space-around",
+                      width: Responsive.widthPx(85),
+                    }}
+                  >
+                    <View style={styles.attendanceview}>
+                      <Image
+                        resizeMode="contain"
+                        style={{ width: Responsive.widthPx(10) }}
+                        source={Images.checkin}
+                      />
+                      <View>
+                        <Text style={styles.listheadingtext}>Check In</Text>
+                        {
+                          item.check_in ?
+                            <Text style={styles.listtext}>{moment(item.check_in).add({ hours: 5, minutes: 30 }).format('YY-MM-DD hh:mm:ss')}</Text>
+                            :
+                            null
+                        }
+                      </View>
                     </View>
-                  </View>
-                  <View style={styles.attendanceview}>
-                    <Image
-                      resizeMode="contain"
-                      style={{ width: Responsive.widthPx(10) }}
-                      source={Images.checkin}
-                    />
-                    <View>
-                      <Text style={styles.listheadingtext}>Chock out</Text>
-                      <Text style={styles.listtext}>{item.check_out}</Text>
+                    <View style={styles.attendanceview}>
+                      <Image
+                        resizeMode="contain"
+                        style={{ width: Responsive.widthPx(10) }}
+                        source={Images.checkin}
+                      />
+                      <View>
+                        <Text style={styles.listheadingtext}>Check out</Text>
+                        {
+                          item.check_out ?
+                            <Text style={styles.listtext}>{moment(item.check_out).add({ hours: 5, minutes: 30 }).format('YY-MM-DD hh:mm:ss')}</Text>
+                            :
+                            null
+                        }
+
+                      </View>
                     </View>
                   </View>
                 </View>
-              </View>
-            </TouchableOpacity>
-          )}
+              </TouchableOpacity>
+            )
+          }}
         />
       </View>
       {/* </AppScrollview> */}

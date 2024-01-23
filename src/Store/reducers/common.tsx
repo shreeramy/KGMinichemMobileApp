@@ -1,6 +1,12 @@
 const initialState = {
-  profile_Token:'',
-  user_id:''
+  profile_Token: '',
+  user_id: '',
+  filterItems: [],
+  orderModeData: [],
+  deliveryModeData: [],
+  invoiceModeData: [],
+  paymentModeData: []
+
 }
 
 export default function common(state = initialState, action: any = {}) {
@@ -18,6 +24,40 @@ export default function common(state = initialState, action: any = {}) {
       }
     }
 
+    case 'filterItemAction': {
+      return {
+        ...state,
+        filterItems: action.payload
+      }
+    }
+
+    case 'setOrderModeAction': {
+      return {
+        ...state,
+        orderModeData: action.payload
+      }
+    }
+
+    case 'setDeliveryModeAction': {
+      return {
+        ...state,
+        deliveryModeData: action.payload
+      }
+    }
+
+    case 'setInvoiceModeAction': {
+      return {
+        ...state,
+        invoiceModeData: action.payload
+      }
+    }
+
+    case 'setPaymentModeAction': {
+      return {
+        ...state,
+        paymentModeData: action.payload
+      }
+    }
 
     default:
       return state

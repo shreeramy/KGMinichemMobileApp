@@ -146,7 +146,8 @@ const Locationsendscreen = (props: LocationsendscreenProps) => {
         (position) => {
           const currentLongitude = position.coords.longitude;
           const currentLatitude = position.coords.latitude;
-          console.log(currentLongitude, currentLatitude);
+          // console.log("currentLongitude", currentLongitude);
+          // console.log("currentLatitude", currentLatitude);
           setLongitude(currentLongitude);
           setLatitude(currentLatitude);
         },
@@ -196,7 +197,12 @@ const Locationsendscreen = (props: LocationsendscreenProps) => {
       imageFilePath,
       "base64"
     );
-    const atendpassid = await AsyncStorage.getItem("attendata");
+    console.log("imageResponse::", imageResponse)
+    // TODO
+    const atendpassid = await AsyncStorage.getItem("attendanceId");
+    console.log("atendpassid:::", atendpassid)
+    console.log("latitude:::", latitude)
+    console.log("longitude:::", longitude)
     Loader.isLoading(true);
     if (uid) {
       const methodName = "create_location";
@@ -219,7 +225,7 @@ const Locationsendscreen = (props: LocationsendscreenProps) => {
               image: imageResponse,
             },
           ],
-        ]
+        ], {}
       );
       console.log(">>>>>>>", createLocationResult);
       console.log("uselocationData.....", locationData);
@@ -308,7 +314,7 @@ const Locationsendscreen = (props: LocationsendscreenProps) => {
             label={"Send location"}
             // containerStyle={styles.btnsyle}
             onPress={() => sentuserlocationdata()}
-            // onPress={() => sendlatlong()}
+          // onPress={() => sendlatlong()}
           />
         </View>
       </AppScrollview>

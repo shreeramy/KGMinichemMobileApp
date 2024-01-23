@@ -128,10 +128,10 @@ const AppHeader = (props: AppHeaderProps) => {
           "employId",
           responseData.result[0].employee_id[0].toString()
         );
-        const attendance_id = await AsyncStorage.getItem("attendanceId");
+        // const attendance_id = await AsyncStorage.getItem("attendanceId");
         console.log(
           "SessionData1111",
-          attendance_id,
+          // attendance_id,
           responseData.result[0].attendance_id[0]
         );
       } else {

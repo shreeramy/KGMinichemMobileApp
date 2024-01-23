@@ -61,6 +61,67 @@ const drawerList = [
 const AppDrawer = ({ ...props }) => {
   const [profiledata, setProfiledata] = React.useState("");
   const [customerdata, setcustomerdata] = React.useState([]);
+  // console.log("customerdata in drwaer===>", customerdata)
+
+  async function searchRead1() {
+    const uid = await AsyncStorage.getItem("userId");
+    const odooPassword = await AsyncStorage.getItem("@odopassword");
+
+    console.log("uid in App header::::", uid)
+    if (uid) {
+      const searchCriteria = [["id", "=", uid]];
+      // const odooPassword = uid;
+      const response = await fetch(ApiEndPoints.jsonRpcEndpoint, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          jsonrpc: "2.0",
+          method: "call",
+          params: {
+            service: "object",
+            method: "execute_kw",
+            args: [
+              ApiEndPoints.odooDatabase,
+              uid,
+              odooPassword,
+              "res.users", // Replace with the desired model name
+              "search_read",
+              // [searchCriteria],
+              [
+                searchCriteria,
+                [
+                  "id",
+                  "email",
+                  "name",
+                  "image_1920",
+                ],
+              ],
+              {},
+            ],
+          },
+        }),
+      });
+
+      const responseData = await response.json();
+      if (responseData.result) {
+        const customdata = responseData.result;
+        setcustomerdata(customdata);
+
+      } else {
+        console.error("search_read error://..", responseData.error);
+        return null;
+      }
+
+      // return responseData.result;
+    }
+
+    return null;
+  }
+  React.useEffect(() => {
+    searchRead1()
+  }, [])
   React.useEffect(() => {
     //  Loader.isLoading(false)
     const abortController = new AbortController();
@@ -149,10 +210,10 @@ const AppDrawer = ({ ...props }) => {
     }
   };
 
-  const odooHost = "http://kg.wangoes.com";
-  const odooDatabase = "kg.wangoes.com";
-  const jsonRpcEndpoint = `${odooHost}/jsonrpc`;
-  const odooPassword = "admin";
+  // const odooHost = "http://kg.wangoes.com";
+  // const odooDatabase = "kg.wangoes.com";
+  // const jsonRpcEndpoint = `${odooHost}/jsonrpc`;
+  // const odooPassword = "admin";
 
   const logout = async () => {
     try {

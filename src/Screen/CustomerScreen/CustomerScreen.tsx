@@ -95,8 +95,8 @@ const CustomerScreen = (props: CustomerScreenProps) => {
       if (responseData.result) {
         Loader.isLoading(false);
         const customdata = responseData.result;
+        console.log("search_read result in customer screen:::::", responseData.result);
         setcustomerdata(customdata);
-        //console.log("search_read result:::::", responseData.result);
       } else {
         console.error("search_read error://..", responseData.error);
         return null;

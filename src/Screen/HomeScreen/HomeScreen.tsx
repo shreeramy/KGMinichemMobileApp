@@ -94,7 +94,7 @@ const HomeScreen = (props: HomeScreenProps) => {
   };
 
   const [loggedIn, setLoggedIn] = useState<boolean>();
-  console.log("loggedIn::::", loggedIn)
+  // console.log("loggedIn::::", loggedIn)
   const [toggleForTimer, setToggleForTimer] = useState(false)
   // console.log("toggleForTimer", toggleForTimer)
   const [loginTime, setLoginTime] = useState(null);
@@ -111,7 +111,7 @@ const HomeScreen = (props: HomeScreenProps) => {
   // console.log("attendanceId", attendanceId)
   const [getattendece, setgetattendece] = useState([]);
   // const [attendeceid, setattendeceid] = useState();
-  // console.log("attendeceid",attendeceid)
+  // console.log("attendeceid", attendeceid)
   const [lastCheckout, setLastCheckout] = useState<string>('')
   const [lastCheckoutDate, setLastCheckoutDate] = useState<string>('')
   const [lastCheckinDate, setLastCheckinDate] = useState<string>('')
@@ -119,7 +119,7 @@ const HomeScreen = (props: HomeScreenProps) => {
   const [lastCheckIn, setLastCheckedIn] = useState<string>('')
   // console.log("attendanceId::::::", attendanceId)
   // console.log("lastCheckIn======>", lastCheckIn)
-  console.log("lastCheckout======>", lastCheckout)
+  // console.log("lastCheckout======>", lastCheckout)
 
   const odooHost = "http://kg.wangoes.com";
   const odooDatabase = "kg.wangoes.com";
@@ -170,7 +170,7 @@ const HomeScreen = (props: HomeScreenProps) => {
       });
 
       const responseData = await response.json();
-      // console.log("search_rea>>> in home screen", responseData);
+      console.log("search_rea>>> in home screen", responseData.result);
       if (responseData.result) {
         const customdata = responseData.result;
         setemplotId(responseData.result[0].employee_id[0])
@@ -185,7 +185,6 @@ const HomeScreen = (props: HomeScreenProps) => {
         } else if (responseData.result[0].last_check_out !== false) {
           setLoggedIn(true)
         }
-
         const lastLocalCheckoutTime = moment(responseData.result[0].last_check_out).add({ hours: 5, minutes: 30 }).format('hh:mm:ss')
         const lastLocalCheckinTime = moment(responseData.result[0].last_check_in).add({ hours: 5, minutes: 30 }).format('hh:mm:ss')
         if (responseData.result[0].last_check_out === false && responseData.result[0].last_check_in === false) {
@@ -584,20 +583,25 @@ const HomeScreen = (props: HomeScreenProps) => {
         Utility.showSuccessToast("Clocked in successfully");
         // navigation.navigate(Screen.ShowOrderScreen);
         const customdata = responseData.result;
-        // console.log("?customdata>>......", customdata);
+        // await AsyncStorage.setItem("attendanceId", customdata);
+
         setLoggedIn(false);
         setToggleForTimer(true)
         // const localDateTime = moment.utc(utcDateTime).local().format('YYYY-MM-DD HH:mm:ss');
 
         // handleLogin();
-        console.log("resultUTC:::", resultUTC)
+        // console.log("resultUTC:::", resultUTC)
         const resultTime = moment.utc(resultUTC).tz('Asia/Kolkata').format('HH:mm:ss');
         const time12Hour = moment(resultTime, 'HH:mm:ss').format('hh:mm:ss');
         setshowtime(time12Hour)
         // setshowtime(`${hours}:${minutes}:${seconds}`);
         setshowdate(`${day}-${month}-${year}`);
         // console.log("create attrhhs>>,,...", responseData.result);
+        console.log("?setattendanceId>>......", customdata);
         setattendanceId(customdata);
+        await AsyncStorage.setItem("attendanceId", customdata.toString());
+
+
       } else {
         Loader.isLoading(false);
         Utility.showDangerToast("already clocked in , can't clocked in again");
@@ -617,7 +621,7 @@ const HomeScreen = (props: HomeScreenProps) => {
     const odooPassword = await AsyncStorage.getItem("@odopassword");
     // console.log("gettimedate in clockout======", gettimedate);
     console.log("senddatetime in clockout=======", senddatetime);
-    console.log("attendanceId in clockout=======", attendanceId);
+    console.log("uid in clockout=======", uid);
     // Loader.isLoading(true);
     Loader.isLoading(true);
     // console.log(
