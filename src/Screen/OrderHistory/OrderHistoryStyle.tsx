@@ -5,7 +5,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
-    // justifyContent: "center",
+    
   },
   item: {
     padding: 20,
@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
     borderRadius: Responsive.widthPx(5),
   },
   headerview: {
-    // marginTop: Responsive.heightPx(2),
+    
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    // width: Responsive.widthPx(90),
+    
   },
   listtextheading: { color: Color.text_color, fontWeight: "bold" },
   listtext: { color: Color.text_color },

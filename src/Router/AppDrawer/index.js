@@ -2,31 +2,24 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as React from "react";
 import {
   FlatList,
-  TouchableOpacity,
-  Text,
-  View,
-  StyleSheet,
-  ImageBackground,
   Image,
+  ImageBackground,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
-// import { Image } from 'react-native-elements/dist/image/Image'
 
 import {
   Color,
   Fonts,
   Images,
   Responsive,
-  Screen,
-  Storage,
+  Screen
 } from "../../Helper";
 import { ApiEndPoints, ApiServices } from "../../NetworkCall";
 
 const drawerList = [
-  // {
-  //   key: Screen.HomeScreen,
-  //   name: "Home",
-  //   headingicon: Images.activehome,
-  // },
   {
     key: Screen.CustomerScreen,
     name: "Customer",
@@ -42,11 +35,6 @@ const drawerList = [
     name: "Attendance",
     headingicon: Images.Attendance,
   },
-  // {
-  //   key: Screen.LiveLocationScreen,
-  //   name: "Real time location track",
-  //   headingicon: Images.Realtimelocationtrack,
-  // },
   {
     key: Screen.ShowOrderScreen,
     name: "Order",
@@ -61,16 +49,13 @@ const drawerList = [
 const AppDrawer = ({ ...props }) => {
   const [profiledata, setProfiledata] = React.useState("");
   const [customerdata, setcustomerdata] = React.useState([]);
-  // console.log("customerdata in drwaer===>", customerdata)
 
   async function searchRead1() {
     const uid = await AsyncStorage.getItem("userId");
     const odooPassword = await AsyncStorage.getItem("@odopassword");
 
-    console.log("uid in App header::::", uid)
     if (uid) {
       const searchCriteria = [["id", "=", uid]];
-      // const odooPassword = uid;
       const response = await fetch(ApiEndPoints.jsonRpcEndpoint, {
         method: "POST",
         headers: {
@@ -86,9 +71,8 @@ const AppDrawer = ({ ...props }) => {
               ApiEndPoints.odooDatabase,
               uid,
               odooPassword,
-              "res.users", // Replace with the desired model name
+              "res.users", 
               "search_read",
-              // [searchCriteria],
               [
                 searchCriteria,
                 [
@@ -113,8 +97,6 @@ const AppDrawer = ({ ...props }) => {
         console.error("search_read error://..", responseData.error);
         return null;
       }
-
-      // return responseData.result;
     }
 
     return null;
@@ -123,10 +105,8 @@ const AppDrawer = ({ ...props }) => {
     searchRead1()
   }, [])
   React.useEffect(() => {
-    //  Loader.isLoading(false)
     const abortController = new AbortController();
     props.navigation.addListener("focus", () => {
-      // userinfo()
     });
     return () => {
       abortController.abort();
@@ -138,7 +118,6 @@ const AppDrawer = ({ ...props }) => {
       if (response.data.success == true) {
         setProfiledata(response.data.result);
       }
-      //  console.log("this is profile data>>>>>>>@@@@@@@@?????????",profiledata)
     });
   };
   const onPressDrawer = (key) => {
@@ -147,23 +126,6 @@ const AppDrawer = ({ ...props }) => {
 
   const renderItem = ({ item }) => {
     return (
-      // <>
-      //   {
-      //   profiledata.is_provider == 1 ?
-      //     <TouchableOpacity style={styles.listContainer} onPress={() => { onPressDrawer(item.key) }}>
-      //       <Text style={styles.textStyle}>{item.name}</Text>
-      //     </TouchableOpacity>
-      //   :
-      //     // listHiden({item})
-
-      //   item.name != 'All Requests' && item.name != 'My Requests' ?
-      //     <TouchableOpacity style={styles.listContainer} onPress={() => { onPressDrawer(item.key) }}>
-      //       <Text style={styles.textStyle}>{item.name}</Text>
-      //     </TouchableOpacity>
-      //   :
-      //   null
-      //   }
-      // </>
       <View>
         <TouchableOpacity
           style={styles.listContainer}
@@ -210,14 +172,8 @@ const AppDrawer = ({ ...props }) => {
     }
   };
 
-  // const odooHost = "http://kg.wangoes.com";
-  // const odooDatabase = "kg.wangoes.com";
-  // const jsonRpcEndpoint = `${odooHost}/jsonrpc`;
-  // const odooPassword = "admin";
-
   const logout = async () => {
     try {
-      // await AsyncStorage.removeItem("userToken");
       await AsyncStorage.removeItem("userId");
       props.navigation.replace("LoginScreen");
     } catch (error) {
@@ -226,7 +182,6 @@ const AppDrawer = ({ ...props }) => {
   };
   return (
     <ImageBackground source={Images.profilebgsummary} style={styles.container}>
-      {/* <View style={styles.viewline} /> */}
       <ImageBackground
         resizeMode="cover"
         borderBottomLeftRadius={15}
@@ -251,11 +206,9 @@ const AppDrawer = ({ ...props }) => {
             <View style={{ marginLeft: 5 }}>
               <Text style={styles.nameTitlestyle}>
                 {customerdata[0]?.name}
-                {/* {profiledata.first_name} {profiledata.last_name} */}
               </Text>
               <Text style={{ color: "#fff" }}>
                 {customerdata[0]?.email}
-                {/* {profiledata.first_name} {profiledata.last_name} */}
               </Text>
             </View>
           </View>
@@ -271,19 +224,13 @@ const AppDrawer = ({ ...props }) => {
             ItemSeparatorComponent={() => <View style={styles.separator} />}
             keyExtractor={(_, index) => `drawer${index}`}
           />
-          {/* <TouchableOpacity
-            style={styles.listContainer}
-            onPress={() => props.navigation.navigate('EnquiryScreen', { userid: profiledata.id })}
-          >
-            <Text style={styles.textStyle}>Enquiry</Text>
-          </TouchableOpacity> */}
           <View>
             <View style={styles.separator} />
             <View
               style={{
                 flexDirection: "row",
                 alignItems: "center",
-                // marginLeft: 5,
+
                 marginTop: 12,
               }}
             >
@@ -306,15 +253,8 @@ export default AppDrawer;
 
 const styles = StyleSheet.create({
   listContainer: {
-    // paddingTop: 5
-    // paddingLeft: 30
-    // margin:
-    // marginTop: 10,
   },
   listContainer1: {
-    // paddingTop: 5
-    // paddingLeft: 30
-    // margin:
     backgroundColor: "red",
   },
   container: {
@@ -323,22 +263,18 @@ const styles = StyleSheet.create({
   profileDetails: {
     marginLeft: Responsive.widthPx(5),
     height: Responsive.widthPx(116),
-    // backgroundColor: "red",
     marginTop: Responsive.heightPx(4),
   },
   viewline: {
     height: Responsive.widthPx(13),
-    // backgroundColor: "red",
   },
   profileNameview: {
     height: Responsive.widthPx(30),
-    // backgroundColor: "red",
   },
   imageStyle: {
     width: Responsive.widthPx(20),
     height: Responsive.widthPx(20),
     borderRadius: 100,
-    // backgroundColor: "red"
   },
   imageView: {
     width: Responsive.widthPx(22),
@@ -350,7 +286,6 @@ const styles = StyleSheet.create({
   imagenameView: {
     flexDirection: "row",
     alignItems: "center",
-    // backgroundColor: "red",
     padding: 8,
     height: Responsive.heightPx(18),
   },

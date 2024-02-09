@@ -1,5 +1,3 @@
-// const odooHost = "http://kg.wangoes.com";
-// const odooDatabase = "kg.wangoes.com";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 const odooHost = "http://kg.wangoes.com";
 const odooDatabase = "kg.wangoes.com";
@@ -10,7 +8,6 @@ const ApiEndPoints = {
   odooDatabase: `${odooDatabase}`,
   jsonRpcEndpoint: `${jsonRpcEndpoint}`,
 };
-// Define the authenticate function
 export async function authenticate(username, password) {
   try {
     const response = await fetch(ApiEndPoints.jsonRpcEndpoint, {
@@ -42,7 +39,6 @@ export async function authenticate(username, password) {
   }
 }
 
-// odooApi.js
 export async function searchRead(
   uid,
   model,
@@ -53,10 +49,6 @@ export async function searchRead(
 ) {
   try {
     console.log("searchCriteria::", searchCriteria)
-    // console.log("uid::", uid)
-    // console.log("limit::", limit)
-    // console.log("offset::", offset)
-    // console.log("model::", model)
     const odooPassword = await AsyncStorage.getItem("@odopassword");
     const response = await fetch(ApiEndPoints.jsonRpcEndpoint, {
       method: "POST",
@@ -87,7 +79,6 @@ export async function searchRead(
     });
 
     const responseData = await response.json();
-    // console.log("responseData in api ===>", responseData.result)
     if (responseData.result) {
       return responseData.result;
     } else {
@@ -142,7 +133,6 @@ export async function get_all_product_details(uid, searchCriteria) {
   }
 }
 
-// odooApi.js
 export async function callOdooMethod(
   uid,
   model,

@@ -48,16 +48,6 @@ const getStatusBarHeight: any = () => {
   });
 };
 
-// const listenOrientationChange = (that) => {
-//   Dimensions.addEventListener('change', (newDimensions) => {
-//     screenWidth = newDimensions.window.width
-//     screenHeight = newDimensions.window.height
-//     that.setState({
-//       orientation: screenWidth < screenHeight ? 'portrait' : 'landscape'
-//     })
-//   })
-// }
-
 const removeOrientationListener = () => {
   Dimensions.removeEventListener("change", () => {});
 };

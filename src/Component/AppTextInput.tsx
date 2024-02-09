@@ -28,7 +28,6 @@ interface AppTextInputProps {
   textStyle?: any;
   maxLength?: any;
   ismaxLength?: any;
-  // multiline?: boolean;
   onImageChange?: any;
   onFocus?: any;
   onPressIn?: any;
@@ -60,7 +59,6 @@ const AppTextInput = (props: AppTextInputProps) => {
     textStyle,
     maxLength,
     ismaxLength,
-    // multiline,
     onFocus,
     onPressIn,
     isShowIcon,
@@ -111,7 +109,6 @@ const AppTextInput = (props: AppTextInputProps) => {
             onChangeText={onChangeText}
             autoCapitalize={autoCapitalize}
             placeholder={placeHolder}
-            // multiline={multiline}
             {...(keyboardType !== null && { keyboardType })}
             placeholderTextColor={placeholderTextColor}
             underlineColorAndroid="transparent"
@@ -183,7 +180,6 @@ AppTextInput.defaultProps = {
   editable: true,
   ismaxLength: false,
   keyboardType: null,
-  // multiline: false,
   returnKeyType: "next",
   autoCapitalize: "none",
   onChangeText: () => {},
@@ -209,8 +205,6 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     marginTop: Responsive.heightPx(2),
     elevation: 5,
-    // borderWidth: 1,
-    // borderColor: Color.text_input_borderColor,
     alignItems: "center",
     justifyContent: "center",
     alignContent: "center",
@@ -229,7 +223,6 @@ const styles = StyleSheet.create({
   imagestyle: {
     width: Responsive.widthPx(7),
     height: Responsive.widthPx(7),
-    // alignContent: "flex-end",
   },
   touchstyle: {
     flex: 1,

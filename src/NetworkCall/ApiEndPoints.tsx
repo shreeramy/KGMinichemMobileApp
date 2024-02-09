@@ -1,9 +1,6 @@
 import { APPConfig } from "../Helper";
 
 const image_url = "";
-// const API_URL = "https://api-shield.rukkor.dev/";
-// const odooHost = "http://kg.wangoes.com";
-// const odooDatabase = "kg.wangoes.com";
 const odooHost = "http://kg.wangoes.com";
 const odooDatabase = "kg.wangoes.com";
 const jsonRpcEndpoint = `${odooHost}/jsonrpc`;

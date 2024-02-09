@@ -4,20 +4,20 @@ import { Responsive } from "../../Helper";
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // backgroundColor: "#fff",
-    // alignItems: "center",
-    // padding: 10,
-    // justifyContent: "center",
+    
+    
+    
+    
   },
   topcontener: {
     width: Responsive.widthPx(80),
     alignItems: "center",
     justifyContent: "center",
     height: Responsive.heightPx(20),
-    // backgroundColor: "red",
+    
   },
   signdot: {
-    // backgroundColor: "yellow",
+    
     width: Responsive.widthPx(80),
     flexDirection: "row",
     alignItems: "flex-end",
@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
     marginLeft: Responsive.widthPx(5),
   },
   logoimg: {
-    // backgroundColor: "yellow",
+    
     width: Responsive.widthPx(80),
     flexDirection: "row",
     alignItems: "flex-end",

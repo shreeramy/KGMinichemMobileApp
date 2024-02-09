@@ -2,16 +2,12 @@ import {
   Text,
   StyleSheet,
   View,
-  Image,
-  ImageBackground,
   TouchableOpacity,
-  FlatList,
   TextInput,
-  Button,
   KeyboardAvoidingView,
 } from "react-native";
-import React, { Component, useState } from "react";
-import { Color, Const, Images, Loader, Responsive, Screen } from "../../Helper";
+import React, { useState } from "react";
+import { Color, Loader } from "../../Helper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as OdooApi from "../OdooApi";
 
@@ -25,7 +21,6 @@ interface EditOrderLineScreenProps {
 const EditOrderLineScreen = (props: EditOrderLineScreenProps) => {
   const { navigation, text, commonActions, route } = props;
 
-  // State to hold the form values
   const [productName, setProductName] = useState(route.params.item.name);
   const [quantity, setQuantity] = useState(route.params.item.product_uom_qty);
 
@@ -37,7 +32,7 @@ const EditOrderLineScreen = (props: EditOrderLineScreenProps) => {
   const [productId, setProductId] = useState(route.params.item.product_id[0]);
   const [saleOrderId, setSaleOrderId] = useState(route.params.item.order_id[0]);
 
-  const updateOrderLine1 = async (v, id) => {
+  const updateOrderLine1 = async () => {
     Loader.isLoading(true);
     const uid = await AsyncStorage.getItem("userId");
 
@@ -57,7 +52,7 @@ const EditOrderLineScreen = (props: EditOrderLineScreenProps) => {
 
     if (uid) {
       const methodName = "write";
-      const model = "sale.order"; // Replace with the desired model name
+      const model = "sale.order";
 
       const updateOrder = await OdooApi.callOdooMethod(
         uid,
@@ -66,16 +61,12 @@ const EditOrderLineScreen = (props: EditOrderLineScreenProps) => {
 
         [saleOrderId, { order_line: serverValues }]
       );
-      console.log("OrderUpdated---------->", serverValues);
 
       if (updateOrder) {
         Loader.isLoading(false);
-
-        console.log("OrderUpdated", updateOrder);
         navigation.goBack();
       } else {
         Loader.isLoading(false);
-        console.log("OrderUpdatedError---------->");
       }
     }
     return null;

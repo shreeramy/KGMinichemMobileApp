@@ -97,6 +97,5 @@ const styles = StyleSheet.create({
     fontFamily: Fonts.Metropolis_Regular,
     fontSize: Responsive.font(5),
     fontWeight: "bold",
-    // color: Color.greenShade32
   },
 });

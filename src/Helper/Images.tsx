@@ -5,7 +5,6 @@ const Images = {
   HomeSvg,
   logndots,
   chekout,
-  // drawer
   checkinout: require("../Assets/Images/checkinout.png"),
   hidden_eyes: require("../Assets/Images/hidden_eyes.png"),
   show_eyes: require("../Assets/Images/show_eyes.png"),
@@ -21,8 +20,6 @@ const Images = {
   share: require("../Assets/Images/share.png"),
   terms: require("../Assets/Images/terms.png"),
   banner: require("../Assets/Images/banner.png"),
-
-  // GK-Images Start Here
   user: require("../Assets/Images/user.png"),
   applogo: require("../Assets/Images/applogo.png"),
   pass: require("../Assets/Images/pass.png"),
@@ -69,6 +66,7 @@ const Images = {
   inactiveNotification: require("../Assets/Images/inactiveNotification.png"),
   checkin: require("../Assets/Images/checkin.png"),
   noimg: require("../Assets/Images/noimg.jpeg"),
+  pdf: require("../Assets/Images/pdf.webp")
 };
 
 export default Images;

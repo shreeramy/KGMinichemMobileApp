@@ -1,5 +1,3 @@
-import _ from 'lodash'
-
 export const updateIsLogin = (payload) => {
   return (dispatch) => {
     dispatch({

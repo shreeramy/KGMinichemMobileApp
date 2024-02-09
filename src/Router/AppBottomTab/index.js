@@ -9,7 +9,6 @@ import {
 } from "react-native";
 import _ from "lodash";
 import { Color, Fonts, Images, Responsive, Screen } from "../../Helper";
-// import AppShadow from '../../Component/AppShadow'
 
 const tabArray = [
   {
@@ -44,12 +43,10 @@ const tabArray = [
 
 const AppBottomTab = ({ props }) => {
   const onPressDrawer = (key) => {
-    // console.log('props ', props)
     props?.navigation?.jumpTo(key);
   };
 
   return (
-    // <AppShadow container={styles.shadow}>
     <View>
       <View style={styles.container}>
         {_.map(tabArray, (item, index) => {
@@ -82,7 +79,6 @@ const AppBottomTab = ({ props }) => {
       </View>
       <SafeAreaView style={styles.backgroundColor} />
     </View>
-    // </AppShadow>
   );
 };
 

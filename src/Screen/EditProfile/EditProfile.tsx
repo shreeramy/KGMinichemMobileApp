@@ -1,22 +1,16 @@
-import { Text, StyleSheet, View, Image, ImageBackground } from "react-native";
-import React, { Component, useState } from "react";
-import { SvgIcon } from "../../Component/SvgIcons";
-import { Color, Const, Images, Loader, Responsive, Screen } from "../../Helper";
-import { bindActionCreators } from "redux";
-import { connect } from "react-redux";
-import {
-  AppButton,
-  AppContainer,
-  AppHeader,
-  AppScrollview,
-  AppTextInput,
-} from "../../Component";
-import { useEffect } from "react";
-import styles from "./EditProfilestyle";
-import { TouchableOpacity } from "react-native-gesture-handler";
-import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import React, { useState } from "react";
+import { Image, ImageBackground, Text, View } from "react-native";
+import { TouchableOpacity } from "react-native-gesture-handler";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import {
+  AppContainer,
+  AppScrollview
+} from "../../Component";
+import { Color, Const, Images, Loader, Responsive, Screen } from "../../Helper";
 import { ApiEndPoints } from "../../NetworkCall";
+import styles from "./EditProfilestyle";
 
 interface EditProfileProps {
   navigation?: any;
@@ -27,29 +21,17 @@ interface EditProfileProps {
 
 const EditProfile = (props: EditProfileProps) => {
   const { navigation, text, commonActions, route } = props;
-  const [name, setname] = useState("");
-  const [Email, setEmail] = useState("");
-  const [Mobile, setMobile] = useState("");
-  const [Country, setCountry] = useState("");
-  const [gstNumber, setgstNumber] = useState("");
-  const [Address, setAddress] = useState("");
-  const [State, setState] = useState("");
-  const [City, setCity] = useState("");
   const [customerdata, setcustomerdata] = useState([]);
   const customer = route?.params?.user;
 
-  console.log("Ed>cus>>>>>.", customer);
-
   React.useEffect(() => {
-    // searchRead();
     const backScreen = navigation.addListener("focus", () => {
-      // searchRead();
       retrieveData();
     });
     return backScreen;
   }, []);
 
-  const retrieveData = async (key) => {
+  const retrieveData = async () => {
     try {
       const value = await AsyncStorage.getItem("userId");
       if (value !== null) {
@@ -61,8 +43,6 @@ const EditProfile = (props: EditProfileProps) => {
       console.log("Error retrieving data: ", error);
     }
   };
-
-  // const odooPassword = "admin";
 
   async function searchRead(e: any) {
     const uid = await AsyncStorage.getItem("userId");
@@ -86,7 +66,7 @@ const EditProfile = (props: EditProfileProps) => {
               ApiEndPoints.odooDatabase,
               uid,
               odooPassword,
-              "res.partner", // Replace with the desired model name
+              "res.partner",
               "search_read",
               [searchCriteria],
               {},
@@ -101,13 +81,10 @@ const EditProfile = (props: EditProfileProps) => {
         Loader.isLoading(false);
         const customdata = responseData.result;
         setcustomerdata(customdata);
-        console.log(">>????", responseData.result);
       } else {
         console.error("search_read error://..", responseData.error);
         return null;
       }
-
-      // return responseData.result;
     }
 
     return null;
@@ -118,7 +95,6 @@ const EditProfile = (props: EditProfileProps) => {
       <AppScrollview>
         <View style={styles.container}>
           <View style={styles.topcontener}>
-            {/* <View> */}
             <ImageBackground
               resizeMode="stretch"
               borderBottomLeftRadius={15}
@@ -134,7 +110,6 @@ const EditProfile = (props: EditProfileProps) => {
                   style={{
                     flexDirection: "row",
                     alignItems: "center",
-                    // backgroundColor: "red",
                     width: Responsive.widthPx(90),
                     justifyContent: "space-between",
                   }}
@@ -167,8 +142,6 @@ const EditProfile = (props: EditProfileProps) => {
                         custaddr: customer?.street,
                         parametrt: 1,
                         usering: customer?.image_1920,
-
-                        // allcustmData: customer,
                       })
                     }
                   >
@@ -274,7 +247,6 @@ const EditProfile = (props: EditProfileProps) => {
                   style={{
                     flexDirection: "row",
                     alignItems: "center",
-                    //   marginLeft: 15,
                   }}
                 >
                   <Image

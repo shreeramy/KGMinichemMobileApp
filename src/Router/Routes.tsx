@@ -27,6 +27,7 @@ import AppBottomTab from "./AppBottomTab";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useSelector } from "react-redux";
 import OrderFilterScreen from "../Screen/OrderFilterScreen.js";
+import PdfViewer from "../Component/pdfViewer";
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -35,12 +36,9 @@ const Tab = createBottomTabNavigator();
 interface appScrollviewProps {
   isLogin?: boolean;
 }
-// const userId = await AsyncStorage.getItem("userId");
-// console.log("<<<></>>>..//", userId);
 const checkUserSession = async () => {
   try {
     const userId = await AsyncStorage.getItem("userId");
-    console.log("<<<></>>>..//", userId);
     if (userId) {
       console.log("<<<><????..", userId);
     } else {
@@ -51,11 +49,9 @@ const checkUserSession = async () => {
     return null;
   }
 };
-// const token = useSelector((state) => state.token);
 
-export default function Routes(props: appScrollviewProps) {
-  const renderBottomTab = () => {
-    // const initialRouteName = userId ? Screen.HomeScreen : Screen.LoginScreen;
+export default function Routes() {
+  const renderBottomTab =  () => {
     const initialRouteName = checkUserSession()
       ? Screen.HomeScreen
       : Screen.LoginScreen;
@@ -78,7 +74,7 @@ export default function Routes(props: appScrollviewProps) {
       </Tab.Navigator>
     );
   };
-  const drawerContainer = () => {
+  const DrawerContainer = () => {
     return (
       <Drawer.Navigator
         screenOptions={{
@@ -100,14 +96,10 @@ export default function Routes(props: appScrollviewProps) {
     <NavigationContainer>
       <Stack.Navigator
         initialRouteName={Screen.LoginScreen}
-        // initialRouteName={
-        //   checkUserSession() ? Screen.HomeScreen : Screen.LoginScreen
-        // }
-        // initialRouteName={Screen.LoginScreen}
         screenOptions={{ headerShown: false }}
       >
         <Stack.Screen name={Screen.LoginScreen} component={LoginScreen} />
-        <Stack.Screen name={Screen.HomeScreen} component={drawerContainer} />
+        <Stack.Screen name={Screen.HomeScreen} component={DrawerContainer} />
         <Stack.Screen name={Screen.CustomerScreen} component={CustomerScreen} />
         <Stack.Screen name={Screen.ProductCatalog} component={ProductCatalog} />
         <Stack.Screen name={Screen.Profile} component={Profile} />
@@ -139,6 +131,7 @@ export default function Routes(props: appScrollviewProps) {
           name={Screen.EditOrderLineScreen}
           component={EditOrderLineScreen}
         />
+        <Stack.Screen name={Screen.PdfViewer} component={PdfViewer} />
       </Stack.Navigator>
     </NavigationContainer>
   );

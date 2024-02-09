@@ -5,7 +5,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
-    // justifyContent: "center",
+    
   },
   item: {
     padding: 20,
@@ -21,9 +21,9 @@ const styles = StyleSheet.create({
     elevation: 5,
     backgroundColor: "#fff",
     width: Responsive.widthPx(90),
-    // alignItems: "center",
-    // justifyContent: "space-between",
-    // flexDirection: "row",
+    
+    
+    
     borderRadius: Responsive.widthPx(5),
   },
   headerview: {
@@ -34,11 +34,11 @@ const styles = StyleSheet.create({
     width: Responsive.widthPx(90),
   },
   headerview1: {
-    // marginTop: Responsive.heightPx(2),
+    
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    // width: Responsive.widthPx(90),
+    
   },
   listtextheading: { color: Color.text_color, fontWeight: "600" },
   listtext: { color: Color.text_color },

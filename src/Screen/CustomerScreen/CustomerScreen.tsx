@@ -1,42 +1,13 @@
-import {
-  Text,
-  StyleSheet,
-  View,
-  Image,
-  FlatList,
-  TouchableOpacity,
-  TextInput,
-  ActivityIndicator,
-} from "react-native";
-import React, { Component, useState } from "react";
-import { SvgIcon } from "../../Component/SvgIcons";
-import {
-  Color,
-  Const,
-  Images,
-  Loader,
-  Responsive,
-  Screen,
-  Utility,
-} from "../../Helper";
-import { bindActionCreators } from "redux";
-import { connect } from "react-redux";
-import * as OdooApi from "../OdooApi";
-import {
-  AppButton,
-  AppContainer,
-  AppHeader,
-  AppScrollview,
-  AppTextInput,
-} from "../../Component";
-import _ from "lodash";
-import { useEffect } from "react";
-import styles from "./CustomerScreenstyle";
-// import { getData } from "../OdooApi";
-import axios from "axios";
-
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { ApiEndPoints } from "../../NetworkCall";
+import React, { useEffect, useState } from 'react';
+import { Text, View, Image, FlatList, TouchableOpacity, TextInput, ActivityIndicator } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { AppContainer } from '../../Component';
+import { Color, Const, Images, Loader, Responsive, Screen } from '../../Helper';
+import { ApiEndPoints } from '../../NetworkCall';
+import * as OdooApi from '../OdooApi';
+import styles from './CustomerScreenstyle';
 interface CustomerScreenProps {
   navigation?: any;
   text?: any;
@@ -48,21 +19,19 @@ const CustomerScreen = (props: CustomerScreenProps) => {
   const [customerdata, setcustomerdata] = useState([]);
   const [prosearch, setprosearch] = useState("");
   const [page, setPage] = useState(1);
+
+
   const [loading, setLoading] = useState(false);
   const [noMoreData, setNoMoreData] = useState(false);
   const [apiCall, setApicall] = useState(false);
 
-  React.useEffect(() => {
-    console.log('useEffect-->', 'searchReadData');
+  useEffect(() => {
     searchReadData();
-    //  retrieveData();
   }, []);
 
   async function searchRead1(e: any) {
-    console.log('searchRead1-->', 'searchRead1');
     const uid = await AsyncStorage.getItem("userId");
     const odooPassword = await AsyncStorage.getItem("@odopassword");
-    // Loader.isLoading(true);
 
     if (uid) {
       const searchCriteria = [["name", "ilike", e]];
@@ -81,7 +50,7 @@ const CustomerScreen = (props: CustomerScreenProps) => {
               ApiEndPoints.odooDatabase,
               uid,
               odooPassword,
-              "res.partner", // Replace with the desired model name
+              "res.partner",
               "search_read",
               [searchCriteria],
               {},
@@ -95,37 +64,19 @@ const CustomerScreen = (props: CustomerScreenProps) => {
       if (responseData.result) {
         Loader.isLoading(false);
         const customdata = responseData.result;
-        console.log("search_read result in customer screen:::::", responseData.result);
         setcustomerdata(customdata);
       } else {
         console.error("search_read error://..", responseData.error);
         return null;
       }
-
-      // return responseData.result;
     }
 
     return null;
   }
 
-  const retrieveData = async (key) => {
-    try {
-      const value = await AsyncStorage.getItem("userId");
-      if (value !== null) {
-        //  console.log("Retrieved data: ", value);
-      } else {
-        console.log("No data found.");
-      }
-    } catch (error) {
-      console.log("Error retrieving data: ", error);
-    }
-  };
-
   const searchReadData = async (pageNumber) => {
-    console.log('searchReadData-->', 'searchReadData');
     try {
       setLoading(true);
-      // Loader.isLoading(true);
       const uid = await AsyncStorage.getItem("userId");
 
       if (uid && !noMoreData) {
@@ -142,9 +93,7 @@ const CustomerScreen = (props: CustomerScreenProps) => {
           limit,
           offset
         );
-        // console.log("searchData in custenerrfhbadsjkhj====>", searchData)
         if (searchData) {
-          //  console.log('searchData-->',searchData);
           setcustomerdata((prevData: any) => {
             if (pageNumber === 1) {
               return [...searchData];
@@ -164,15 +113,11 @@ const CustomerScreen = (props: CustomerScreenProps) => {
       console.error("Error:", error);
     } finally {
       setLoading(false);
-      // Loader.isLoading(false);
     }
   };
 
-  const onendreached = () => {
-    console.log('onendreached', 'onendreached');
-    // Assuming you want to load more data only if not already loading
+  const onendreached = () => {;
     if (apiCall) {
-      // searchRead1(prosearch);
     } else {
       if (!loading && !noMoreData) {
         setPage((prevPage) => prevPage + 1);
@@ -183,28 +128,26 @@ const CustomerScreen = (props: CustomerScreenProps) => {
   };
 
   useEffect(() => {
-    // Check if there is cached data, if not fetch from the API
     const fetchCachedData = async () => {
       const cachedData = await AsyncStorage.getItem("cachedCustomerData");
 
       if (cachedData) {
-        //setcustomerdata(JSON.parse(cachedData));
       } else {
         searchReadData(page);
       }
     };
 
     fetchCachedData();
-  }, []); // Fetch data on initial mount
+  }, []); 
 
   useEffect(() => {
-    // Cache the data whenever it changes
     AsyncStorage.setItem("cachedCustomerData", JSON.stringify(customerdata));
   }, [customerdata]);
 
+
+  
   return (
     <AppContainer>
-      {/* <AppScrollview> */}
       <View style={styles.container}>
         <View style={styles.headerview}>
           <View style={styles.headerview1}>
@@ -222,23 +165,11 @@ const CustomerScreen = (props: CustomerScreenProps) => {
               Customer
             </Text>
           </View>
-          {/* <View style={styles.headerview1}>
-            <TouchableOpacity>
-              <Image
-                style={{
-                  marginLeft: 10,
-                }}
-                resizeMode="contain"
-                source={Images.Filter}
-              />
-            </TouchableOpacity>
-          </View> */}
         </View>
         <View style={styles.item1}>
           <View>
             <TouchableOpacity
               onPress={() => {
-                // searchcustomerdata(prosearch);
                 searchRead1(prosearch);
               }}
             >
@@ -253,7 +184,6 @@ const CustomerScreen = (props: CustomerScreenProps) => {
             <TextInput
               style={{
                 padding: 2,
-                // backgroundColor: "red",
                 height: Responsive.heightPx(5),
                 width: Responsive.widthPx(65),
                 color: Color.text_color,
@@ -263,11 +193,7 @@ const CustomerScreen = (props: CustomerScreenProps) => {
               onChangeText={(prosearch: any) => {
                 setprosearch(prosearch);
                 setApicall(true);
-                // searchcustomerdata(prosearch);
-
-                //  searchRead1(prosearch);
               }}
-              // onChangeText={handleSearchChange}
               placeholderTextColor={Color.text_color}
               placeholder="Search"
             />
@@ -285,7 +211,6 @@ const CustomerScreen = (props: CustomerScreenProps) => {
                   style={{
                     width: Responsive.widthPx(5),
                     height: Responsive.heightPx(4),
-                    // backgroundColor: "red",
                   }}
                   resizeMode="contain"
                   source={Images.crossicon}
@@ -312,7 +237,6 @@ const CustomerScreen = (props: CustomerScreenProps) => {
                       height: Responsive.heightPx(5),
                     }}
                     resizeMode="contain"
-                    // source={{ uri: `data:image/png;base64,${barcodeData}` }}
                     source={{
                       uri: `data:image/png;base64,${item?.image_512}`,
                     }}
@@ -331,7 +255,7 @@ const CustomerScreen = (props: CustomerScreenProps) => {
             </TouchableOpacity>
           )}
           onEndReached={onendreached}
-          onEndReachedThreshold={0.1} // Adjust as needed
+          onEndReachedThreshold={0.1}
           ListFooterComponent={() =>
             loading ? <ActivityIndicator size="large" color="#0000ff" /> : null
           }
@@ -368,7 +292,6 @@ const CustomerScreen = (props: CustomerScreenProps) => {
           </TouchableOpacity>
         </View>
       </View>
-      {/* </AppScrollview> */}
     </AppContainer>
   );
 };

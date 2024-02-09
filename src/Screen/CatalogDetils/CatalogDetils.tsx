@@ -1,27 +1,16 @@
-import { Text, StyleSheet, View, Image, ImageBackground } from "react-native";
-import React, { Component, useState } from "react";
-import { SvgIcon } from "../../Component/SvgIcons";
+import { Text, View, Image, ImageBackground, Pressable } from "react-native";
+import React, { useState } from "react";
 import { Color, Const, Images, Loader, Responsive, Screen } from "../../Helper";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import {
-  AppButton,
   AppContainer,
-  AppHeader,
-  AppScrollview,
-  AppTextInput,
 } from "../../Component";
-import { useEffect } from "react";
 import styles from "./CatalogDetilsstyls";
 import {
   FlatList,
-  ScrollView,
   TouchableOpacity,
 } from "react-native-gesture-handler";
-import axios from "axios";
-import { color } from "react-native-reanimated";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { ApiEndPoints } from "../../NetworkCall";
 
 interface CatalogDetilsProps {
   navigation?: any;
@@ -39,16 +28,11 @@ const CatalogDetils = (props: CatalogDetilsProps) => {
   );
   const [imagelist, setimagelist] = useState(route?.params?.image_list);
   ("");
-
   const proimag = route?.params?.img;
   const atribute_color_code = route?.params?.colorcode;
-  const proId = route?.params?.product;
   const dicreptiion = route?.params?.discrption;
   const titl = route?.params?.title;
-  // const attribute_line_ids = route?.params?.attributelineids;
-  const textvalue = getitem;
-  // const textsArray = textvalue?.split(", ");
-  const textsArray = textvalue;
+  const pdf = route?.params?.pdf;
 
   const renderItem = ({ item }) => (
     <View style={styles.item1}>
@@ -58,7 +42,6 @@ const CatalogDetils = (props: CatalogDetilsProps) => {
         <View>
           <View
             style={{
-              // width: Responsive.widthPx(25),
               backgroundColor: atribute_color_code,
               justifyContent: "center",
               alignItems: "center",
@@ -74,7 +57,7 @@ const CatalogDetils = (props: CatalogDetilsProps) => {
                 fontWeight: "bold",
               }}
             >
-              {console.log(">>??..", item)}
+
               {item}
             </Text>
           </View>
@@ -95,9 +78,7 @@ const CatalogDetils = (props: CatalogDetilsProps) => {
               top: 0,
               height: Responsive.heightPx(28),
               width: Responsive.widthPx(100),
-              // backgroundColor: "red",
             }}
-            // source={Images.catelogBanner}
             source={{ uri: `data:image/png;base64,${proimag}` }}
           >
             <View style={{ marginTop: Responsive.heightPx(5) }}>
@@ -105,7 +86,6 @@ const CatalogDetils = (props: CatalogDetilsProps) => {
                 style={{
                   flexDirection: "row",
                   alignItems: "center",
-                  // backgroundColor: "red",
                   width: Responsive.widthPx(90),
                   justifyContent: "space-between",
                 }}
@@ -153,6 +133,19 @@ const CatalogDetils = (props: CatalogDetilsProps) => {
               >
                 {titl}
               </Text>
+              {pdf === false ?
+                <View /> :
+                <Pressable onPress={() => navigation.navigate(Screen.PdfViewer, { pdf })}>
+                  <Image
+                    style={{
+                      width: Responsive.widthPx(8),
+                      height: Responsive.heightPx(8),
+                    }}
+                    resizeMode="contain"
+                    source={Images.pdf}
+                  />
+                </Pressable>
+              }
             </View>
             <View>
               <View style={{ marginTop: 10 }}>
@@ -194,7 +187,6 @@ const CatalogDetils = (props: CatalogDetilsProps) => {
             </Text>
           </TouchableOpacity>
         </View>
-        {/* <View> */}
         <FlatList
           data={imagelist}
           numColumns={2}
@@ -207,7 +199,7 @@ const CatalogDetils = (props: CatalogDetilsProps) => {
                     marginTop: 10,
                     justifyContent: "center",
                     alignItems: "center",
-                    // backgroundColor: "red",
+
                   }}
                 >
                   {item ? (
@@ -240,8 +232,6 @@ const CatalogDetils = (props: CatalogDetilsProps) => {
           keyExtractor={(item) => item.key}
         />
       </View>
-      {/* </View> */}
-      {/* </AppScrollview> */}
     </AppContainer>
   );
 };

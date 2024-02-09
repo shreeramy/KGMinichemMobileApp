@@ -1,24 +1,17 @@
+import React, { useState } from "react";
 import {
-  Text,
-  StyleSheet,
-  View,
-  Image,
   FlatList,
+  Image,
+  Text,
   TouchableOpacity,
+  View
 } from "react-native";
-import React, { Component, useState } from "react";
-import { SvgIcon } from "../../Component/SvgIcons";
-import { Color, Const, Images, Loader, Responsive, Screen } from "../../Helper";
-import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
 import {
-  AppButton,
-  AppContainer,
-  AppHeader,
-  AppScrollview,
-  AppTextInput,
+  AppContainer
 } from "../../Component";
-import { useEffect } from "react";
+import { Color, Const, Images, Responsive } from "../../Helper";
 import styles from "./OrderHistoryStyle";
 
 interface OrderHistoryProps {
@@ -29,7 +22,6 @@ interface OrderHistoryProps {
 
 const OrderHistory = (props: OrderHistoryProps) => {
   const { navigation, text, commonActions } = props;
-  const [email, setemail] = useState("");
   const data = [
     {
       text1: "Red clay",
@@ -70,7 +62,6 @@ const OrderHistory = (props: OrderHistoryProps) => {
 
   return (
     <AppContainer>
-      {/* <AppScrollview> */}
       <View style={styles.container}>
         <View style={styles.headerview}>
           <View style={styles.headerview1}>
@@ -88,42 +79,20 @@ const OrderHistory = (props: OrderHistoryProps) => {
               Order History
             </Text>
           </View>
-          {/* <View style={styles.headerview1}>
-            <TouchableOpacity>
-              <Image resizeMode="contain" source={Images.Delete} />
-            </TouchableOpacity>
-            <TouchableOpacity>
-              <Image
-                style={{
-                  marginLeft: 10,
-                }}
-                resizeMode="contain"
-                source={Images.Edit}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity>
-              <Image
-                style={{
-                  marginLeft: 10,
-                }}
-                resizeMode="contain"
-                source={Images.Filter}
-              />
-            </TouchableOpacity>
-          </View> */}
+      
         </View>
         <FlatList
           data={data}
-          keyExtractor={(item) => item.id}
+          keyExtractor={(item) => item.text1}
           renderItem={({ item }) => (
-            // <TouchableOpacity onPress={() => {}} style={{}}>
+            
             <View style={styles.item}>
               <View>
                 <Image
                   style={{
                     width: Responsive.widthPx(20),
                     height: Responsive.heightPx(10),
-                    //   backgroundColor: "red",
+                    
                     borderRadius: Responsive.widthPx(3),
                   }}
                   resizeMode="contain"
@@ -132,11 +101,11 @@ const OrderHistory = (props: OrderHistoryProps) => {
               </View>
               <View style={{ marginLeft: 15 }}>
                 <Text style={styles.listtextheading}>{item.text1}</Text>
-                {/* <View style={{}}> */}
+
                 <Text style={styles.listtext}>{item.text2}</Text>
                 <View
                   style={{
-                    // marginLeft: 5,
+                    
                     backgroundColor: item.colors,
                     padding: Responsive.widthPx(1.5),
                     borderRadius: Responsive.widthPx(5),
@@ -149,13 +118,11 @@ const OrderHistory = (props: OrderHistoryProps) => {
                   <Text style={styles.listtext1}>{item.text3}</Text>
                 </View>
               </View>
-              {/* </View> */}
             </View>
-            // </TouchableOpacity>
+            
           )}
         />
       </View>
-      {/* </AppScrollview> */}
     </AppContainer>
   );
 };

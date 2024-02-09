@@ -1,39 +1,26 @@
+import moment from 'moment-timezone';
+import React, { useState,useEffect } from "react";
 import {
-  Text,
-  StyleSheet,
-  View,
-  Image,
   FlatList,
+  Image,
+  Text,
   TouchableOpacity,
-  TextInput,
+  View
 } from "react-native";
-import React, { Component, useState } from "react";
-import { SvgIcon } from "../../Component/SvgIcons";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import {
+  AppContainer
+} from "../../Component";
 import {
   Color,
   Const,
   Images,
   Loader,
   Responsive,
-  Screen,
-  Utility,
+  Screen
 } from "../../Helper";
-import { bindActionCreators } from "redux";
-import { connect } from "react-redux";
-import Odoo from "react-native-odoo-promise-based";
-import moment from 'moment-timezone';
-import {
-  AppButton,
-  AppContainer,
-  AppHeader,
-  AppScrollview,
-  AppTextInput,
-} from "../../Component";
-import { useEffect } from "react";
 import styles from "./AttendanceHistoryScreenstyle";
-// import { getData } from "../OdooApi";
-import axios from "axios";
-
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ApiEndPoints } from "../../NetworkCall";
 interface AttendanceHistoryScreenProps {
@@ -45,10 +32,8 @@ interface AttendanceHistoryScreenProps {
 const AttendanceHistoryScreen = (props: AttendanceHistoryScreenProps) => {
   const { navigation, text, commonActions } = props;
   const [customerdata, setcustomerdata] = useState([]);
-  // console.log("customerdata AttendanceHistoryScreen:::", customerdata)
-  const [prosearch, setprosearch] = useState("");
 
-  React.useEffect(() => {
+  useEffect(() => {
     searchRead();
     const backScreen = navigation.addListener("focus", () => {
       searchRead();
@@ -57,7 +42,7 @@ const AttendanceHistoryScreen = (props: AttendanceHistoryScreenProps) => {
     return backScreen;
   }, []);
 
-  const retrieveData = async (key) => {
+  const retrieveData = async () => {
     try {
       const value = await AsyncStorage.getItem("userId");
       if (value !== null) {
@@ -70,14 +55,10 @@ const AttendanceHistoryScreen = (props: AttendanceHistoryScreenProps) => {
     }
   };
 
-  // ....///////////////////////////\\\
-
   const odooHost = "http://kg.wangoes.com";
   const odooDatabase = "kg.wangoes.com";
   const jsonRpcEndpoint = `${odooHost}/jsonrpc`;
-  // const odooPassword = "admin";
 
-  // Function to perform a search_read operation
   async function searchRead() {
     const uid = await AsyncStorage.getItem("userId");
     const odooPassword = await AsyncStorage.getItem("@odopassword");
@@ -85,13 +66,6 @@ const AttendanceHistoryScreen = (props: AttendanceHistoryScreenProps) => {
 
     if (uid) {
       const searchCriteria = [["id", "!=", 0]];
-      // const searchCriteria = [["check_out", "!=", false]];
-      // if (name){
-      //   searchCriteria.append(["name", "=", name])
-      // }
-      // const searchCriteria = [];
-      // Replace with your search criteria
-
       const response = await fetch(ApiEndPoints.jsonRpcEndpoint, {
         method: "POST",
         headers: {
@@ -117,7 +91,6 @@ const AttendanceHistoryScreen = (props: AttendanceHistoryScreenProps) => {
       });
 
       const responseData = await response.json();
-      // console.log("responseData:::", responseData.result)
       if (responseData.result) {
         Loader.isLoading(false);
         const customdata = responseData.result;
@@ -126,8 +99,6 @@ const AttendanceHistoryScreen = (props: AttendanceHistoryScreenProps) => {
         console.error("search_read error://..", responseData.error);
         return null;
       }
-
-      // return responseData.result;
     }
 
     return null;
@@ -143,12 +114,6 @@ const AttendanceHistoryScreen = (props: AttendanceHistoryScreenProps) => {
       const searchCriteria = [
         ["attendance_id", "=", item.id]
       ];
-      // const searchCriteria = [["check_out", "!=", false]];
-      // if (name){
-      //   searchCriteria.append(["name", "=", name])
-      // }
-      // const searchCriteria = [];
-      // Replace with your search criteria
 
       const response = await fetch(ApiEndPoints.jsonRpcEndpoint, {
         method: "POST",
@@ -175,18 +140,13 @@ const AttendanceHistoryScreen = (props: AttendanceHistoryScreenProps) => {
       });
 
       const responseData = await response.json();
-      // console.log("responseData:::", responseData.result)
       if (responseData.result) {
         Loader.isLoading(false);
         navigation.navigate(Screen.LiveLocationScreen, { attendanceData: responseData.result })
-        // const customdata = responseData.result;
-        // setcustomerdata(customdata);
       } else {
         console.error("search_read error://..", responseData.error);
         return null;
       }
-
-      // return responseData.result;
     }
 
 
@@ -195,7 +155,6 @@ const AttendanceHistoryScreen = (props: AttendanceHistoryScreenProps) => {
 
   return (
     <AppContainer>
-      {/* <AppScrollview> */}
       <View style={styles.container}>
         <View style={styles.headerview}>
           <View style={styles.headerview1}>
@@ -213,72 +172,7 @@ const AttendanceHistoryScreen = (props: AttendanceHistoryScreenProps) => {
               Attendance History
             </Text>
           </View>
-          {/* <View style={styles.headerview1}>
-              <TouchableOpacity>
-                <Image
-                  style={{
-                    marginLeft: 10,
-                  }}
-                  resizeMode="contain"
-                  source={Images.Filter}
-                />
-              </TouchableOpacity>
-            </View> */}
         </View>
-        {/* <View style={styles.item1}>
-          <View>
-            <TouchableOpacity
-              onPress={() => {
-                searchRead1(prosearch);
-              }}
-            >
-              <Image
-                style={{ width: Responsive.widthPx(10) }}
-                resizeMode="contain"
-                source={Images.Search}
-              />
-            </TouchableOpacity>
-          </View>
-          <View>
-            <TextInput
-              style={{
-                padding: 2,
-                // backgroundColor: "red",
-                height: Responsive.heightPx(5),
-                width: Responsive.widthPx(65),
-                color: Color.text_color,
-                marginLeft: 10,
-              }}
-              value={prosearch}
-              onChangeText={(prosearch: any) => {
-                setprosearch(prosearch);
-                searchRead1(prosearch);
-              }}
-              placeholderTextColor={Color.text_color}
-              placeholder="Search"
-            />
-          </View>
-          {prosearch.length > 0 ? (
-            <View>
-              <TouchableOpacity
-                onPress={() => {
-                  setprosearch("");
-                  searchRead();
-                }}
-              >
-                <Image
-                  style={{
-                    width: Responsive.widthPx(5),
-                    height: Responsive.heightPx(4),
-                    // backgroundColor: "red",
-                  }}
-                  resizeMode="contain"
-                  source={Images.crossicon}
-                />
-              </TouchableOpacity>
-            </View>
-          ) : null}
-        </View> */}
         <FlatList
           data={customerdata}
           keyExtractor={(item: any) => item.id}
@@ -288,7 +182,7 @@ const AttendanceHistoryScreen = (props: AttendanceHistoryScreenProps) => {
               <TouchableOpacity
                 onPress={
                   () => { getLocationData(item) }
-                  // navigation.navigate(Screen.EditProfile, { userid: item.id })
+              
                 }
                 style={{}}
               >
@@ -341,7 +235,6 @@ const AttendanceHistoryScreen = (props: AttendanceHistoryScreenProps) => {
           }}
         />
       </View>
-      {/* </AppScrollview> */}
     </AppContainer>
   );
 };

@@ -6,20 +6,6 @@
  */
 
  const { getDefaultConfig } = require('metro-config')
-
- // module.exports = {
- //   transformer: {
- //     getTransformOptions: async () => ({
- //       transform: {
- //         experimentalImportSupport: false,
- //         inlineRequires: false,
- //         babelTransformerPath: require.resolve('react-native-svg-transformer')
- //       }
- //     })
- //   }
- // }
- 
- // const { getDefaultConfig } = require('metro-config')
  
 module.exports = (async () => {
   const {

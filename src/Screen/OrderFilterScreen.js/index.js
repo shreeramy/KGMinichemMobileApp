@@ -1,79 +1,24 @@
-// import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
-// import React from "react";
-// import { Color } from "../../Helper";
 
-// export default function OrderFilterScreen() {
-//   return (
-//     <View style={styles.container}>
-//       <TouchableOpacity style={styles.viewStyle}>
-//         <Text style={styles.textStyle}>first</Text>
-//       </TouchableOpacity>
-
-//       <TouchableOpacity style={styles.viewStyle}>
-//         <Text style={styles.textStyle}>second</Text>
-//       </TouchableOpacity>
-
-//       <TouchableOpacity style={styles.viewStyle}>
-//         <Text style={styles.textStyle}>third</Text>
-//       </TouchableOpacity>
-
-//       <TouchableOpacity style={styles.viewStyle}>
-//         <Text style={styles.textStyle}>fourth</Text>
-//       </TouchableOpacity>
-//     </View>
-//   );
-// }
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//   },
-//   viewStyle: {
-//     width: "30%",
-//     height: "6%",
-//     backgroundColor: Color.botton_Color,
-//     borderRadius: 15,
-//     left: 20,
-//     alignItems: "center",
-//     justifyContent: "center",
-//   },
-//   textStyle: {
-//     color: Color.white,
-//   },
-// });
-
-import React, { useEffect, useState } from 'react';
-import { StyleSheet, ScrollView, View, TouchableOpacity, Text, Button, Image } from 'react-native';
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import CheckBox from 'react-native-check-box'
-import { Calendar, LocaleConfig } from 'react-native-calendars';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { SvgIcon } from "../../Component/SvgIcons";
 import moment from 'moment-timezone';
-import { ApiEndPoints } from "../../NetworkCall";
+import React, { useEffect, useState } from 'react';
+import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import CheckBox from 'react-native-check-box';
+import { useDispatch, useSelector } from 'react-redux';
 import {
-  Const,
   Images,
-  Loader,
-  Responsive,
-  Screen,
-  Utility,
+  Screen
 } from "../../Helper";
-import { useSelector, useDispatch } from 'react-redux'
-import * as OdooApi from "../OdooApi";
-import { useNavigation } from '@react-navigation/native';
-// import { } from 'react-native-elements';
-import { bindActionCreators } from "redux";
-import { connect } from "react-redux";
-import { setFilterItemAction } from '../../Store/actions/AllAction';
-import { filterItemAction, setOrderModeAction, setDeliveryModeAction, setInvoiceModeAction, setPaymentModeAction } from '../../Store/actions/commonActions';
+
+import { filterItemAction, setDeliveryModeAction, setInvoiceModeAction, setOrderModeAction, setPaymentModeAction } from '../../Store/actions/commonActions';
 
 const OrderFilterScreen = ({ route, navigation }) => {
-  // All your menu options go here. 
+  
   const customerid = route?.params?.customerid;
   const callstatus = route?.params?.callstatus;
   const dispatch = useDispatch()
-  // console.log("customerid:::", customerid)
+  
   const [selected, setSelected] = React.useState('');
   const { filterItems, orderModeData, deliveryModeData, invoiceModeData, paymentModeData } = useSelector((state) => state.common)
   console.log("orderModeData:::", orderModeData)
@@ -127,14 +72,11 @@ const OrderFilterScreen = ({ route, navigation }) => {
       setMenuItems([...filterItems])
     }
   }, [])
-  // console.log("menuItems:::::", menuItems)
-  // this holds the keys of the menuItems for the view to know which category is currently being rendered. 
+  
+  
   const [selectedItem, setSelectedItem] = React.useState('1')
-  const [isActive, setIsActive] = React.useState({});
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
-  const [sendPaymentMode, setSendPaymentMode] = useState([])
-  const [mode, setMode] = useState('');
   const [showStartDatePicker, setShowStartDatePicker] = useState(false);
   const [showEndDatePicker, setShowEndDatePicker] = useState(false);
   const [customerdata, setcustomerdata] = useState([]);
@@ -164,14 +106,6 @@ const OrderFilterScreen = ({ route, navigation }) => {
     if (endDate.length !== undefined) {
       searchCriteria.push(["date_order", "<=", endDate])
     }
-    // TODO after disscuing
-    // if (deliveryMode.length >0) {
-    //   searchCriteria.push(["delivery_status", "=", deliveryMode])
-    // }
-    // if (invoiceMode.length >0) {
-    //   searchCriteria.push(["invoice_status", "=", invoiceMode])
-    // }
-
     console.log("searchCriteria  after push:::", searchCriteria)
 
     navigation.navigate(Screen.ShowOrderScreen, { filterSearchCriteria: searchCriteria })
@@ -193,22 +127,22 @@ const OrderFilterScreen = ({ route, navigation }) => {
     });
 
     switch (selectedItem) {
-      case '1': // Order
+      case '1': 
         const updatedOrderMode = updatedMenuItems[0].filters.filter((filter) => filter.isChecked).map((filter) => filter.id);
         setOrderMode(updatedOrderMode);
         dispatch(setOrderModeAction(updatedOrderMode))
         break;
-      case '2': // Delivery
+      case '2': 
         const updatedDeliveryMode = updatedMenuItems[1].filters.filter((filter) => filter.isChecked).map((filter) => filter.id);
         setDeliveryMode(updatedDeliveryMode);
         dispatch(setDeliveryModeAction(updatedDeliveryMode))
         break;
-      case '3': // Invoice
+      case '3': 
         const updatedInvoiceMode = updatedMenuItems[2].filters.filter((filter) => filter.isChecked).map((filter) => filter.id);
         setInvoiceMode(updatedInvoiceMode);
         dispatch(setInvoiceModeAction(updatedInvoiceMode))
         break;
-      case '5': // Payment mode
+      case '5': 
         const updatedPaymentMode = updatedMenuItems[4].filters.filter((filter) => filter.isChecked).map((filter) => filter.value);
         setpaymentMode(updatedPaymentMode);
         dispatch(setPaymentModeAction(updatedPaymentMode))
@@ -220,7 +154,7 @@ const OrderFilterScreen = ({ route, navigation }) => {
     dispatch(filterItemAction(updatedMenuItems))
   };
 
-  // Function to handle start date change
+  
   const handleStartDateChange = (event, selectedDate) => {
     if (event.type == 'set') {
       const currentDate = selectedDate || startDate;
@@ -230,14 +164,14 @@ const OrderFilterScreen = ({ route, navigation }) => {
     }
   };
 
-  // Function to handle end date change
+  
   const handleEndDateChange = (event, selectedDate) => {
     if (event.type == 'set') {
       const currentDate = selectedDate || endDate;
       setShowEndDatePicker(Platform.OS === 'ios');
       const splitDate = moment(currentDate).format('YYYY-MM-DD');
       setEndDate(splitDate)
-      // setEndDate(selectedDate)
+      
     }
   };
 
@@ -362,7 +296,7 @@ const OrderFilterScreen = ({ route, navigation }) => {
                   </TouchableOpacity>
                   {showStartDatePicker && (
                     <DateTimePicker
-                      // testID="dateTimePicker"
+                      
                       value={new Date()}
                       mode="date"
                       display="default"
@@ -379,10 +313,10 @@ const OrderFilterScreen = ({ route, navigation }) => {
                   </TouchableOpacity>
                   {showEndDatePicker && (
                     <DateTimePicker
-                      // testID="dateTimePicker"
+                      
                       value={new Date()}
                       mode="date"
-                      // is24Hour={true}
+                      
                       onChange={handleEndDateChange}
                     />
                   )
@@ -441,13 +375,13 @@ const styles = StyleSheet.create({
     backgroundColor: '#dedede',
   },
   menuItem: {
-    // flex: 1,
+    
     flex: 0,
-    //height:hp(8.5),
+    
     justifyContent: 'center',
     alignItems: 'center',
-    // alignItems: 'flex-start',
-    // borderWidth:1,
+    
+    
   },
   selectedMenuItem: {
     backgroundColor: '#8B8000',
@@ -463,7 +397,7 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     color: '#000',
   },
-  // value column -right
+  
   settingsColumn: {
     flex: .65,
     padding: 10,

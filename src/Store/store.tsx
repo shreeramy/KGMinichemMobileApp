@@ -12,7 +12,6 @@ const store = createStore(rootReducer, applyMiddleware(thunk))
 
 export default store
 
-// eslint-disable-next-line no-undef
 export type commonState = ReturnType<typeof store.getState>
 
 export type AppDispatch = typeof store.dispatch

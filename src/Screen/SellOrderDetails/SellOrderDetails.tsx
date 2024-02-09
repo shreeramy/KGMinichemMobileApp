@@ -1,36 +1,29 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import React, { useState } from "react";
 import {
-  Text,
-  StyleSheet,
-  View,
-  Image,
   FlatList,
+  Image,
+  Text,
   TouchableOpacity,
+  View
 } from "react-native";
-import React, { Component, useState } from "react";
-import { SvgIcon } from "../../Component/SvgIcons";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import {
+  AppContainer,
+  AppScrollview
+} from "../../Component";
 import {
   Color,
   Const,
   Images,
   Loader,
   Responsive,
-  Screen,
-  Utility,
+  Screen
 } from "../../Helper";
-import { bindActionCreators } from "redux";
-import { connect } from "react-redux";
-import {
-  AppButton,
-  AppContainer,
-  AppHeader,
-  AppScrollview,
-  AppTextInput,
-} from "../../Component";
-import { useEffect } from "react";
-import styles from "./SellOrderDetailsstyle";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ApiEndPoints } from "../../NetworkCall";
 import * as OdooApi from "../OdooApi";
+import styles from "./SellOrderDetailsstyle";
 interface SellOrderDetailsProps {
   navigation?: any;
   text?: any;
@@ -61,10 +54,6 @@ const SellOrderDetails = (props: SellOrderDetailsProps) => {
     return backScreen;
   }, []);
 
-  const toggleModal = () => {
-    setModalVisible(!isModalVisible);
-  };
-
   async function ProductCatalogapi() {
     const uid = await AsyncStorage.getItem("userId");
     const odooPassword = await AsyncStorage.getItem("@odopassword");
@@ -89,7 +78,7 @@ const SellOrderDetails = (props: SellOrderDetailsProps) => {
               ApiEndPoints.odooDatabase,
               uid,
               odooPassword,
-              "product.product", // Replace with the desired model name
+              "product.product", 
               "search_read",
               [searchCriteria],
               {},
@@ -102,19 +91,12 @@ const SellOrderDetails = (props: SellOrderDetailsProps) => {
 
       if (responseData.result.length > 0) {
         Loader.isLoading(false);
-        // if (responseData.result.length == 0) {
-        //   setLoading(false);
-        // }
         const customdata = responseData.result;
         setproductdata(customdata);
-        // setcustomerdata([...customdata, ...responseData.result]);
-        // setoffsetdata(offsetdata + 5);
       } else {
         console.error("search_read error://..", responseData.error);
         return null;
       }
-
-      // return responseData.result;
     }
 
     return null;
@@ -158,7 +140,6 @@ const SellOrderDetails = (props: SellOrderDetailsProps) => {
           setcustomerdata(customdata);
           const getorderline = result[0].order_line;
           setorderlilne(getorderline);
-          // console.log("get sell_order_details:", result[0].order_line);
         } else {
           console.error("Error fetching data");
         }
@@ -181,9 +162,7 @@ const SellOrderDetails = (props: SellOrderDetailsProps) => {
 
         if (result) {
           const customdata = result;
-          // console.log("customdata:::::", customdata)
           setgetallorders(customdata);
-          // console.log("get sell_order_details:", result[0].order_line);
         } else {
           console.error("Error fetching data");
         }
@@ -271,7 +250,6 @@ const SellOrderDetails = (props: SellOrderDetailsProps) => {
           </View>
           <View
             style={{
-              // backgroundColor: "red",
               alignItems: "center",
               flexDirection: "row",
               width: Responsive.widthPx(90),
@@ -318,7 +296,6 @@ const SellOrderDetails = (props: SellOrderDetailsProps) => {
             </View>
             <View
               style={{
-                // backgroundColor: "red",
                 height: Responsive.heightPx(25),
               }}
             >
@@ -348,7 +325,7 @@ const SellOrderDetails = (props: SellOrderDetailsProps) => {
                           style={{
                             width: "40%",
                             alignItems: "center",
-                            // backgroundColor: "red",
+                     
                             padding: Responsive.heightPx(1),
                           }}
                         >

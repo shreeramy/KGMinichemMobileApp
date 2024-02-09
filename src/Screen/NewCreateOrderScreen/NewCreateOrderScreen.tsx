@@ -1,19 +1,25 @@
-import {
-  Text,
-  StyleSheet,
-  View,
-  Image,
-  FlatList,
-  TouchableOpacity,
-  TextInput,
-  Button,
-  KeyboardAvoidingView,
-  Platform,
-  Alert,
-  ActivityIndicator,
-} from "react-native";
-import React, { Component, useRef, useState } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import moment from "moment";
+import React, { useEffect, useRef, useState } from "react";
+import {
+  ActivityIndicator,
+  FlatList,
+  Image,
+  Platform,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View
+} from "react-native";
+import Modal from "react-native-modal";
+import RBSheet from "react-native-raw-bottom-sheet";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import {
+  AppButton,
+  AppContainer
+} from "../../Component";
 import {
   Color,
   Const,
@@ -23,26 +29,8 @@ import {
   Screen,
   Utility,
 } from "../../Helper";
-import { bindActionCreators } from "redux";
-import { connect } from "react-redux";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import RBSheet from "react-native-raw-bottom-sheet";
-import Modal from "react-native-modal";
-import Geolocation from "@react-native-community/geolocation";
-import { PERMISSIONS, request } from "react-native-permissions";
-import {
-  AppButton,
-  AppContainer,
-  AppHeader,
-  AppScrollview,
-  AppTextInput,
-} from "../../Component";
-import { useEffect } from "react";
-import styles from "./NewCreateOrderScreenstyle";
 import { ApiEndPoints } from "../../NetworkCall";
-import moment from "moment";
-import { cos, log } from "react-native-reanimated";
-import * as OdooApi from "../OdooApi";
+import styles from "./NewCreateOrderScreenstyle";
 
 interface NewCreateOrderScreenstyleProps {
   navigation?: any;
@@ -70,12 +58,6 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
   const [PaymentMode, setPaymentMode] = React.useState("Payment Mode");
   const [customerdata, setcustomerdata] = useState([]);
   const [productdata, setproductdata] = useState([]);
-  const regex = /\(([^)]+)\)/;
-  // useEffect(() => {
-  //   if (sendCustomerName) {
-  //     sendCustomerName.map(ele => console.log("ele", ele))
-  //   }
-  // }, [sendCustomerName])
   const [gstin, setgstin] = useState([
     {
       name: "Registered Business-Regular",
@@ -140,7 +122,6 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
       name: "Other UPI",
     },
 
-    // Add more payment methods as needed
   ]);
 
   const [isModalVisible, setModalVisible] = useState(false);
@@ -149,18 +130,13 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
   const [text3, setText3] = useState("");
   const [SelectUnit, setSelectUnit] = useState("");
   const [SelectUnitid, setSelectUnitid] = useState(Number);
-  const [items, setItems] = useState([]);
   const [date, setDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
-  const [sendorderdata, setsendorderdata] = useState([]);
   const [unitname, setunitname] = useState([]);
   const [orderLines, setOrderLines] = useState([]);
   const [newUnitIds, setNewUnitIds] = useState([]);
   const [generateId, setGenerateId] = useState(false);
   const [newGeneratedIds, setNewGeneratedIds] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [noMoreData, setNoMoreData] = useState(false);
-  console.log("")
 
   const [addval, setaddval] = useState([]);
   React.useEffect(() => {
@@ -178,7 +154,6 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
 
   React.useEffect(() => {
     getcustomer();
-    // searchReadData()
   }, []);
 
   const handleDateChange = (event, selectedDate) => {
@@ -192,41 +167,10 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
   };
 
   const formattedDate = moment(date).format("YYYY-MM-DD");
-  // console.log(">>?formattedDate...", formattedDate);
 
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
   };
-
-  const generateTwoDigitUniqueId = (existingIds: string[]): string => {
-    let uniqueId;
-
-    do {
-      uniqueId = Math.floor(Math.random() * 90 + 10).toString();
-    } while (existingIds.includes(uniqueId));
-
-    return uniqueId;
-  };
-
-  const handleUnit = (selectedUnit: string): void => {
-    setGenerateId(true);
-    setSelectUnit(selectedUnit);
-
-    // const id = generateTwoDigitUniqueId(newUnitIds);
-    // setNewGeneratedIds(id);
-
-    // const Unitregex = /\(([^)]+)\)/;
-    // const match = selectedUnit.match(Unitregex);
-
-    // if (match) {
-    //   const result = match[1];
-    //   setSelectUnit(result);
-    // } else {
-    //   console.log("No match found");
-    // }
-  };
-
-  // >>>>>>????????????....?????????//////????????????????????
 
   useEffect(() => {
     console.log("Order Lines updated:>>>", orderLines);
@@ -238,7 +182,6 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
   }, [SelectUnit, unitname]);
 
   const callfinesproduct = async () => {
-    // addItem();
     Loader.isLoading(true);
     await setTimeout(() => {
       Loader.isLoading(false);
@@ -262,12 +205,6 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
       ];
 
       arrval = [...arrval, newOrderLine];
-      // const newOrderLine1 = [
-      //   0,
-      //   0,
-      //   { product_name: "adhesive", product_qunt: 5, prod_price: 12 },
-      // ];
-      // setaddval((prevArr) => [...prevArr, newOrderLine, newOrderLine1]);
       const newOrderLine1 = {
         product_id: 0,
         product_uom_qty: 0,
@@ -283,8 +220,6 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
       setText1("");
       setText2("");
       setText3("");
-      console.log("?orde_addv>>?//", addval);
-      console.log(">>>???", arrval);
     }
   };
 
@@ -292,8 +227,6 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
     const newAddVal = [...addval];
     newAddVal.splice(index, 1);
     setaddval(newAddVal);
-
-    // Remove the corresponding item from arrval
     const newArrVal = [...arrval];
     newArrVal.splice(index, 1);
     arrval = newArrVal;
@@ -345,7 +278,6 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
         navigation.navigate(Screen.ShowOrderScreen);
         const customdata = responseData.result;
         setcustomerdata(customdata);
-        // console.log("create salallorder_Suucess:", responseData.result);
       } else {
         Loader.isLoading(false);
         Utility.showDangerToast("sellorder not created");
@@ -359,157 +291,9 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
     return null;
   }
 
-  // &&&&&&&&&&&&&&&&&&&&&&&&&&&&&******************&&&&&&&&&&&&********
-
-  // async function createsellorder(order) {
-  //   const uid = await AsyncStorage.getItem("userId");
-  // const odooPassword = await AsyncStorage.getItem("@odopassword");
-  //   console.log("createorder=--array", createorder);
-  //   // Loader.isLoading(true);
-  //   Loader.isLoading(true);
-  //   if (uid) {
-  //     const searchCriteria = [["id", "!=", 0]];
-  //     const userData = {
-  //       partner_id: cutomerId,
-  //       payment_mode: PaymentMode,
-  //       l10n_in_gst_treatment: gstsendvalue,
-  //       validity_date: formattedDate, // Use a valid date format (YYYY-MM-DD)
-
-  //       order_line: createorder,
-  //     };
-  //     const response = await fetch(ApiEndPoints.jsonRpcEndpoint, {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify({
-  //         jsonrpc: "2.0",
-  //         method: "call",
-  //         params: {
-  //           service: "object",
-  //           method: "execute_kw",
-  //           args: [
-  //             ApiEndPoints.odooDatabase,
-  //             uid,
-  //             odooPassword,
-  //             "sale.order", // Replace with the desired model name
-  //             "create",
-  //             [userData],
-  //             {},
-  //           ],
-  //         },
-  //       }),
-  //     });
-  //     console.log("user.????", userData);
-  //     const responseData = await response.json();
-  //     console.log("??>>>/////...", responseData);
-  //     if (responseData.result) {
-  //       Loader.isLoading(false);
-  //       Utility.showSuccessToast("sellorder created successfully");
-  //       navigation.navigate(Screen.ShowOrderScreen);
-  //       const customdata = responseData.result;
-  //       setcustomerdata(customdata);
-  //       console.log("create salallorder_Suucess:", responseData.result);
-  //     } else {
-  //       Loader.isLoading(false);
-  //       Utility.showDangerToast("sellorder not created");
-  //       console.error("create faild:>>", responseData.error);
-  //       return null;
-  //     }
-
-  //     return responseData.result;
-  //   }
-
-  //   return null;
-  // }
-
-  // const addItem = async () => {
-  //   console.log(">>>?.....Items", ...items);
-  //   if (text1 || text2 || text3) {
-  //     const newOrderLine = [
-  //       0,
-  //       0,
-  //       {
-  //         product_id: parseInt(text1),
-  //         product_uom_qty: parseInt(text2),
-  //         price_unit: parseFloat(text3),
-  //         product_uom: parseInt(SelectUnitid),
-  //       },
-  //     ];
-
-  //     // setsendorderdata([...items, orderLine]);
-  //     setOrderLines([...orderLines, newOrderLine]);
-  //     // setOrderLines((prevOrderLines) => [...prevOrderLines, newOrderLine]);
-  //     console.log("/...//...>>>?///", ...orderLines, ">>>>>", newOrderLine);
-  //     console.log("===//..??", newOrderLine);
-  //     // setItems([...items, orderLine]);
-  //     setText1("");
-  //     setText2("");
-  //     setText3("");
-  //     setcreateorder(items);
-  //     console.log(";;<<m>>,///???", ...items);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   searchRead1()
-  // }, [])
-
-  async function searchRead1(e: any) {
-    console.log('searchRead1-->', 'searchRead1');
+  async function getmatricunit() {
     const uid = await AsyncStorage.getItem("userId");
     const odooPassword = await AsyncStorage.getItem("@odopassword");
-    Loader.isLoading(true);
-
-    if (uid) {
-      const searchCriteria = [["name", "ilike", e]];
-      const response = await fetch(ApiEndPoints.jsonRpcEndpoint, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          jsonrpc: "2.0",
-          method: "call",
-          params: {
-            service: "object",
-            method: "execute_kw",
-            args: [
-              ApiEndPoints.odooDatabase,
-              uid,
-              odooPassword,
-              "res.partner", // Replace with the desired model name
-              "search_read",
-              [searchCriteria],
-              {},
-            ],
-          },
-        }),
-      });
-
-      const responseData = await response.json();
-
-      if (responseData.result) {
-        Loader.isLoading(false);
-        const customdata = responseData.result;
-        setcustomerdata(customdata);
-        //console.log("search_read result:::::", responseData.result);
-      } else {
-        console.error("search_read error://..", responseData.error);
-        return null;
-      }
-
-      // return responseData.result;
-    }
-
-    return null;
-  }
-
-
-  async function getmatricunit(e: any) {
-    const uid = await AsyncStorage.getItem("userId");
-    const odooPassword = await AsyncStorage.getItem("@odopassword");
-    // Loader.isLoading(true);
 
     if (uid) {
       const searchCriteria = [];
@@ -528,7 +312,7 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
               ApiEndPoints.odooDatabase,
               uid,
               odooPassword,
-              "uom.uom", // Replace with the desired model name
+              "uom.uom", 
               "search_read",
               [searchCriteria],
               {},
@@ -542,21 +326,18 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
       if (responseData.result) {
         Loader.isLoading(false);
         const customdata = responseData.result;
-        // console.log("Checing custom", customdata);
         setunitname(customdata);
-        // console.log("search_get>>>??", responseData.result);
+
       } else {
-        // console.error("search_read error://..", responseData.error);
         return null;
       }
 
-      // return responseData.result;
     }
 
     return null;
   }
 
-  const retrieveData = async (key) => {
+  const retrieveData = async () => {
     try {
       const value = await AsyncStorage.getItem("userId");
       if (value !== null) {
@@ -569,7 +350,6 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
     }
   };
 
-  // Function to perform a search_read operation
   async function getcustomer() {
     const uid = await AsyncStorage.getItem("userId");
     const odooPassword = await AsyncStorage.getItem("@odopassword");
@@ -577,12 +357,7 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
 
     if (uid) {
       const searchCriteria = [["id", "!=", 0]];
-      // if (name){
-      //   searchCriteria.append(["name", "=", name])
-      // }
-      // const searchCriteria = [];
-      // Replace with your search criteria
-
+ 
       const response = await fetch(ApiEndPoints.jsonRpcEndpoint, {
         method: "POST",
         headers: {
@@ -598,7 +373,7 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
               ApiEndPoints.odooDatabase,
               uid,
               odooPassword,
-              "res.partner", // Replace with the desired model name
+              "res.partner", 
               "search_read",
               [searchCriteria],
               {},
@@ -608,20 +383,16 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
       });
 
       const responseData = await response.json();
-      // console.log("responseData.result in getcustomer", responseData)
       if (responseData.result) {
 
         Loader.isLoading(false);
         const customdata = responseData.result;
         setcustomerdata(customdata);
-        // console.log("search_read result:::::", responseData.result);
       } else {
-        // console.error("search_read error://..", responseData.error);
         Loader.isLoading(false);
         return null;
       }
 
-      // return responseData.result;
     }
     Loader.isLoading(false);
     return null;
@@ -633,15 +404,9 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
         data={unitname}
         renderItem={({ item }) => (
           <TouchableOpacity
-            // onPress={() =>
-            //   refRBSheet.current.close(
-            //     setroll(item.name),
-            //     console.log("sdjcvh", item.name)
-            //   )
-            // }
+          
             onPress={() =>
               refRBSheet3.current.close(
-                // setroll(item?.name),
                 console.log("????>...???.>>>", item),
                 setSelectUnit(item?.name),
                 setSelectUnitid(item?.id)
@@ -656,12 +421,10 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
           >
             <View
               style={{
-                // backgroundColor: "red",
+
                 width: Responsive.widthPx(90),
                 justifyContent: "center",
                 alignItems: "center",
-                // height: Responsive.heightPx(3),
-                // borderWidth: 1,
                 borderColor: Color.text_input_borderColor,
                 marginTop: Responsive.heightPx(3),
                 borderRadius: Responsive.widthPx(3),
@@ -670,7 +433,7 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
               <Text
                 style={{
                   color: Color.text_color,
-                  // fontSize: 20,
+      
                   marginHorizontal: 12,
                   marginVertical: 5,
                 }}
@@ -687,60 +450,6 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
 
   const YourOwnComponent = () => (
     <View style={{ backgroundColor: "#fff" }}>
-      {/* <View style={styles.item1}>
-        <View>
-          <TouchableOpacity
-            onPress={() => {
-              searchRead1(prosearch);
-            }}
-          >
-            <Image
-              style={{ width: Responsive.widthPx(10) }}
-              resizeMode="contain"
-              source={Images.Search}
-            />
-          </TouchableOpacity>
-        </View>
-        <View>
-          <TextInput
-            style={{
-              padding: 2,
-              // backgroundColor: "red",
-              height: Responsive.heightPx(5),
-              width: Responsive.widthPx(65),
-              color: Color.text_color,
-              marginLeft: 10,
-            }}
-            value={prosearch}
-            onChangeText={(prosearch: any) => {
-              setprosearch(prosearch);
-              searchRead1(prosearch);
-            }}
-            placeholderTextColor={Color.text_color}
-            placeholder="Search"
-          />
-        </View>
-        {prosearch.length > 0 ? (
-          <View>
-            <TouchableOpacity
-              onPress={() => {
-                setprosearch("");
-                searchRead();
-              }}
-            >
-              <Image
-                style={{
-                  width: Responsive.widthPx(5),
-                  height: Responsive.heightPx(4),
-                  // backgroundColor: "red",
-                }}
-                resizeMode="contain"
-                source={Images.crossicon}
-              />
-            </TouchableOpacity>
-          </View>
-        ) : null}
-      </View> */}
       {
         customerdata.length === 0 ?
           <View>
@@ -750,16 +459,10 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
           <FlatList
             data={customerdata}
             renderItem={({ item }) => {
-              // console.log("item::::::", item)
               return (
 
                 <TouchableOpacity
-                  // onPress={() =>
-                  //   refRBSheet.current.close(
-                  //     setroll(item.name),
-                  //     console.log("sdjcvh", item.name)
-                  //   )
-                  // }
+              
                   onPress={() =>
                     refRBSheet.current.close(
                       setroll(item?.name),
@@ -775,12 +478,9 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
                 >
                   <View
                     style={{
-                      // backgroundColor: "red",
                       width: Responsive.widthPx(90),
                       justifyContent: "center",
                       alignItems: "center",
-                      // height: Responsive.heightPx(3),
-                      // borderWidth: 1,
                       borderColor: Color.text_input_borderColor,
                       marginTop: Responsive.heightPx(3),
                       borderRadius: Responsive.widthPx(3),
@@ -789,7 +489,7 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
                     <Text
                       style={{
                         color: Color.text_color,
-                        // fontSize: 20,
+       
                         marginHorizontal: 12,
                         marginVertical: 5,
                       }}
@@ -813,12 +513,7 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
         data={gstin}
         renderItem={({ item }) => (
           <TouchableOpacity
-            // onPress={() =>
-            //   refRBSheet.current.close(
-            //     setroll(item.name),
-            //     console.log("sdjcvh", item.name)
-            //   )
-            // }
+         
             onPress={() =>
               refRBSheet1.current.close(
                 setgstinpro(item?.name),
@@ -827,20 +522,20 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
             }
             style={{
               width: Responsive.widthPx(100),
-              // height: Responsive.heightPx(3),
+      
               justifyContent: "center",
               alignItems: "center",
-              // backgroundColor: "red",
+        
             }}
           >
             <View
               style={{
-                // backgroundColor: "red",
+      
                 width: Responsive.widthPx(90),
                 justifyContent: "center",
                 alignItems: "center",
-                // height: Responsive.heightPx(3),
-                // borderWidth: 1,
+    
+  
                 borderColor: Color.text_input_borderColor,
                 marginTop: Responsive.heightPx(1),
                 borderRadius: Responsive.widthPx(3),
@@ -849,7 +544,7 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
               <Text
                 style={{
                   color: Color.text_color,
-                  // fontSize: 20,
+  
                   marginHorizontal: 12,
                   marginVertical: 5,
                 }}
@@ -869,34 +564,28 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
         data={payment}
         renderItem={({ item }) => (
           <TouchableOpacity
-            // onPress={() =>
-            //   refRBSheet.current.close(
-            //     setroll(item.name),
-            //     console.log("sdjcvh", item.name)
-            //   )
-            // }
+         
             onPress={() =>
               PaymentModesheet.current.close(
                 setPaymentMode(item?.name)
-                // setgstsendvalue(item?.sendvale)
+
               )
             }
             style={{
               width: Responsive.widthPx(100),
-              // height: Responsive.heightPx(3),
+ 
               justifyContent: "center",
               alignItems: "center",
-              // backgroundColor: "red",
+
             }}
           >
             <View
               style={{
-                // backgroundColor: "red",
+
                 width: Responsive.widthPx(90),
                 justifyContent: "center",
                 alignItems: "center",
-                // height: Responsive.heightPx(3),
-                // borderWidth: 1,
+
                 borderColor: Color.text_input_borderColor,
                 marginTop: Responsive.heightPx(1),
                 borderRadius: Responsive.widthPx(3),
@@ -905,7 +594,6 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
               <Text
                 style={{
                   color: Color.text_color,
-                  // fontSize: 20,
                   marginHorizontal: 12,
                   marginVertical: 5,
                 }}
@@ -926,14 +614,8 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
         data={productdata}
         renderItem={({ item }) => (
           <TouchableOpacity
-            // onPress={() =>
-            //   refRBSheet.current.close(
-            //     setroll(item.name),
-            //     console.log("sdjcvh", item.name)
-            //   )
-            // }
+
             onPress={() => {
-              // console.log("uomid------------>", item?.uom_id);
 
               refRBSheet2.current.close(
                 setproname(item?.display_name),
@@ -945,20 +627,15 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
             }}
             style={{
               width: Responsive.widthPx(100),
-              // height: Responsive.heightPx(3),
               justifyContent: "center",
               alignItems: "center",
-              // backgroundColor: "red",
             }}
           >
             <View
               style={{
-                // backgroundColor: "red",
                 width: Responsive.widthPx(90),
                 justifyContent: "center",
                 alignItems: "center",
-                // height: Responsive.heightPx(3),
-                // borderWidth: 1,
                 borderColor: Color.text_input_borderColor,
                 marginTop: Responsive.heightPx(1),
                 borderRadius: Responsive.widthPx(3),
@@ -967,7 +644,6 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
               <Text
                 style={{
                   color: Color.text_color,
-                  // fontSize: 20,
                   marginHorizontal: 12,
                   marginVertical: 5,
                 }}
@@ -987,16 +663,9 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
     const uid = await AsyncStorage.getItem("userId");
     const odooPassword = await AsyncStorage.getItem("@odopassword");
     Loader.isLoading(true);
-    // setLoading(true);
 
     if (uid) {
       const searchCriteria = [["id", "!=", 0]];
-      // if (name){
-      //   searchCriteria.append(["name", "=", name])
-      // }
-      // const searchCriteria = [];
-      // Replace with your search criteria
-
       const response = await fetch(ApiEndPoints.jsonRpcEndpoint, {
         method: "POST",
         headers: {
@@ -1012,7 +681,7 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
               ApiEndPoints.odooDatabase,
               uid,
               odooPassword,
-              "product.product", // Replace with the desired model name
+              "product.product", 
               "search_read",
               [searchCriteria],
               {},
@@ -1022,25 +691,16 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
       });
 
       const responseData = await response.json();
-      // console.log("responseData.result.length in ProductCatalogapi", responseData)
       if (responseData.result.length > 0) {
 
         Loader.isLoading(false);
-        // if (responseData.result.length == 0) {
-        //   setLoading(false);
-        // }
         const customdata = responseData.result;
         setproductdata(customdata);
-        // setcustomerdata([...customdata, ...responseData.result]);
-        // setoffsetdata(offsetdata + 5);
-        // console.log("search?>>>>>", responseData.result);
       } else {
         console.error("search_read error://..", responseData.error);
         Loader.isLoading(false);
         return null;
       }
-
-      // return responseData.result;
     }
 
     return null;
@@ -1061,8 +721,6 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
 
   return (
     <AppContainer>
-      {/* <KeyboardAvoidingView> */}
-      {/* <AppScrollview> */}
       <View style={styles.container}>
         <View style={styles.headerview}>
           <View style={styles.headerview1}>
@@ -1192,8 +850,6 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
                 shadowOpacity: 0.25,
                 shadowRadius: 3.84,
                 elevation: 5,
-                // borderWidth: 1,
-                // borderColor: Color.text_input_borderColor,
                 alignItems: "center",
                 justifyContent: "space-between",
                 alignContent: "center",
@@ -1237,8 +893,6 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
                 shadowOpacity: 0.25,
                 shadowRadius: 3.84,
                 elevation: 5,
-                // borderWidth: 1,
-                // borderColor: Color.text_input_borderColor,
                 alignItems: "center",
                 justifyContent: "space-between",
                 alignContent: "center",
@@ -1280,8 +934,6 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
                 shadowOpacity: 0.25,
                 shadowRadius: 3.84,
                 elevation: 5,
-                // borderWidth: 1,
-                // borderColor: Color.text_input_borderColor,
                 alignItems: "center",
                 justifyContent: "space-between",
                 alignContent: "center",
@@ -1297,7 +949,7 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
                 }}
               >
                 {PaymentMode}
-                {/* {gstinpro} */}
+
               </Text>
               <Image
                 style={{ marginRight: Responsive.widthPx(4) }}
@@ -1332,8 +984,6 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
                 shadowOpacity: 0.25,
                 shadowRadius: 3.84,
                 elevation: 5,
-                // borderWidth: 1,
-                // borderColor: Color.text_input_borderColor,
                 alignItems: "center",
                 justifyContent: "space-between",
                 alignContent: "center",
@@ -1355,8 +1005,6 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
               />
             </TouchableOpacity>
 
-            {/* Optional: Button to manually trigger the date picker */}
-            {/* <Button title="Select Date" onPress={showDatepicker} /> */}
           </View>
 
           <View
@@ -1364,27 +1012,9 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
               width: Responsive.widthPx(90),
               justifyContent: "center",
               alignItems: "center",
-              // flexDirection: "row",
             }}
           >
             <AppButton onPress={toggleModal} label={"Add Product"} />
-            {/* <TouchableOpacity onPress={toggleModal}>
-              <View
-                style={{
-                  backgroundColor: Color.botton_Color,
-                  borderRadius: Responsive.widthPx(2),
-                  width: Responsive.widthPx(50),
-                  // height: Responsive.heightPx(5),
-                  justifyContent: "center",
-                  alignItems: "center",
-                  bottom: Responsive.heightPx(3),
-                  marginTop: Responsive.heightPx(8),
-                  padding: Responsive.widthPx(3),
-                }}
-              >
-                <Text style={{ color: "#fff" }}>Add Product</Text>
-              </View>
-            </TouchableOpacity> */}
           </View>
         </View>
         <View style={{ flex: 1 }}>
@@ -1415,28 +1045,7 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
                   </TouchableOpacity>
                 </View>
               </View>
-              {/* <View
-                style={{
-                  height: Responsive.heightPx(20),
-                  borderColor: "red",
-                  borderWidth: 1,
-                  marginBottom: Responsive.heightPx(4),
-                }}
-              >
-                <FlatList
-                  data={addval}
-                  keyExtractor={(item, index) => index.toString()}
-                  renderItem={({ item, index }) => (
-                    <View>
-                      <Text>{`Product ID: ${item.product_name}, Quantity: ${item.product_qunt}, prod_price: ${item.prod_price}`}</Text>
-                      <Button
-                        title="Remove"
-                        onPress={() => removeItem(index)}
-                      />
-                    </View>
-                  )}
-                />
-              </View> */}
+           
               <View style={styles.orderlineview}>
                 <View
                   style={{
@@ -1449,11 +1058,9 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
                   <Text style={styles.listtext}>Product</Text>
                   <Text style={styles.listtext}>Quantity</Text>
                   <Text style={styles.listtext}>Price</Text>
-                  {/* <Text style={styles.listtext}>Subtotal</Text> */}
                 </View>
                 <View
                   style={{
-                    // backgroundColor: "red",
                     height: Responsive.heightPx(25),
                   }}
                 >
@@ -1469,13 +1076,12 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
                             width: Responsive.widthPx(70),
                             justifyContent: "space-between",
                             alignItems: "center",
-                            // backgroundColor: "red",
                           }}
                         >
                           <View
                             style={{
                               width: Responsive.widthPx(20),
-                              // backgroundColor: "red",
+      
                               padding: Responsive.heightPx(1),
                             }}
                           >
@@ -1556,10 +1162,8 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
               </View>
               <View
                 style={{
-                  // padding: 12,
                   flexDirection: "row",
                   alignItems: "center",
-                  // backgroundColor: "red",
                   justifyContent: "space-between",
                 }}
               >
@@ -1593,7 +1197,6 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
                     color: Color.text_color,
                     flexDirection: "row",
                     alignItems: "center",
-                    // backgroundColor: "red",
                     justifyContent: "space-between",
                   }}
                 >
@@ -1620,12 +1223,7 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
                 keyboardType={"number-pad"}
                 onChangeText={(value) => setText3(value)}
               />
-              {/* <Button
-                  title="Add Item"
-                  onPress={() => {
-                    addItem, setModalVisible(false);
-                  }}
-                /> */}
+         
               <View
                 style={{
                   flexDirection: "row",
@@ -1640,8 +1238,6 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
                   }}
                   onPress={() => {
                     addItem();
-                    // setText1("");
-                    // createsellorder();
                   }}
                 >
                   <View
@@ -1666,9 +1262,6 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
                     addItem();
                     callfinesproduct();
                     toggleModal();
-                    // setText1("");
-                    // setText2("");
-                    // setText3("");
                   }}
                 >
                   <View
@@ -1685,22 +1278,11 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
                   </View>
                 </TouchableOpacity>
               </View>
-
-              {/* <Button
-                  title="Add More"
-                  onPress={() => {
-                    addItem(), toggleModal();
-                  }}
-                /> */}
-              {/* <TouchableOpacity onPress={toggleModal}>
-                  <Text>Close Modal</Text>
-                </TouchableOpacity> */}
             </View>
           </Modal>
         </View>
       </View>
-      {/* </AppScrollview> */}
-      {/* // </KeyboardAvoidingView> */}
+
     </AppContainer>
   );
 };

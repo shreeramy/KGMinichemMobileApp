@@ -5,19 +5,19 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: "#fff",
     alignItems: "center",
-    // padding: 10,
-    // justifyContent: "center",
+    
+    
   },
   topcontener: {
     width: Responsive.widthPx(80),
     alignItems: "center",
     justifyContent: "flex-end",
     flex: 1,
-    // height: Responsive.heightPx(20),
-    // backgroundColor: "red",
+    
+    
   },
   signdot: {
-    // backgroundColor: "yellow",
+    
     width: Responsive.widthPx(80),
     flexDirection: "row",
     alignItems: "flex-end",
@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
     marginLeft: Responsive.widthPx(5),
   },
   logoimg: {
-    // backgroundColor: "yellow",
+    
     width: Responsive.widthPx(80),
     flexDirection: "row",
     alignItems: "flex-end",
@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
   },
   textinputstyle: {
     marginTop: Responsive.heightPx(2),
-    // backgroundColor: "red",
+    
     width: Responsive.widthPx(90),
     alignSelf: "center",
   },
@@ -47,12 +47,12 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   btnsyle: {},
-  //////////////////////////////
+  
   dropdown: {
-    // height: 40,
-    // borderColor: "red",
+    
+    
     borderWidth: 0.1,
-    // borderRadius: 8,
+    
     paddingHorizontal: 8,
 
     shadowColor: "#000",
@@ -63,27 +63,27 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     marginTop: Responsive.heightPx(2),
-    // elevation: 1,
+    
 
-    // width: Responsive.widthPx(90),
+    
     height: Responsive.widthPx(15),
     borderRadius: Responsive.widthPx(1),
-    // flexDirection: "row",
-    // shadowColor: "#000",
-    // shadowOffset: {
-    //   width: 0,
-    //   height: 2,
-    // },
-    // shadowOpacity: 0.25,
-    // shadowRadius: 3.84,
-    // marginTop: Responsive.heightPx(2),
-    // elevation: 5,
-    // // borderWidth: 1,
-    // // borderColor: Color.text_input_borderColor,
-    // alignItems: "center",
-    // justifyContent: "center",
-    // alignContent: "center",
-    // backgroundColor: "#fff",
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
   },
   icon: {
     marginRight: 5,

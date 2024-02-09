@@ -5,7 +5,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
-    // justifyContent: "center",
   },
   item: {
     padding: 15,
@@ -26,7 +25,6 @@ const styles = StyleSheet.create({
     borderRadius: Responsive.widthPx(2),
   },
   headerview: {
-    // marginTop: Responsive.heightPx(2),
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
@@ -37,12 +35,10 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    // width: Responsive.widthPx(90),
   },
   listtext: { color: Color.text_color },
   listheadingtext: { color: Color.text_color, fontWeight: "900", fontSize: 15 },
   item1: {
-    // padding: 20,
     marginVertical: 8,
     marginHorizontal: 16,
     shadowColor: "#000",
@@ -62,7 +58,6 @@ const styles = StyleSheet.create({
   attendanceview: {
     flexDirection: "row",
     alignItems: "center",
-    // backgroundColor: "red",
     width: Responsive.widthPx(45),
     justifyContent: "space-around",
   },

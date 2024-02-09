@@ -1,48 +1,38 @@
+import React, { useRef, useState } from "react";
 import {
-  Text,
-  StyleSheet,
-  View,
+  Alert,
   Image,
   ImageBackground,
-  Alert,
-  FlatList,
+  Text,
   TouchableOpacity,
-  PermissionsAndroid,
+  View
 } from "react-native";
-import React, { Component, useRef, useState } from "react";
-import { SvgIcon } from "../../Component/SvgIcons";
 import RNFS from 'react-native-fs';
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
 import {
-  Color,
   Const,
   Images,
   Loader,
   Responsive,
   Screen,
-  Utility,
+  Utility
 } from "../../Helper";
-import { bindActionCreators } from "redux";
-import { connect } from "react-redux";
-// import { launchImageLibrary } from "react-native-image-picker";
-import { launchImageLibrary } from "react-native-image-picker";
-import ImagePicker from "react-native-image-crop-picker";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useEffect } from "react";
 import BottomSheet from "react-native-bottomsheet";
-import CountryPicker from "react-native-country-picker-modal";
-import RBSheet from "react-native-raw-bottom-sheet";
-import RNFetchBlob from "rn-fetch-blob"; // Import RNFetchBlob for handling file operations
 import { Dropdown } from "react-native-element-dropdown";
+import ImagePicker from "react-native-image-crop-picker";
+import { launchImageLibrary } from "react-native-image-picker";
 import {
   AppButton,
   AppContainer,
-  AppHeader,
   AppScrollview,
-  AppTextInput,
+  AppTextInput
 } from "../../Component";
-import { useEffect } from "react";
-import styles from "./Profilestyle";
-import { callOdooMethod } from "../OdooApi";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ApiEndPoints } from "../../NetworkCall";
+import { callOdooMethod } from "../OdooApi";
+import styles from "./Profilestyle";
 
 interface ProfileProps {
   navigation?: any;
@@ -53,7 +43,6 @@ interface ProfileProps {
 
 const Profile = (props: ProfileProps) => {
   const { navigation, text, commonActions, route } = props;
-  const refRBSheet: any = useRef();
   const [name, setname] = useState(
     route?.params?.cutname ? route?.params?.cutname : ""
   );
@@ -67,46 +56,29 @@ const Profile = (props: ProfileProps) => {
   const [Address, setAddress] = useState(
     route?.params?.custaddr ? route?.params?.custaddr : ""
   );
-  const [cunState, setcunState] = useState("");
   const [City, setCity] = useState("");
   const [Pincode, setPincode] = useState("");
-  const [imgage, setImage] = useState("");
-  const [mageObject, setImageObject] = useState("");
-  const [show, setShow] = useState(false);
-  const [countryCode, setCountryCode] = useState("");
-  const [selectedCountry, setSelectedCountry] = useState("");
-  const [country, setCountry] = useState(null);
-  const [searchText, setSearchText] = useState("");
-  const [profile, setProfile] = React.useState("");
-  const [imageSource, setImageSource] = useState(null);
-  const [callingCode, setCallingCode] = useState();
-  const [baseimg, setbaseimg] = useState();
   const [value, setValue] = useState(null);
   const [countrysendvalue, setsendvalue] = useState(null);
   const [customerdata, setcustomerdata] = useState([]);
   const [countrydata, setcountrydata] = useState([]);
   const [statelist, setstatelist] = React.useState([]);
-  const customeralldata = route?.params?.allcustmData;
-  console.log(">>?>...///", customeralldata);
-  const [roll, setroll] = React.useState("");
   const userId = route?.params?.useridsend;
   const username = route?.params?.cutname;
   const useremal = route?.params?.cutemail;
   const usermob = route?.params?.custphone;
   const userAddress = route?.params?.custaddr;
   const userparam = route?.params?.parametrt;
-  // const usering = route?.params?.usering;
   const [usering, setIusering] = useState(route?.params?.usering);
   const [imagepath, setIMagespath] = React.useState(
     route?.params?.usering ? route?.params?.usering : null
   );
+
   useEffect(() => {
     getcountrylist();
-    // getstatelist();
   }, []);
 
   const imageFilePath = imagepath?.path;
-  console.log(">>>imageF>>>>", imageFilePath);
   const onPickImage = () => {
     BottomSheet.showBottomSheetWithOptions(
       {
@@ -132,14 +104,12 @@ const Profile = (props: ProfileProps) => {
             (response) => {
               if (response) {
                 if (response.didCancel) {
-                  // User canceled the image selection
                 } else {
                   const imagedata = response?.assets[0];
                   setIMagespath({
                     path: imagedata?.uri,
                     ...imagedata,
                   });
-                  // Imageuploade(imagedata);
                 }
               }
             }
@@ -149,27 +119,16 @@ const Profile = (props: ProfileProps) => {
     );
   };
 
-  // Define the authenticate function
   async function handleCreatePartner() {
     const uid = await AsyncStorage.getItem("userId");
     const odooPassword = await AsyncStorage.getItem("@odopassword");
-
-    // Loader.isLoading(true);
-
-    // Load the image file
     if (!imagepath) {
       Alert.alert("KG-Minichem", "Please select your profile picture");
       return;
     }
 
     Loader.isLoading(true);
-
-    // const imageResponse = await RNFetchBlob.fs.readFile(
-    //   imageFilePath,
-    //   "base64"
-    // );
     let imageResponse = await RNFS.readFile(imagepath?.path, 'base64').then(res => { return res });
-    // console.log("jhc>>//", setbaseimg(imageResponse));
 
     const userData = {
       name: name,
@@ -202,7 +161,7 @@ const Profile = (props: ProfileProps) => {
               ApiEndPoints.odooDatabase,
               uid,
               odooPassword,
-              "res.partner", // Replace with the desired model name
+              "res.partner", 
               "create",
               [userData],
               {},
@@ -229,8 +188,6 @@ const Profile = (props: ProfileProps) => {
         console.error("ProfileCreateError------->", responseData.error);
         return null;
       }
-
-      // return responseData.result;
     }
 
     return null;
@@ -238,29 +195,12 @@ const Profile = (props: ProfileProps) => {
 
   const editUser = async () => {
     let userData = {};
-    console.log(">>>>>>.13246??>>");
     const uid = await AsyncStorage.getItem("userId");
     const odooPassword = await AsyncStorage.getItem("@odopassword");
-    // Loader.isLoading(true);
-    // Load the image file
-    // if (!imagepath) {
-    //   Alert.alert("KG-Minichem", "Please select your profile picture");
-    //   return;
-    // }
     if (imageFilePath) {
-      console.log(">>>imageF>>>>111000", imageFilePath);
-      // const imageResponse = await RNFetchBlob.fs.readFile(
-      //   imageFilePath,
-      //   "base64"
-      // );
       let imageResponse = await RNFS.readFile(imagepath?.path, 'base64').then(res => { return res });
       userData.image_1920 = imageResponse;
-      console.log("i>>>>/", imageResponse);
     }
-    // Loader.isLoading(true);
-
-    console.log(">>>route?.../..", route?.params?.usering);
-    console.log(">>>route????...///");
     if (route?.params?.cutname) {
       userData.name = name;
     }
@@ -278,7 +218,6 @@ const Profile = (props: ProfileProps) => {
     userData.zip = Pincode;
     userData.country_id = Number(countrysendvalue);
     userData.vat = gstNumber;
-    console.log("<>>>??>//???...", userData);
 
     console.log("user>>>>.", userData);
     if (uid) {
@@ -297,7 +236,7 @@ const Profile = (props: ProfileProps) => {
               ApiEndPoints.odooDatabase,
               uid,
               odooPassword,
-              "res.partner", // Replace with the desired model name
+              "res.partner", 
               "write",
               [userId],
               { values: userData },
@@ -331,84 +270,13 @@ const Profile = (props: ProfileProps) => {
     return null;
   };
 
-  // with callOdooMethod
-  // const editUser = async () => {
-  //   try {
-  //     const uid = await AsyncStorage.getItem("userId");
-
-  //     if (!uid) {
-  //       console.error("User ID not found");
-  //       return null;
-  //     }
-
-  //     let userData = {};
-
-  //     if (imageFilePath) {
-  //       const imageResponse = await RNFetchBlob.fs.readFile(
-  //         imageFilePath,
-  //         "base64"
-  //       );
-  //       userData.image_1920 = imageResponse;
-  //     }
-
-  //     if (route?.params?.cutname) {
-  //       userData.name = name;
-  //     }
-  //     if (route?.params?.cutemail) {
-  //       userData.email = Email;
-  //     }
-  //     if (route?.params?.custphone) {
-  //       userData.phone = Mobile;
-  //     }
-  //     if (route?.params?.custaddr) {
-  //       userData.street = Address;
-  //     }
-
-  //     userData.city = City;
-  //     userData.state_id = Number(value);
-  //     userData.zip = Pincode;
-  //     userData.country_id = Number(countrysendvalue);
-  //     userData.vat = gstNumber;
-
-  //     console.log("<>>>??>//???...", userData);
-
-  //     const response = await callOdooMethod(
-  //       uid,
-  //       "res.partner",
-  //       "write",
-  //       [userId],
-  //       { values: userData }
-  //     );
-
-  //     console.log("search>>>>.", response.result);
-
-  //     if (response.result) {
-  //       Loader.isLoading(false);
-  //       Utility.showSuccessToast("Profile edited successfully");
-  //       navigation.navigate(Screen.NewCreateOrderScreen);
-  //       setcustomerdata(response.result);
-  //       console.log("search_read result_Editapi..", response.result);
-  //     } else {
-  //       Loader.isLoading(false);
-  //       Utility.showDangerToast("Profile not edited");
-  //       console.error("search_read error://..", response.error);
-  //     }
-
-  //     return response.result;
-  //   } catch (error) {
-  //     console.error("Error:", error);
-  //     return null;
-  //   }
-  // };
-
   async function getcountrylist() {
     const uid = await AsyncStorage.getItem("userId");
-    // Loader.isLoading(true);
     if (uid) {
       const searchCriteria = [["id", "!=", 0]];
       const countryData = await callOdooMethod(
         uid,
-        "res.country", // Replace with the desired model name
+        "res.country",
         "search_read",
         [searchCriteria],
         {}
@@ -417,7 +285,6 @@ const Profile = (props: ProfileProps) => {
       if (countryData) {
         setcountrydata(countryData);
       } else {
-        //Loader.isLoading(false);
         console.error("search_read error://..");
       }
     }
@@ -430,7 +297,7 @@ const Profile = (props: ProfileProps) => {
       const searchCriteria = [["country_id", "=", stateid]];
       const statedata = await callOdooMethod(
         uid,
-        "res.country.state", // Replace with the desired model name
+        "res.country.state",
         "search_read",
         [searchCriteria],
         {}
@@ -451,7 +318,7 @@ const Profile = (props: ProfileProps) => {
       <AppScrollview>
         <View style={styles.container}>
           <View style={styles.topcontener}>
-            {/* <View> */}
+
             <ImageBackground
               resizeMode="stretch"
               borderBottomLeftRadius={15}
@@ -467,7 +334,7 @@ const Profile = (props: ProfileProps) => {
                   style={{
                     flexDirection: "row",
                     alignItems: "center",
-                    // backgroundColor: "red",
+
                     width: Responsive.widthPx(55),
                     justifyContent: "space-between",
                   }}
@@ -506,13 +373,12 @@ const Profile = (props: ProfileProps) => {
                     >
                       <TouchableOpacity
                         onPress={() => {
-                          // onGallery();
+
                           onPickImage();
                         }}
                       >
                         <View
                           style={{
-                            // backgroundColor: "red",
                             height: Responsive.heightPx(9),
                             justifyContent: "flex-end",
                             alignItems: "flex-end",
@@ -537,13 +403,12 @@ const Profile = (props: ProfileProps) => {
                     >
                       <TouchableOpacity
                         onPress={() => {
-                          // onGallery();
+
                           onPickImage();
                         }}
                       >
                         <View
                           style={{
-                            // backgroundColor: "red",
                             height: Responsive.heightPx(9),
                             justifyContent: "flex-end",
                             alignItems: "flex-end",
@@ -557,62 +422,20 @@ const Profile = (props: ProfileProps) => {
                   )}
                 </View>
 
-                {/* <TouchableOpacity onPress={onPickImage}>
-                  {imagepath ? (
-                    <Image
-                      source={
-                        imagepath ? { uri: imagepath?.path } : Images.camera
-                      }
-                      style={{
-                        width: Responsive.widthPx(50),
-                        height: Responsive.heightPx(50),
-                      }}
-                    />
-                  ) : (
-                    <Image
-                      source={Images.draweruser}
-                      resizeMode="contain"
-                      style={{
-                        width: Responsive.widthPx(50),
-                        height: Responsive.heightPx(50),
-                      }}
-                    />
-                  )}
-                </TouchableOpacity> */}
+
               </View>
             </ImageBackground>
-            {/* </View> */}
+
           </View>
-          {/* <View style={styles.signdot}>
-            <Text style={{ fontSize: 22, fontWeight: "bold" }}>Sign In</Text>
-            <SvgIcon Icon={Images.logndots} height={55} width={50} />
-          </View> */}
+
 
           <View style={{ marginTop: Responsive.heightPx(4) }}>
             <View style={styles.textinputstyle}>
-              {/* <View>
-                <RBSheet
-                  ref={refRBSheet}
-                  height={300}
-                  openDuration={250}
-                  customStyles={{
-                    container: {
-                      justifyContent: "center",
-                      alignItems: "center",
-                      backgroundColor: Color.black,
-                      borderTopLeftRadius: 10,
-                    },
-                  }}
-                >
-                  <YourOwnComponent />
-                </RBSheet>
-              </View> */}
+
 
               <Text style={styles.labeltext}>Name</Text>
               <AppTextInput
-                // userimg={true}
                 value={name}
-                // keyboardType={"email-address"}
                 onChangeText={(name: any) => {
                   setname(name);
                 }}
@@ -622,7 +445,6 @@ const Profile = (props: ProfileProps) => {
             <View style={styles.textinputstyle}>
               <Text style={styles.labeltext}>Email</Text>
               <AppTextInput
-                // userimg={true}
                 value={Email ? Email : useremal}
                 keyboardType={"email-address"}
                 onChangeText={(email: any) => {
@@ -635,7 +457,6 @@ const Profile = (props: ProfileProps) => {
               <Text style={styles.labeltext}>Mobile</Text>
               <AppTextInput
                 maxLength={10}
-                // userimg={true}
                 value={Mobile ? Mobile : usermob}
                 keyboardType={"number-pad"}
                 onChangeText={(Mobile: any) => {
@@ -648,9 +469,8 @@ const Profile = (props: ProfileProps) => {
             <View style={styles.textinputstyle}>
               <Text style={styles.labeltext}>GST Number</Text>
               <AppTextInput
-                // userimg={true}
                 value={gstNumber}
-                // keyboardType={"email-address"}
+
                 onChangeText={(gstNumber: any) => {
                   setgstNumber(gstNumber);
                 }}
@@ -661,9 +481,7 @@ const Profile = (props: ProfileProps) => {
             <View style={styles.textinputstyle}>
               <Text style={styles.labeltext}>Address</Text>
               <AppTextInput
-                // userimg={true}
                 value={Address ? Address : userAddress}
-                // keyboardType={"email-address"}
                 onChangeText={(Address: any) => {
                   setAddress(Address);
                 }}
@@ -718,9 +536,7 @@ const Profile = (props: ProfileProps) => {
             <View style={styles.textinputstyle}>
               <Text style={styles.labeltext}>Pin code</Text>
               <AppTextInput
-                // userimg={true}
                 value={Pincode}
-                // keyboardType={"email-address"}
                 onChangeText={(Pincode: any) => {
                   setPincode(Pincode);
                 }}
@@ -731,9 +547,7 @@ const Profile = (props: ProfileProps) => {
             <View style={styles.textinputstyle}>
               <Text style={styles.labeltext}>City</Text>
               <AppTextInput
-                // userimg={true}
                 value={City}
-                // keyboardType={"email-address"}
                 onChangeText={(City: any) => {
                   setCity(City);
                 }}
@@ -743,10 +557,8 @@ const Profile = (props: ProfileProps) => {
           </View>
           <AppButton
             label={"Save Changes & Create Order"}
-            // containerStyle={styles.btnsyle}
             onPress={() => {
               userparam ? editUser() : handleCreatePartner();
-              // editUser();
             }}
           />
         </View>
