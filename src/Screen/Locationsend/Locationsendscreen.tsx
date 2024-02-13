@@ -118,7 +118,7 @@ const Locationsendscreen = (props: LocationsendscreenProps) => {
     const imageResponse = await RNFetchBlob.fs.readFile(
       imageFilePath,
       "base64"
-    );
+    )
     const atendpassid = await AsyncStorage.getItem("attendanceId");
     Loader.isLoading(true);
     if (uid) {

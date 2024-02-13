@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
   },
   btntextview: {
     backgroundColor: "#3A474A",
-    width: Responsive.widthPx(35),
+    width: Responsive.widthPx(75),
     alignItems: "center",
     justifyContent: "center",
     padding: Responsive.heightPx(2),
@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
     borderRadius: Responsive.widthPx(3),
   },
   btntext: {
-    fontSize: 15,
+    fontSize: 18,
     fontWeight: "bold",
     color: "#fff",
   },

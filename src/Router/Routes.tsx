@@ -20,6 +20,8 @@ import {
   Profile,
   SellOrderDetails,
   ShowOrderScreen,
+  SettingScreen,
+  NotificationScreen
 } from "../Screen";
 import AppDrawer from "./AppDrawer";
 import { StyleSheet } from "react-native";
@@ -36,25 +38,11 @@ const Tab = createBottomTabNavigator();
 interface appScrollviewProps {
   isLogin?: boolean;
 }
-const checkUserSession = async () => {
-  try {
-    const userId = await AsyncStorage.getItem("userId");
-    if (userId) {
-      console.log("<<<><????..", userId);
-    } else {
-      console.log("<<<><nullnullnull/", null);
-    }
-  } catch (error) {
-    console.error("Error checking user session:", error);
-    return null;
-  }
-};
 
-export default function Routes() {
+export default function Routes(props) {
+  const initialRoute = props.data;
+  console.log("route--->", initialRoute)
   const renderBottomTab =  () => {
-    const initialRouteName = checkUserSession()
-      ? Screen.HomeScreen
-      : Screen.LoginScreen;
     return (
       <Tab.Navigator
         tabBar={(props) => <AppBottomTab props={props} />}
@@ -62,15 +50,19 @@ export default function Routes() {
           lazy: true,
           headerShown: false,
         }}
-        initialRouteName={initialRouteName}
+        initialRouteName={Screen.LoginScreen}
       >
         <Tab.Screen name={Screen.HomeScreen} component={HomeScreen} />
-        <Tab.Screen name={Screen.LoginScreen} component={LoginScreen} />
+        <Tab.Screen name={Screen.NotificationScreen} component={NotificationScreen} />
+        <Tab.Screen
+          name={Screen.SettingScreen}
+          component={SettingScreen}
+        />
         <Tab.Screen
           name={Screen.Locationsendscreen}
           component={Locationsendscreen}
         />
-        {/* <Tab.Screen name={Screen.ContactUsScreen} component={ContactUsScreen} />  */}
+
       </Tab.Navigator>
     );
   };
@@ -95,7 +87,7 @@ export default function Routes() {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName={Screen.LoginScreen}
+        initialRouteName={initialRoute === true ? Screen.HomeScreen : Screen.LoginScreen}
         screenOptions={{ headerShown: false }}
       >
         <Stack.Screen name={Screen.LoginScreen} component={LoginScreen} />
@@ -132,6 +124,8 @@ export default function Routes() {
           component={EditOrderLineScreen}
         />
         <Stack.Screen name={Screen.PdfViewer} component={PdfViewer} />
+        <Stack.Screen name={Screen.SettingScreen} component={SettingScreen} />
+        <Stack.Screen name={Screen.NotificationScreen} component={NotificationScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

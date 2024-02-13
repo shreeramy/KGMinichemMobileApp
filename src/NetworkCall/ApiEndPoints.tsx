@@ -1,4 +1,3 @@
-import { APPConfig } from "../Helper";
 
 const image_url = "";
 const odooHost = "http://kg.wangoes.com";

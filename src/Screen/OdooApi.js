@@ -48,7 +48,6 @@ export async function searchRead(
   fields
 ) {
   try {
-    console.log("searchCriteria::", searchCriteria)
     const odooPassword = await AsyncStorage.getItem("@odopassword");
     const response = await fetch(ApiEndPoints.jsonRpcEndpoint, {
       method: "POST",
@@ -77,7 +76,6 @@ export async function searchRead(
         },
       }),
     });
-
     const responseData = await response.json();
     if (responseData.result) {
       return responseData.result;

@@ -14,6 +14,8 @@ import LiveLocationScreen from "./LiveLocation/LiveLocationScreen";
 import AttendanceHistoryScreen from "./AttendanceHistory/AttendanceHistoryScreen";
 import Locationsendscreen from "./Locationsend/Locationsendscreen";
 import EditOrderLineScreen from "./EditOrderLineScreen/EditOrderLineScreen";
+import SettingScreen from "./SettingsScreen/SettingScreen";
+import NotificationScreen from "./NotificationScreen/NotificationScreen";
 export {
   HomeScreen,
   LoginScreen,
@@ -31,4 +33,6 @@ export {
   AttendanceHistoryScreen,
   Locationsendscreen,
   EditOrderLineScreen,
+  SettingScreen,
+  NotificationScreen
 };

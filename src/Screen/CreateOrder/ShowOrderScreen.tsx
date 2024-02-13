@@ -136,8 +136,6 @@ const ShowOrderScreen = (props: ShowOrderScreenProps) => {
 
   useEffect(() => {
     if (search.length === 0) {
-      console.log("useEffect calling ::::")
-
       searchRead(page, search)
       setPage(1)
     }

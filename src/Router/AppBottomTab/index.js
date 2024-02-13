@@ -19,14 +19,14 @@ const tabArray = [
     color: Color.botton_Color,
   },
   {
-    key: Screen.HomeScreen,
+    key: Screen.NotificationScreen,
     name: "Notifiation",
     icon: Images.inactiveNotification,
     active_icon: Images.activeNotification,
     color: Color.botton_Color,
   },
   {
-    key: Screen.HomeScreen,
+    key: Screen.SettingScreen,
     name: "Setting",
     icon: Images.Setting,
     active_icon: Images.activeSetting,

@@ -31,6 +31,7 @@ import {
 } from "../../Helper";
 import { ApiEndPoints } from "../../NetworkCall";
 import styles from "./NewCreateOrderScreenstyle";
+import * as OdooApi from '../OdooApi';
 
 interface NewCreateOrderScreenstyleProps {
   navigation?: any;
@@ -43,8 +44,6 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
   const { navigation, text, commonActions, route } = props;
   const getcustomeId = route?.params?.sendcustomerId;
   const sendCustomerName = route?.params?.sendcustomerName;
-  const [orederdate, setorederdate] = useState("");
-  const [createorder, setcreateorder] = useState([]);
   const refRBSheet: any = useRef();
   const refRBSheet1: any = useRef();
   const PaymentModesheet: any = useRef();
@@ -58,6 +57,7 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
   const [PaymentMode, setPaymentMode] = React.useState("Payment Mode");
   const [customerdata, setcustomerdata] = useState([]);
   const [productdata, setproductdata] = useState([]);
+  const [page, setPage] = useState(1);
   const [gstin, setgstin] = useState([
     {
       name: "Registered Business-Regular",
@@ -137,9 +137,11 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
   const [newUnitIds, setNewUnitIds] = useState([]);
   const [generateId, setGenerateId] = useState(false);
   const [newGeneratedIds, setNewGeneratedIds] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const [addval, setaddval] = useState([]);
-  React.useEffect(() => {
+
+  useEffect(() => {
     retrieveData();
     getmatricunit();
     ProductCatalogapi();
@@ -152,8 +154,8 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
     return backScreen;
   }, []);
 
-  React.useEffect(() => {
-    getcustomer();
+  useEffect(() => {
+    getCustomer(1);
   }, []);
 
   const handleDateChange = (event, selectedDate) => {
@@ -312,7 +314,7 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
               ApiEndPoints.odooDatabase,
               uid,
               odooPassword,
-              "uom.uom", 
+              "uom.uom",
               "search_read",
               [searchCriteria],
               {},
@@ -350,53 +352,62 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
     }
   };
 
-  async function getcustomer() {
-    const uid = await AsyncStorage.getItem("userId");
-    const odooPassword = await AsyncStorage.getItem("@odopassword");
-    Loader.isLoading(true);
 
-    if (uid) {
-      const searchCriteria = [["id", "!=", 0]];
- 
-      const response = await fetch(ApiEndPoints.jsonRpcEndpoint, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          jsonrpc: "2.0",
-          method: "call",
-          params: {
-            service: "object",
-            method: "execute_kw",
-            args: [
-              ApiEndPoints.odooDatabase,
-              uid,
-              odooPassword,
-              "res.partner", 
-              "search_read",
-              [searchCriteria],
-              {},
-            ],
-          },
-        }),
-      });
 
-      const responseData = await response.json();
-      if (responseData.result) {
+  const onendreached = () => {
+    ;
 
-        Loader.isLoading(false);
-        const customdata = responseData.result;
-        setcustomerdata(customdata);
-      } else {
-        Loader.isLoading(false);
-        return null;
-      }
-
+    if (!loading) {
+      setPage((prevPage) => prevPage + 1);
+      getCustomer(page + 1);
     }
-    Loader.isLoading(false);
-    return null;
-  }
+
+
+  };
+
+
+  const getCustomer = async (pageNumber) => {
+    try {
+      setLoading(true);
+      const uid = await AsyncStorage.getItem("userId");
+
+      if (uid) {
+        const searchCriteria = [["id", "!=", 0]];
+        const list = ["id"];
+
+        const limit = 20;
+        const offset = (pageNumber - 1) * 10;
+
+        const searchData = await OdooApi.searchRead(
+          uid,
+          "res.partner",
+          searchCriteria,
+          limit,
+          offset
+        );
+        if (searchData) {
+          setcustomerdata((prevData: any) => {
+            if (pageNumber === 1) {
+              return [...searchData];
+            } else {
+              const uniqueData = searchData.filter(
+                (item: any) =>
+                  !prevData.some((existingItem) => existingItem.id === item.id)
+              );
+              return [...prevData, ...uniqueData];
+            }
+          });
+        } else {
+          console.error("searchRead error://..");
+        }
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
 
   const Getunitname = () => (
     <View style={{ backgroundColor: "#fff" }}>
@@ -404,7 +415,7 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
         data={unitname}
         renderItem={({ item }) => (
           <TouchableOpacity
-          
+
             onPress={() =>
               refRBSheet3.current.close(
                 console.log("????>...???.>>>", item),
@@ -433,7 +444,7 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
               <Text
                 style={{
                   color: Color.text_color,
-      
+
                   marginHorizontal: 12,
                   marginVertical: 5,
                 }}
@@ -448,9 +459,10 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
     </View>
   );
 
-  const YourOwnComponent = () => (
+  const CustomerDataList = () => (
     <View style={{ backgroundColor: "#fff" }}>
       {
+
         customerdata.length === 0 ?
           <View>
             <ActivityIndicator size="large" color="#0000ff" />
@@ -462,7 +474,7 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
               return (
 
                 <TouchableOpacity
-              
+
                   onPress={() =>
                     refRBSheet.current.close(
                       setroll(item?.name),
@@ -489,7 +501,7 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
                     <Text
                       style={{
                         color: Color.text_color,
-       
+
                         marginHorizontal: 12,
                         marginVertical: 5,
                       }}
@@ -500,6 +512,11 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
                 </TouchableOpacity>
               )
             }}
+            onEndReached={onendreached}
+            onEndReachedThreshold={0.1}
+            ListFooterComponent={() =>
+              loading ? <ActivityIndicator size="large" color="#0000ff" /> : null
+            }
             numColumns={1}
           />
       }
@@ -507,13 +524,13 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
     </View>
   );
 
-  const YourOwnComponent1 = () => (
+  const GstDataList = () => (
     <View style={{ backgroundColor: "#fff" }}>
       <FlatList
         data={gstin}
         renderItem={({ item }) => (
           <TouchableOpacity
-         
+
             onPress={() =>
               refRBSheet1.current.close(
                 setgstinpro(item?.name),
@@ -522,20 +539,20 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
             }
             style={{
               width: Responsive.widthPx(100),
-      
+
               justifyContent: "center",
               alignItems: "center",
-        
+
             }}
           >
             <View
               style={{
-      
+
                 width: Responsive.widthPx(90),
                 justifyContent: "center",
                 alignItems: "center",
-    
-  
+
+
                 borderColor: Color.text_input_borderColor,
                 marginTop: Responsive.heightPx(1),
                 borderRadius: Responsive.widthPx(3),
@@ -544,7 +561,7 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
               <Text
                 style={{
                   color: Color.text_color,
-  
+
                   marginHorizontal: 12,
                   marginVertical: 5,
                 }}
@@ -564,7 +581,7 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
         data={payment}
         renderItem={({ item }) => (
           <TouchableOpacity
-         
+
             onPress={() =>
               PaymentModesheet.current.close(
                 setPaymentMode(item?.name)
@@ -573,7 +590,7 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
             }
             style={{
               width: Responsive.widthPx(100),
- 
+
               justifyContent: "center",
               alignItems: "center",
 
@@ -608,7 +625,7 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
     </View>
   );
 
-  const YourOwnComponent2 = () => (
+  const ProductDataList = () => (
     <View style={{ backgroundColor: "#fff" }}>
       <FlatList
         data={productdata}
@@ -660,11 +677,13 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
   );
 
   async function ProductCatalogapi() {
+
     const uid = await AsyncStorage.getItem("userId");
     const odooPassword = await AsyncStorage.getItem("@odopassword");
     Loader.isLoading(true);
 
     if (uid) {
+
       const searchCriteria = [["id", "!=", 0]];
       const response = await fetch(ApiEndPoints.jsonRpcEndpoint, {
         method: "POST",
@@ -681,7 +700,7 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
               ApiEndPoints.odooDatabase,
               uid,
               odooPassword,
-              "product.product", 
+              "product.product",
               "search_read",
               [searchCriteria],
               {},
@@ -689,8 +708,11 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
           },
         }),
       });
+      console.log("products--> ", response)
 
       const responseData = await response.json();
+      console.log("productsData--> ", responseData)
+
       if (responseData.result.length > 0) {
 
         Loader.isLoading(false);
@@ -754,7 +776,7 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
               },
             }}
           >
-            <YourOwnComponent />
+            <CustomerDataList />
           </RBSheet>
         </View>
 
@@ -790,7 +812,7 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
               },
             }}
           >
-            <YourOwnComponent1 />
+            <GstDataList />
           </RBSheet>
         </View>
 
@@ -825,7 +847,7 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
               },
             }}
           >
-            <YourOwnComponent2 />
+            <ProductDataList />
           </RBSheet>
         </View>
 
@@ -1017,7 +1039,7 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
             <AppButton onPress={toggleModal} label={"Add Product"} />
           </View>
         </View>
-        <View style={{ flex: 1 }}>
+        <View style={{ flex: 1, }}>
           <Modal isVisible={isModalVisible}>
             <View style={styles.modalContainer}>
               <View
@@ -1045,7 +1067,7 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
                   </TouchableOpacity>
                 </View>
               </View>
-           
+
               <View style={styles.orderlineview}>
                 <View
                   style={{
@@ -1081,7 +1103,7 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
                           <View
                             style={{
                               width: Responsive.widthPx(20),
-      
+
                               padding: Responsive.heightPx(1),
                             }}
                           >
@@ -1223,7 +1245,7 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
                 keyboardType={"number-pad"}
                 onChangeText={(value) => setText3(value)}
               />
-         
+
               <View
                 style={{
                   flexDirection: "row",

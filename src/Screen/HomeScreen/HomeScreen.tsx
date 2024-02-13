@@ -633,7 +633,7 @@ const HomeScreen = (props: HomeScreenProps) => {
 
   return (
     <AppContainer>
-                <AppScrollview>
+        
       <AppHeader
         {...props}
         isBackBtn={false}
@@ -723,11 +723,11 @@ const HomeScreen = (props: HomeScreenProps) => {
               <Text style={styles.btntext}>Overview</Text>
             </View>
           </TouchableOpacity>
-          <TouchableOpacity>
+          {/* <TouchableOpacity>
             <View style={styles.btntextview1}>
               <Text style={styles.btntext1}>Analytics</Text>
             </View>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
         <View
           style={{
@@ -735,11 +735,13 @@ const HomeScreen = (props: HomeScreenProps) => {
             justifyContent: "space-around",
             alignItems: "center",
             marginTop: Responsive.heightPx(2),
+            flex: 1
           }}
         >
 
           <FlatList
             data={data}
+            showsVerticalScrollIndicator={false}
             numColumns={3}
             renderItem={({ item, index }) => (
               <View style={index === 0 ? styles.item : styles.item1}>
@@ -759,7 +761,6 @@ const HomeScreen = (props: HomeScreenProps) => {
           />
         </View>
       </View>
-</AppScrollview>
     </AppContainer>
 
   );

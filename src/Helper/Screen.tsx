@@ -2,6 +2,8 @@ const Screen = {
   RootHome: "RootHome",
   HomeScreen: "HomeScreen",
   LoginScreen: "LoginScreen",
+  SettingScreen: "SettingScreen",
+  NotificationScreen: "NotificationScreen",
   CustomerScreen: "CustomerScreen",
   ProductCatalog: "ProductCatalog",
   Profile: "Profile",
