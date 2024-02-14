@@ -1,16 +1,16 @@
-import { Text, View, Image, ImageBackground, Pressable } from "react-native";
 import React, { useState } from "react";
-import { Color, Const, Images, Loader, Responsive, Screen } from "../../Helper";
-import { bindActionCreators } from "redux";
-import { connect } from "react-redux";
-import {
-  AppContainer,
-} from "../../Component";
-import styles from "./CatalogDetilsstyls";
+import { Image, ImageBackground, Pressable, Text, View } from "react-native";
 import {
   FlatList,
   TouchableOpacity,
 } from "react-native-gesture-handler";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import {
+  AppContainer,
+} from "../../Component";
+import { Color, Const, Images, Responsive, Screen } from "../../Helper";
+import styles from "./CatalogDetailsstyle";
 
 interface CatalogDetilsProps {
   navigation?: any;
@@ -19,7 +19,7 @@ interface CatalogDetilsProps {
   route?: any;
 }
 
-const CatalogDetils = (props: CatalogDetilsProps) => {
+const CatalogDetails = (props: CatalogDetilsProps) => {
   const { navigation, text, commonActions, route } = props;
   const [getitem, setgetitem] = useState("");
 
@@ -242,4 +242,4 @@ function mapDispatchToProps(dispatch: any) {
   };
 }
 
-export default connect(null, mapDispatchToProps)(CatalogDetils);
+export default connect(null, mapDispatchToProps)(CatalogDetails);

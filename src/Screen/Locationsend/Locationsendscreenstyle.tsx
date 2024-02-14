@@ -5,19 +5,14 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: "#fff",
     alignItems: "center",
-    
-    
   },
   topcontener: {
     width: Responsive.widthPx(80),
     alignItems: "center",
     justifyContent: "flex-end",
     flex: 1,
-    
-    
   },
   signdot: {
-    
     width: Responsive.widthPx(80),
     flexDirection: "row",
     alignItems: "flex-end",
@@ -25,7 +20,6 @@ const styles = StyleSheet.create({
     marginLeft: Responsive.widthPx(5),
   },
   logoimg: {
-    
     width: Responsive.widthPx(80),
     flexDirection: "row",
     alignItems: "flex-end",
@@ -38,7 +32,6 @@ const styles = StyleSheet.create({
   },
   textinputstyle: {
     marginTop: Responsive.heightPx(2),
-    
     width: Responsive.widthPx(90),
     alignSelf: "center",
   },
@@ -46,15 +39,9 @@ const styles = StyleSheet.create({
   Country: {
     marginBottom: 5,
   },
-  btnsyle: {},
-  
   dropdown: {
-    
-    
     borderWidth: 0.1,
-    
     paddingHorizontal: 8,
-
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -63,27 +50,8 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     marginTop: Responsive.heightPx(2),
-    
-
-    
     height: Responsive.widthPx(15),
     borderRadius: Responsive.widthPx(1),
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
   },
   icon: {
     marginRight: 5,

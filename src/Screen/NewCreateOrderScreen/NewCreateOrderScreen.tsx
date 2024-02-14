@@ -33,14 +33,14 @@ import { ApiEndPoints } from "../../NetworkCall";
 import styles from "./NewCreateOrderScreenstyle";
 import * as OdooApi from '../OdooApi';
 
-interface NewCreateOrderScreenstyleProps {
+interface NewCreateOrderScreenProps {
   navigation?: any;
   text?: any;
   commonActions?: any;
   route?: any;
 }
 var arrval = [];
-const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
+const NewCreateOrderScreen = (props: NewCreateOrderScreenProps) => {
   const { navigation, text, commonActions, route } = props;
   const getcustomeId = route?.params?.sendcustomerId;
   const sendCustomerName = route?.params?.sendcustomerName;
@@ -142,11 +142,9 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
   const [addval, setaddval] = useState([]);
 
   useEffect(() => {
-    retrieveData();
     getmatricunit();
     ProductCatalogapi();
     const backScreen = navigation.addListener("focus", () => {
-      retrieveData();
       getmatricunit();
       ProductCatalogapi();
       arrval = [];
@@ -335,34 +333,15 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
       }
 
     }
-
     return null;
   }
 
-  const retrieveData = async () => {
-    try {
-      const value = await AsyncStorage.getItem("userId");
-      if (value !== null) {
-        console.log("Retrieved data: ", value);
-      } else {
-        console.log("No data found.");
-      }
-    } catch (error) {
-      console.log("Error retrieving data: ", error);
-    }
-  };
-
-
 
   const onendreached = () => {
-    ;
-
     if (!loading) {
       setPage((prevPage) => prevPage + 1);
       getCustomer(page + 1);
     }
-
-
   };
 
 
@@ -373,8 +352,6 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
 
       if (uid) {
         const searchCriteria = [["id", "!=", 0]];
-        const list = ["id"];
-
         const limit = 20;
         const offset = (pageNumber - 1) * 10;
 
@@ -627,6 +604,11 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
 
   const ProductDataList = () => (
     <View style={{ backgroundColor: "#fff" }}>
+    {productdata.length === 0 ?
+          <View>
+            <ActivityIndicator size="large" color="#0000ff" />
+          </View>
+          :
       <FlatList
         data={productdata}
         renderItem={({ item }) => (
@@ -673,6 +655,7 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
         )}
         numColumns={1}
       />
+              }
     </View>
   );
 
@@ -842,7 +825,7 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
               container: {
                 justifyContent: "center",
                 alignItems: "center",
-                backgroundColor: Color.black,
+                backgroundColor: Color.white,
                 borderTopLeftRadius: 10,
               },
             }}
@@ -1315,4 +1298,4 @@ function mapDispatchToProps(dispatch: any) {
   };
 }
 
-export default connect(null, mapDispatchToProps)(NewCreateOrderScreenstyle);
+export default connect(null, mapDispatchToProps)(NewCreateOrderScreen);

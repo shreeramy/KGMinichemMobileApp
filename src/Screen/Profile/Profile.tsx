@@ -1,4 +1,5 @@
-import React, { useRef, useState } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import React, { useEffect, useState } from "react";
 import {
   Alert,
   Image,
@@ -7,9 +8,19 @@ import {
   TouchableOpacity,
   View
 } from "react-native";
+import BottomSheet from "react-native-bottomsheet";
+import { Dropdown } from "react-native-element-dropdown";
 import RNFS from 'react-native-fs';
+import ImagePicker from "react-native-image-crop-picker";
+import { launchImageLibrary } from "react-native-image-picker";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
+import {
+  AppButton,
+  AppContainer,
+  AppScrollview,
+  AppTextInput
+} from "../../Component";
 import {
   Const,
   Images,
@@ -18,18 +29,6 @@ import {
   Screen,
   Utility
 } from "../../Helper";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useEffect } from "react";
-import BottomSheet from "react-native-bottomsheet";
-import { Dropdown } from "react-native-element-dropdown";
-import ImagePicker from "react-native-image-crop-picker";
-import { launchImageLibrary } from "react-native-image-picker";
-import {
-  AppButton,
-  AppContainer,
-  AppScrollview,
-  AppTextInput
-} from "../../Component";
 import { ApiEndPoints } from "../../NetworkCall";
 import { callOdooMethod } from "../OdooApi";
 import styles from "./Profilestyle";
@@ -574,3 +573,5 @@ function mapDispatchToProps(dispatch: any) {
 }
 
 export default connect(null, mapDispatchToProps)(Profile);
+
+// export default Profile

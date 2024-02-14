@@ -2,8 +2,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import moment from 'moment-timezone';
 import React, { useEffect, useState } from "react";
 import {
-  Alert,
-  BackHandler,
   FlatList,
   Image,
   ImageBackground,
@@ -11,7 +9,7 @@ import {
   TouchableOpacity,
   View
 } from "react-native";
-import { AppContainer, AppHeader, AppScrollview } from "../../Component";
+import { AppContainer, AppHeader } from "../../Component";
 import {
   Color,
   Images,
@@ -82,7 +80,7 @@ const HomeScreen = (props: HomeScreenProps) => {
 
   const [loggedIn, setLoggedIn] = useState<boolean>();
   const [toggleForTimer, setToggleForTimer] = useState(false)
-  const [loginTime, setLoginTime] = useState(null);
+  const [loginTime, setLoginTime] = useState<Date | null>(null);
   const [totalLoggedInTime, setTotalLoggedInTime] = useState(0);
   const [timerInterval, setTimerInterval] = useState(null);
   const [locationData, setLocationData] = useState([]);
@@ -214,8 +212,8 @@ const HomeScreen = (props: HomeScreenProps) => {
     } else {
       stopTimer();
       if (loginTime) {
-        const logoutTime = new Date();
-        const timeDifference = Math.floor((logoutTime - loginTime) / 1000);
+        const logoutTime: Date = new Date();
+        const timeDifference = Math.floor((logoutTime.getTime() - loginTime.getTime()) / 1000);
         setTotalLoggedInTime(totalLoggedInTime + timeDifference);
       }
 
@@ -577,9 +575,7 @@ const HomeScreen = (props: HomeScreenProps) => {
                         {formatTime(totalLoggedInTime)}
                       </Text>
                     )}
-
                     <Text style={styles.checlout}>Check In</Text>
-
                   </View>
                 </ImageBackground>
               </TouchableOpacity>
@@ -723,11 +719,6 @@ const HomeScreen = (props: HomeScreenProps) => {
               <Text style={styles.btntext}>Overview</Text>
             </View>
           </TouchableOpacity>
-          {/* <TouchableOpacity>
-            <View style={styles.btntextview1}>
-              <Text style={styles.btntext1}>Analytics</Text>
-            </View>
-          </TouchableOpacity> */}
         </View>
         <View
           style={{

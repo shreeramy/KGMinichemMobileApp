@@ -132,7 +132,7 @@ const ProductCatalog = (props: ProductCatalogProps) => {
       <View style={styles.bannerItem}>
         <TouchableOpacity
           onPress={async () => {
-            navigation.navigate(Screen.CatalogDetils, {
+            navigation.navigate(Screen.CatalogDetails, {
               product: item?.id,
               img: item?.image,
               discrption: item?.product_description,
@@ -207,12 +207,13 @@ const ProductCatalog = (props: ProductCatalogProps) => {
               </Text>
             </View>
           </View>
-          <View style={styles.item}>
+          <View style={styles.item} testID="search-results">
             <View>
               <TouchableOpacity
                 onPress={() => {
                   searchRead1();
                 }}
+                testID="search-button"
               >
                 <Image
                   style={{ width: Responsive.widthPx(10) }}

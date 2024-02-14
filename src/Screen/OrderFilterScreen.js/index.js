@@ -14,12 +14,7 @@ import {
 import { filterItemAction, setDeliveryModeAction, setInvoiceModeAction, setOrderModeAction, setPaymentModeAction } from '../../Store/actions/commonActions';
 
 const OrderFilterScreen = ({ route, navigation }) => {
-  
-  const customerid = route?.params?.customerid;
-  const callstatus = route?.params?.callstatus;
   const dispatch = useDispatch()
-  
-  const [selected, setSelected] = React.useState('');
   const { filterItems, orderModeData, deliveryModeData, invoiceModeData, paymentModeData } = useSelector((state) => state.common)
   console.log("orderModeData:::", orderModeData)
   const [menuItems, setMenuItems] = React.useState([

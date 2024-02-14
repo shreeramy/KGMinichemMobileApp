@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   FlatList,
   Image,
@@ -86,7 +86,7 @@ const OrderHistory = (props: OrderHistoryProps) => {
           keyExtractor={(item) => item.text1}
           renderItem={({ item }) => (
             
-            <View style={styles.item}>
+            <View style={styles.item} testID="order-history-item">
               <View>
                 <Image
                   style={{
@@ -134,3 +134,4 @@ function mapDispatchToProps(dispatch: any) {
 }
 
 export default connect(null, mapDispatchToProps)(OrderHistory);
+// export default OrderHistory

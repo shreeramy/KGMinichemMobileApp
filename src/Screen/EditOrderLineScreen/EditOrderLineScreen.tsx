@@ -98,7 +98,7 @@ const EditOrderLineScreen = (props: EditOrderLineScreenProps) => {
         <TextInput
           style={styles.inputText}
           placeholder={"Enter Unit of Measure"}
-          value={unitOfMeasure.toString()}
+          value={unitOfMeasure ? unitOfMeasure.toString() : ''}
           onChangeText={(text) => setUnitOfMeasure(text)}
         />
 

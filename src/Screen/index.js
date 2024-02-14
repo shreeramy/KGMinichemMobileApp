@@ -5,7 +5,7 @@ import ProductCatalog from "./ProductCatalog/ProductCatalog";
 import Profile from "./Profile/Profile";
 import EditProfile from "./EditProfile/EditProfile";
 import OrderHistory from "./OrderHistory/OrderHistory";
-import CatalogDetils from "./CatalogDetils/CatalogDetils";
+import CatalogDetails from "./CatalogDetails/CatalogDetails";
 import OdooApiProxy from "./OdooApi";
 import ShowOrderScreen from "./CreateOrder/ShowOrderScreen";
 import NewCreateOrderScreen from "./NewCreateOrderScreen/NewCreateOrderScreen";
@@ -24,7 +24,7 @@ export {
   Profile,
   EditProfile,
   OrderHistory,
-  CatalogDetils,
+  CatalogDetails,
   OdooApiProxy,
   ShowOrderScreen,
   NewCreateOrderScreen,

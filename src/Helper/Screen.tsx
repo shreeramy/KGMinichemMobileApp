@@ -9,7 +9,7 @@ const Screen = {
   Profile: "Profile",
   EditProfile: "EditProfile",
   OrderHistory: "OrderHistory",
-  CatalogDetils: "CatalogDetils",
+  CatalogDetails: "CatalogDetails",
   OdooApiProxy: "OdooApiProxy",
   ShowOrderScreen: "ShowOrderScreen",
   NewCreateOrderScreen: "NewCreateOrderScreen",

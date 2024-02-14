@@ -1,12 +1,14 @@
-import React from "react";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { createDrawerNavigator } from "@react-navigation/drawer";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import { createDrawerNavigator } from "@react-navigation/drawer";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import React from "react";
+import { StyleSheet } from "react-native";
+import PdfViewer from "../Component/pdfViewer";
 import { Responsive, Screen } from "../Helper";
 import {
   AttendanceHistoryScreen,
-  CatalogDetils,
+  CatalogDetails,
   CustomerScreen,
   EditOrderLineScreen,
   EditProfile,
@@ -15,21 +17,17 @@ import {
   Locationsendscreen,
   LoginScreen,
   NewCreateOrderScreen,
+  NotificationScreen,
   OrderHistory,
   ProductCatalog,
   Profile,
   SellOrderDetails,
-  ShowOrderScreen,
   SettingScreen,
-  NotificationScreen
+  ShowOrderScreen
 } from "../Screen";
-import AppDrawer from "./AppDrawer";
-import { StyleSheet } from "react-native";
-import AppBottomTab from "./AppBottomTab";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useSelector } from "react-redux";
 import OrderFilterScreen from "../Screen/OrderFilterScreen.js";
-import PdfViewer from "../Component/pdfViewer";
+import AppBottomTab from "./AppBottomTab";
+import AppDrawer from "./AppDrawer";
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -98,7 +96,7 @@ export default function Routes(props) {
         <Stack.Screen name={Screen.EditProfile} component={EditProfile} />
         <Stack.Screen name={Screen.OrderFilterScreen} component={OrderFilterScreen} />
         <Stack.Screen name={Screen.OrderHistory} component={OrderHistory} />
-        <Stack.Screen name={Screen.CatalogDetils} component={CatalogDetils} />
+        <Stack.Screen name={Screen.CatalogDetails} component={CatalogDetails} />
         <Stack.Screen
           name={Screen.AttendanceHistoryScreen}
           component={AttendanceHistoryScreen}

@@ -1,0 +1,310 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CustomerScreen renders correctly 1`] = `
+<View
+  style={
+    {
+      "backgroundColor": "#ffff",
+      "flex": 1,
+    }
+  }
+>
+  <RCTSafeAreaView />
+  <View
+    style={
+      {
+        "backgroundColor": "#ffff",
+        "flex": 1,
+      }
+    }
+  >
+    <View
+      style={
+        {
+          "alignItems": "center",
+          "flex": 1,
+        }
+      }
+    >
+      <View
+        style={
+          {
+            "alignItems": "center",
+            "flexDirection": "row",
+            "justifyContent": "space-between",
+            "width": 675,
+          }
+        }
+      >
+        <View
+          style={
+            {
+              "alignItems": "center",
+              "flexDirection": "row",
+              "justifyContent": "space-between",
+              "marginTop": 26.28,
+            }
+          }
+        >
+          <View
+            accessibilityState={
+              {
+                "busy": undefined,
+                "checked": undefined,
+                "disabled": undefined,
+                "expanded": undefined,
+                "selected": undefined,
+              }
+            }
+            accessibilityValue={
+              {
+                "max": undefined,
+                "min": undefined,
+                "now": undefined,
+                "text": undefined,
+              }
+            }
+            accessible={true}
+            collapsable={false}
+            focusable={true}
+            onClick={[Function]}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
+            style={
+              {
+                "opacity": 1,
+              }
+            }
+          >
+            <Image
+              resizeMode="contain"
+              source={
+                {
+                  "testUri": "../../../src/Assets/Images/blackbacicon.png",
+                }
+              }
+              style={
+                {
+                  "height": 105.12,
+                  "width": 75,
+                }
+              }
+            />
+          </View>
+          <Text
+            style={
+              {
+                "color": "#000000",
+                "fontSize": 20,
+                "marginLeft": 5,
+              }
+            }
+          >
+            Customer
+          </Text>
+        </View>
+      </View>
+      <View
+        style={
+          {
+            "alignItems": "center",
+            "backgroundColor": "#fff",
+            "borderRadius": 37.5,
+            "elevation": 5,
+            "flexDirection": "row",
+            "marginHorizontal": 16,
+            "marginVertical": 8,
+            "shadowColor": "#000",
+            "shadowOffset": {
+              "height": 2,
+              "width": 0,
+            },
+            "shadowOpacity": 0.25,
+            "shadowRadius": 3.84,
+            "width": 675,
+          }
+        }
+      >
+        <View>
+          <View
+            accessibilityState={
+              {
+                "busy": undefined,
+                "checked": undefined,
+                "disabled": undefined,
+                "expanded": undefined,
+                "selected": undefined,
+              }
+            }
+            accessibilityValue={
+              {
+                "max": undefined,
+                "min": undefined,
+                "now": undefined,
+                "text": undefined,
+              }
+            }
+            accessible={true}
+            collapsable={false}
+            focusable={true}
+            onClick={[Function]}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
+            style={
+              {
+                "opacity": 1,
+              }
+            }
+          >
+            <Image
+              resizeMode="contain"
+              source={
+                {
+                  "testUri": "../../../src/Assets/Images/Search.png",
+                }
+              }
+              style={
+                {
+                  "width": 75,
+                }
+              }
+            />
+          </View>
+        </View>
+        <View>
+          <TextInput
+            onChangeText={[Function]}
+            placeholder="Search"
+            placeholderTextColor="#3A474A"
+            style={
+              {
+                "color": "#3A474A",
+                "height": 65.7,
+                "marginLeft": 10,
+                "padding": 2,
+                "width": 487.5,
+              }
+            }
+            value=""
+          />
+        </View>
+      </View>
+      <RCTScrollView
+        ListFooterComponent={[Function]}
+        data={[]}
+        getItem={[Function]}
+        getItemCount={[Function]}
+        keyExtractor={[Function]}
+        onContentSizeChange={[Function]}
+        onEndReached={[Function]}
+        onEndReachedThreshold={0.1}
+        onLayout={[Function]}
+        onMomentumScrollBegin={[Function]}
+        onMomentumScrollEnd={[Function]}
+        onScroll={[Function]}
+        onScrollBeginDrag={[Function]}
+        onScrollEndDrag={[Function]}
+        removeClippedSubviews={false}
+        renderItem={[Function]}
+        scrollEventThrottle={50}
+        stickyHeaderIndices={[]}
+        viewabilityConfigCallbackPairs={[]}
+      >
+        <View>
+          <View
+            onLayout={[Function]}
+          >
+            <ActivityIndicator
+              color="#0000ff"
+              size="large"
+            />
+          </View>
+        </View>
+      </RCTScrollView>
+      <View
+        style={
+          {
+            "alignItems": "flex-end",
+            "justifyContent": "flex-end",
+            "width": 675,
+          }
+        }
+      >
+        <View
+          accessibilityState={
+            {
+              "busy": undefined,
+              "checked": undefined,
+              "disabled": undefined,
+              "expanded": undefined,
+              "selected": undefined,
+            }
+          }
+          accessibilityValue={
+            {
+              "max": undefined,
+              "min": undefined,
+              "now": undefined,
+              "text": undefined,
+            }
+          }
+          accessible={true}
+          collapsable={false}
+          focusable={true}
+          onClick={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
+          style={
+            {
+              "opacity": 1,
+            }
+          }
+        >
+          <View
+            style={
+              {
+                "alignItems": "center",
+                "backgroundColor": "#4E2F1B",
+                "borderRadius": 150,
+                "bottom": 39.42,
+                "height": 65.7,
+                "justifyContent": "center",
+                "padding": 25,
+                "width": 75,
+              }
+            }
+          >
+            <Image
+              resizeMode="contain"
+              source={
+                {
+                  "testUri": "../../../src/Assets/Images/Plus.png",
+                }
+              }
+              style={
+                {
+                  "height": 105.12,
+                  "width": 60,
+                }
+              }
+            />
+          </View>
+        </View>
+      </View>
+    </View>
+  </View>
+  <RCTSafeAreaView />
+</View>
+`;

@@ -6,6 +6,10 @@ export default class Loader {
   }
 
   static isLoading = (check: Boolean) => {
-    this.loader.showLoader(check)
+    if (this.loader && this.loader.showLoader) {
+      this.loader.showLoader(check)
+    } else {
+      console.error('Loader is not properly initialized.')
+    }
   }
 }

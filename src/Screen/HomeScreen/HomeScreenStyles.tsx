@@ -5,18 +5,18 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
-    
+
   },
   topcontener: {
     width: Responsive.widthPx(100),
     alignItems: "center",
     justifyContent: "center",
     marginTop: 15,
-    
-    
+
+
   },
   logoimg: {
-    
+
     width: Responsive.widthPx(80),
     flexDirection: "row",
     alignItems: "flex-end",
@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
     borderRadius: Responsive.widthPx(3),
   },
   btntextview1: {
-    
+
     width: Responsive.widthPx(35),
     alignItems: "center",
     justifyContent: "center",
@@ -56,13 +56,13 @@ const styles = StyleSheet.create({
     color: "#000",
   },
   item: {
-    
-    
+
+
     alignItems: "center",
     margin: 5,
     borderRadius: 5,
-    
-    
+
+
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -70,21 +70,21 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.5,
     shadowRadius: 0.5,
-    
-    
+
+
     width: Responsive.widthPx(27),
     height: Responsive.heightPx(17),
     backgroundColor: "#9C7257",
     padding: 5,
   },
   item1: {
-    
-    
+
+
     alignItems: "center",
     margin: 5,
     borderRadius: 2,
-    
-    
+
+
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -92,12 +92,12 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.5,
     shadowRadius: 0.5,
-    
+
     borderWidth: 0.1,
     width: Responsive.widthPx(27),
     height: Responsive.heightPx(17),
     padding: 5,
-    
+
   },
   listtext: { textAlign: "center", fontSize: 11, color: Color.text_color },
   listtext1: { textAlign: "center", color: "#fff", fontSize: 11 },
