@@ -114,7 +114,9 @@ const AppHeader = (props: AppHeaderProps) => {
     <View style={styles.constainer}>
       <View style={styles.leftImg}>
         {isBackBtn && (
-          <TouchableOpacity onPress={() => onPressBack()}>
+          <TouchableOpacity 
+          testID="back-button"
+          onPress={() => onPressBack()}>
             <Image
               source={Images.white_BackIcon}
               style={styles.backButton}
@@ -123,7 +125,9 @@ const AppHeader = (props: AppHeaderProps) => {
           </TouchableOpacity>
         )}
         {drawermenu && (
-          <TouchableOpacity onPress={() => onPressDrawer()}>
+          <TouchableOpacity 
+            testID="drawer-menu"
+            onPress={() => onPressDrawer()}>
             <Image
               source={Images.drawermenu}
               style={styles.backButton}
@@ -151,13 +155,16 @@ const AppHeader = (props: AppHeaderProps) => {
             <View>
               {customerdata[0]?.image_1920 ? (
                 <Image
+                  testID="user-image"
                   source={{
                     uri: `data:image/png;base64,${customerdata[0]?.image_1920}`,
                   }}
                   style={styles.imageStyle}
                 />
               ) : (
-                <Image source={Images.draweruser} style={styles.imageStyle} />
+                <Image 
+                testID="user-image"
+                source={Images.draweruser} style={styles.imageStyle} />
               )}
             </View>
           )}

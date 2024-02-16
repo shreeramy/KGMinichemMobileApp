@@ -123,7 +123,7 @@ const Locationsendscreen = (props: LocationsendscreenProps) => {
     Loader.isLoading(true);
     if (uid) {
       const methodName = "create_location";
-      const model = "hr.attendance"; 
+      const model = "hr.attendance";
       const params = [1, locationData];
       const createLocationResult = await callOdooMethod(
         uid,
@@ -179,6 +179,7 @@ const Locationsendscreen = (props: LocationsendscreenProps) => {
                   source={imagepath ? { uri: imagepath?.path } : Images.noimg}
                 />
                 <TouchableOpacity
+                  testID="image-picker-button"
                   onPress={() => {
                     onPickImage();
                   }}

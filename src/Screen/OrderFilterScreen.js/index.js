@@ -13,10 +13,9 @@ import {
 
 import { filterItemAction, setDeliveryModeAction, setInvoiceModeAction, setOrderModeAction, setPaymentModeAction } from '../../Store/actions/commonActions';
 
-const OrderFilterScreen = ({ route, navigation }) => {
+const OrderFilterScreen = ({ navigation }) => {
   const dispatch = useDispatch()
   const { filterItems, orderModeData, deliveryModeData, invoiceModeData, paymentModeData } = useSelector((state) => state.common)
-  console.log("orderModeData:::", orderModeData)
   const [menuItems, setMenuItems] = React.useState([
     {
       id: '1', name: 'Order',
@@ -75,10 +74,10 @@ const OrderFilterScreen = ({ route, navigation }) => {
   const [showStartDatePicker, setShowStartDatePicker] = useState(false);
   const [showEndDatePicker, setShowEndDatePicker] = useState(false);
   const [customerdata, setcustomerdata] = useState([]);
-  const [orderMode, setOrderMode] = useState(orderModeData.length > 0 ? orderModeData : [])
-  const [deliveryMode, setDeliveryMode] = useState(deliveryModeData.length > 0 ? deliveryModeData : [])
-  const [invoiceMode, setInvoiceMode] = useState(invoiceModeData.length > 0 ? invoiceModeData : [])
-  const [paymentMode, setpaymentMode] = useState(paymentModeData.length > 0 ? paymentModeData : [])
+  const [orderMode, setOrderMode] = useState(orderModeData && orderModeData.length > 0 ? orderModeData : []);
+  const [deliveryMode, setDeliveryMode] = useState(deliveryModeData && deliveryModeData.length > 0 ? deliveryModeData : [])
+  const [invoiceMode, setInvoiceMode] = useState(invoiceModeData && invoiceModeData.length > 0 ? invoiceModeData : [])
+  const [paymentMode, setpaymentMode] = useState(paymentModeData && paymentModeData.length > 0 ? paymentModeData : [])
 
 
   const searchRead = async () => {

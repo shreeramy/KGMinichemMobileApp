@@ -25,7 +25,7 @@ import {
   SettingScreen,
   ShowOrderScreen
 } from "../Screen";
-import OrderFilterScreen from "../Screen/OrderFilterScreen.js";
+import OrderFilterScreen from "../Screen/OrderFilterScreen.js/index.js";
 import AppBottomTab from "./AppBottomTab";
 import AppDrawer from "./AppDrawer";
 

@@ -241,8 +241,11 @@ const ShowOrderScreen = (props: ShowOrderScreenProps) => {
           </TouchableOpacity>
         </View>
         {searchVisible ? (
-          <View style={{ flexDirection: 'row', paddingHorizontal: 20 }}>
+          <View
+          testID="search-button"
+          style={{ flexDirection: 'row', paddingHorizontal: 20 }}>
             <TextInput
+              
               style={{
                 flex: 1,
                 height: 50,
@@ -250,7 +253,7 @@ const ShowOrderScreen = (props: ShowOrderScreenProps) => {
                 alignSelf: "center",
                 borderRadius: 10,
               }}
-              placeholder={"Search"}
+              placeholder="Search"
               value={search}
               onChangeText={(text) => searchSetValue(text)}
             />
@@ -266,7 +269,8 @@ const ShowOrderScreen = (props: ShowOrderScreenProps) => {
               <Text style={{ color: '#fff', fontWeight: '500' }}>Search</Text>
             </TouchableOpacity>
           </View>
-        ) : (
+        ) 
+        : (
           <></>
         )}
 

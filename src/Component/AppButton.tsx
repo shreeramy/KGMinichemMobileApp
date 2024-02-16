@@ -31,6 +31,7 @@ const AppButton = (props: AppButtonProps) => {
   } = props;
   return (
     <TouchableOpacity
+      testID="app-button"
       style={[
         styles.container,
         containerStyle,

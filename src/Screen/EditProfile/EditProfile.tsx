@@ -1,4 +1,3 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { useState } from "react";
 import { Image, ImageBackground, Text, View } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
@@ -8,8 +7,7 @@ import {
   AppContainer,
   AppScrollview
 } from "../../Component";
-import { Color, Const, Images, Loader, Responsive, Screen } from "../../Helper";
-import { ApiEndPoints } from "../../NetworkCall";
+import { Color, Const, Images, Responsive, Screen } from "../../Helper";
 import styles from "./EditProfilestyle";
 
 interface EditProfileProps {
@@ -23,72 +21,6 @@ const EditProfile = (props: EditProfileProps) => {
   const { navigation, text, commonActions, route } = props;
   const [customerdata, setcustomerdata] = useState([]);
   const customer = route?.params?.user;
-
-  React.useEffect(() => {
-    const backScreen = navigation.addListener("focus", () => {
-      retrieveData();
-    });
-    return backScreen;
-  }, []);
-
-  const retrieveData = async () => {
-    try {
-      const value = await AsyncStorage.getItem("userId");
-      if (value !== null) {
-        console.log("Retrieved data: ", value);
-      } else {
-        console.log("No data found.");
-      }
-    } catch (error) {
-      console.log("Error retrieving data: ", error);
-    }
-  };
-
-  async function searchRead(e: any) {
-    const uid = await AsyncStorage.getItem("userId");
-    const odooPassword = await AsyncStorage.getItem("@odopassword");
-    Loader.isLoading(true);
-
-    if (uid) {
-      const searchCriteria = [["id", "=", customer?.id]];
-      const response = await fetch(ApiEndPoints.jsonRpcEndpoint, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          jsonrpc: "2.0",
-          method: "call",
-          params: {
-            service: "object",
-            method: "execute_kw",
-            args: [
-              ApiEndPoints.odooDatabase,
-              uid,
-              odooPassword,
-              "res.partner",
-              "search_read",
-              [searchCriteria],
-              {},
-            ],
-          },
-        }),
-      });
-
-      const responseData = await response.json();
-
-      if (responseData.result) {
-        Loader.isLoading(false);
-        const customdata = responseData.result;
-        setcustomerdata(customdata);
-      } else {
-        console.error("search_read error://..", responseData.error);
-        return null;
-      }
-    }
-
-    return null;
-  }
 
   return (
     <AppContainer>
@@ -161,6 +93,7 @@ const EditProfile = (props: EditProfileProps) => {
                       width: Responsive.widthPx(20),
                       borderRadius: Responsive.widthPx(30),
                     }}
+                    testID="profile-image"
                     source={{
                       uri: `data:image/png;base64,${customer?.image_1920}`,
                     }}
@@ -225,12 +158,16 @@ const EditProfile = (props: EditProfileProps) => {
               </View>
               <View style={{ marginLeft: 15 }}>
                 <Text style={styles.headingtext}>Address</Text>
-                <Text style={styles.subheadingtext}>
+                {/* <Text style={styles.subheadingtext}>
                   {customer?.street +
                     ", " +
                     customer.city +
                     ", " +
                     (customer.state_id.length > 0 ? customer.state_id[1] : "")}
+                </Text> */}
+                <Text style={styles.subheadingtext}>
+                  {customer?.street &&
+                    `${customer.street}, ${customer.city}, ${customer.state_id?.[1] || ''}`}
                 </Text>
               </View>
             </View>

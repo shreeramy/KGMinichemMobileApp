@@ -1,29 +1,30 @@
-// import React from 'react';
-// import { render, fireEvent } from '@testing-library/react-native';
-// import CatalogDetails from '../CatalogDetails';
+import React from 'react';
+import { render, fireEvent } from '@testing-library/react-native';
+import CatalogDetails from '../CatalogDetails';
+import { Provider } from 'react-redux';
+import { createStore, applyMiddleware } from 'redux';
+import thunk from 'redux-thunk';
+import rootReducer from '../../../Store/reducers/common';
 
+const store = createStore(rootReducer, applyMiddleware(thunk));
 
+describe('CatalogDetails component', () => {
+  it('renders correctly', () => {
+    const { getByText } = render(<Provider store={store}>
+        <CatalogDetails />
+        </Provider>);
+    expect(getByText('Description')).toBeTruthy();
+    expect(getByText('More images')).toBeTruthy();
+  });
 
-// describe('CatalogDetails component', () => {
-//   it('renders correctly', () => {
-//     const { getByText } = render(<CatalogDetails />);
-//     expect(getByText('Description')).toBeTruthy();
-//     expect(getByText('More images')).toBeTruthy();
-//   });
+  test('navigates to ProductCatalog screen on "More images" press', () => {
+    const navigationMock = { navigate: jest.fn() };
+    const { getByText } = render(
+    <Provider store={store}>
+    <CatalogDetails navigation={navigationMock} />
+    </Provider>);
+    fireEvent.press(getByText('More images'));
+    expect(navigationMock.navigate).toHaveBeenCalledWith('ProductCatalog');
+  });
 
-//   test('navigates to ProductCatalog screen on "More images" press', () => {
-//     const navigationMock = { navigate: jest.fn() };
-//     const { getByText } = render(<CatalogDetails navigation={navigationMock} />);
-//     fireEvent.press(getByText('More images'));
-//     expect(navigationMock.navigate).toHaveBeenCalledWith('ProductCatalog');
-//   });
-
-// //   test('navigates to PdfViewer screen on press of PDF image', () => {
-// //     const navigationMock = { navigate: jest.fn() };
-// //     const { getByTestId } = render(<CatalogDetails navigation={navigationMock} route={{ params: { pdf: true } }} />);
-// //     fireEvent.press(getByTestId('pdfImage'));
-// //     expect(navigationMock.navigate).toHaveBeenCalledWith('PdfViewer', { pdf: true });
-// //   });
-
-//   // Add more test cases for other functionalities and UI components as needed
-// });
+});

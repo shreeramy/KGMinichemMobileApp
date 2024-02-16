@@ -1,52 +1,62 @@
-// import React from 'react';
-// import { render, fireEvent } from '@testing-library/react-native';
-// import OrderFilterScreen from '../index';
 
-// describe('OrderFilterScreen component', () => {
-//   test('renders correctly', () => {
-//     const { getByText } = render(<OrderFilterScreen route={undefined} navigation={undefined} />);
-//     expect(getByText('Order')).toBeDefined();
-//     expect(getByText('Delivery')).toBeDefined();
-//     expect(getByText('Invoice')).toBeDefined();
-//     expect(getByText('Date-range')).toBeDefined();
-//     expect(getByText('Payment mode')).toBeDefined();
-//   });
+import React from 'react';
+import { render, fireEvent } from '@testing-library/react-native';
+import { Provider, useSelector } from 'react-redux';
+import OrderFilterScreen from '../index'
+import { createStore, applyMiddleware } from 'redux';
+import thunk from 'redux-thunk';
+import rootReducer from '../../../Store/reducers/common';
 
-//   test('clicking on menu item selects it', () => {
-//     const { getByText } = render(<OrderFilterScreen route={undefined} navigation={undefined} />);
-//     const orderMenuItem = getByText('Order');
+const store = createStore(rootReducer, applyMiddleware(thunk));;
 
-//     fireEvent.press(orderMenuItem);
-//   });
 
-//   test('clicking on checkbox toggles its state', () => {
-//     const { getByText, getByTestId } = render(<OrderFilterScreen route={undefined} navigation={undefined} />);
-//     const quationCheckbox = getByTestId('quotation-checkbox');
+jest.mock('react-redux', () => ({
+  ...jest.requireActual('react-redux'),
+  useDispatch: jest.fn(),
+  useSelector: jest.fn(),
+}));
 
-//     fireEvent.press(quationCheckbox);
 
-//     expect(quationCheckbox.props.isChecked).toBeTruthy();
-//   });
+const mockNavigation = {
+  navigate: jest.fn(),
+};
 
-//   test('clicking on "CLEAR FILTERS" button clears all filters', () => {
-//     const { getByText, getByTestId } = render(<OrderFilterScreen route={undefined} navigation={undefined} />);
-//     const clearFiltersButton = getByText('CLEAR FILTERS');
 
-//     fireEvent.press(clearFiltersButton);
+describe('OrderFilterScreen', () => {
 
-//     const quotationCheckbox = getByTestId('quotation-checkbox');
-//     expect(quotationCheckbox.props.isChecked).toBeFalsy();
-//     // Assert for other filters if needed
-//   });
 
-//   test('clicking on "APPLY" button applies the selected filters', () => {
-//     const { getByText, getByTestId } = render(<OrderFilterScreen route={undefined} navigation={undefined} />);
-//     const applyButton = getByText('APPLY');
+  const initialState = {
+    common: {
+      filterItems: [
 
-//     fireEvent.press(applyButton);
+      ],
+      orderModeData: [
 
-//     // Add assertions to check if the filters are applied correctly
-//   });
+      ],
+      deliveryModeData: [
 
-//   // Add more test cases as needed
-// });
+      ],
+      invoiceModeData: [
+
+      ],
+      paymentModeData: [
+
+      ],
+    },
+  };
+
+  test('renders correctly', () => {
+    (useSelector as jest.Mock).mockReturnValue(initialState);
+    const { getByText } = render(
+      <Provider store={store}>
+        <OrderFilterScreen navigation={mockNavigation} />
+      </Provider>
+    );
+    expect(getByText('Delivery')).toBeTruthy();
+    expect(getByText('Invoice')).toBeTruthy();
+    expect(getByText('Date-range')).toBeTruthy();
+    expect(getByText('Payment mode')).toBeTruthy();
+  });
+
+});
+

@@ -24,6 +24,7 @@ import {
 import { ApiEndPoints } from "../../NetworkCall";
 import * as OdooApi from "../OdooApi";
 import styles from "./SellOrderDetailsstyle";
+
 interface SellOrderDetailsProps {
   navigation?: any;
   text?: any;
@@ -33,12 +34,10 @@ interface SellOrderDetailsProps {
 
 const SellOrderDetails = (props: SellOrderDetailsProps) => {
   const { navigation, text, commonActions, route } = props;
-  const [email, setemail] = useState("");
   const saleorederId = route.params.selorederid;
   const [customerdata, setcustomerdata] = useState([]);
   const [prosearch, setorderlilne] = useState([]);
   const [getallorders, setgetallorders] = useState([]);
-  const [isModalVisible, setModalVisible] = useState(false);
   const [productdata, setproductdata] = useState([]);
 
   React.useEffect(() => {
@@ -48,7 +47,6 @@ const SellOrderDetails = (props: SellOrderDetailsProps) => {
     const backScreen = navigation.addListener("focus", () => {
       fetchUserData();
       fetchOrderlineData();
-      retrieveData();
       ProductCatalogapi();
     });
     return backScreen;
@@ -101,15 +99,6 @@ const SellOrderDetails = (props: SellOrderDetailsProps) => {
 
     return null;
   }
-
-  const retrieveData = async (key) => {
-    try {
-      const value = await AsyncStorage.getItem("userId");
-      if (value !== null) {
-      } else {
-      }
-    } catch (error) { }
-  };
 
   const ItemSeparatorComponent = () => {
     return (

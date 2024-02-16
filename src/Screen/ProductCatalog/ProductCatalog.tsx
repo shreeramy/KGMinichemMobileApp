@@ -35,21 +35,9 @@ const ProductCatalog = (props: ProductCatalogProps) => {
   const [customerdata, setcustomerdata] = useState([]);
   const [prosearch, setprosearch] = useState("");
   
-  const retrieveData = async () => {
-    try {
-      const value = await AsyncStorage.getItem("userId");
-      if (value !== null) {
-        console.log("Retrieved data: ", value);
-      } else {
-        console.log("No data found.");
-      }
-    } catch (error) {
-      console.log("Error retrieving data: ", error);
-    }
-  };
+
 
   useEffect(() => {
-    retrieveData();
     Showproduclist();
   }, []);
 

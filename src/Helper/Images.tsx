@@ -1,10 +1,9 @@
 import HomeSvg from "../Assets/svg/Home.svg";
-import logndots from "../Assets/svg/logndots.svg";
 import chekout from "../Assets/svg/chekout.svg";
 const Images = {
   HomeSvg,
-  logndots,
   chekout,
+  logndots: require("../Assets/Images/logndots.webp"),
   checkinout: require("../Assets/Images/checkinout.png"),
   hidden_eyes: require("../Assets/Images/hidden_eyes.png"),
   show_eyes: require("../Assets/Images/show_eyes.png"),

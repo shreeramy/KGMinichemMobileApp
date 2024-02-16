@@ -20,6 +20,7 @@ export class AppLoader extends PureComponent {
     const { isVisible, onRequestClose } = this.props
     return (
       <Modal
+        testID='modal-container'
         animationType={'fade'}
         visible={isVisible || isLoading}
         transparent
@@ -27,7 +28,7 @@ export class AppLoader extends PureComponent {
       >
         <View style={styles.container}>
           <View style={styles.loader}>
-            <ActivityIndicator size={'large'} color={'green'} />
+            <ActivityIndicator testID='activity-indicator' size={'large'} color={'green'} />
           </View>
         </View>
       </Modal>

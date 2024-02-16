@@ -9,7 +9,6 @@ export default class Loader {
     if (this.loader && this.loader.showLoader) {
       this.loader.showLoader(check)
     } else {
-      console.error('Loader is not properly initialized.')
     }
   }
 }

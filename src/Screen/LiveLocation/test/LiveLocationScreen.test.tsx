@@ -1,49 +1,45 @@
-// import React from 'react';
-// import { render } from '@testing-library/react-native';
-// import LiveLocationScreen from '../LiveLocationScreen';
+import React from 'react';
+import { render } from '@testing-library/react-native';
+import LiveLocationScreen from '../LiveLocationScreen';
+import { Provider } from 'react-redux';
+import { createStore, applyMiddleware } from 'redux';
+import thunk from 'redux-thunk';
+import rootReducer from '../../../Store/reducers/common';
 
-// jest.mock('@react-native-community/geolocation', () => ({
-//     getCurrentPosition: jest.fn(),
-//   }));
+const store = createStore(rootReducer, applyMiddleware(thunk));
 
-// jest.mock('react-native-permissions', () => ({
-//     PERMISSIONS: {
-//       ANDROID: {
-//         ACCESS_FINE_LOCATION: 'android.permission.ACCESS_FINE_LOCATION',
-//       },
-//       IOS: {
-//         LOCATION_ALWAYS: 'ios.permission.LOCATION_ALWAYS',
-//       },
-//     },
-//     request: jest.fn(),
-//   }));
-  
 
-// describe('<LiveLocationScreen />', () => {
-//   test('renders without crashing', () => {
-//     render(<LiveLocationScreen />);
-//   });
+jest.mock('@react-native-community/geolocation', () => ({
+    getCurrentPosition: jest.fn(),
+}));
 
-// //   test('renders activity indicator when latitude and longitude are undefined', () => {
-// //     const { getByTestId } = render(<LiveLocationScreen />);
-// //     const activityIndicator = getByTestId('activity-indicator');
-// //     expect(activityIndicator).toBeTruthy();
-// //   });
+jest.mock('react-native-permissions', () => ({
+    PERMISSIONS: {
+        ANDROID: {
+            ACCESS_FINE_LOCATION: 'android.permission.ACCESS_FINE_LOCATION',
+        },
+        IOS: {
+            LOCATION_ALWAYS: 'ios.permission.LOCATION_ALWAYS',
+        },
+    },
+    request: jest.fn(),
+}));
 
-// //   test('renders map when latitude and longitude are defined', () => {
-// //     const { getByTestId } = render(
-// //       <LiveLocationScreen
-// //         route={{
-// //           params: {
-// //             attendanceData: [
-// //               { lat: 40.7128, log: -74.006 },
-// //               { lat: 34.0522, log: -118.2437 },
-// //             ],
-// //           },
-// //         }}
-// //       />
-// //     );
-// //     const map = getByTestId('map');
-// //     expect(map).toBeTruthy();
-// //   });
-// });
+
+describe('<LiveLocationScreen />', () => {
+    test('renders without crashing', () => {
+        render(
+            <Provider store={store}>
+                <LiveLocationScreen />
+            </Provider>
+        );
+    });
+
+    test('renders activity indicator when latitude and longitude are undefined', () => {
+        const { getByTestId } = render(<Provider store={store}>
+            <LiveLocationScreen />
+        </Provider>);
+        const activityIndicator = getByTestId('activity-indicator');
+        expect(activityIndicator).toBeTruthy();
+    });
+});

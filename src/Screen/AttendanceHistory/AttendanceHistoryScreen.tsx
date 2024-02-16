@@ -37,27 +37,9 @@ const AttendanceHistoryScreen = (props: AttendanceHistoryScreenProps) => {
     searchRead();
     const backScreen = navigation.addListener("focus", () => {
       searchRead();
-      retrieveData();
     });
     return backScreen;
   }, []);
-
-  const retrieveData = async () => {
-    try {
-      const value = await AsyncStorage.getItem("userId");
-      if (value !== null) {
-        console.log("Retrieved data: ", value);
-      } else {
-        console.log("No data found.");
-      }
-    } catch (error) {
-      console.log("Error retrieving data: ", error);
-    }
-  };
-
-  const odooHost = "http://kg.wangoes.com";
-  const odooDatabase = "kg.wangoes.com";
-  const jsonRpcEndpoint = `${odooHost}/jsonrpc`;
 
   async function searchRead() {
     const uid = await AsyncStorage.getItem("userId");

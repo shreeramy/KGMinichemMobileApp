@@ -92,7 +92,7 @@ const LiveLocationScreen = (props: LiveLocationScreenProps) => {
             borderRadius: 8
           }}>
 
-            <ActivityIndicator color={Color.greenShade5A} size={'large'} />
+            <ActivityIndicator testID="activity-indicator" color={Color.greenShade5A} size={'large'} />
           </View>
           :
           <MapView

@@ -7,7 +7,6 @@ import {
   View,
 } from "react-native";
 import { Color, Fonts, Images, Responsive } from "../Helper";
-import { SvgIcon } from "../Component/SvgIcons";
 
 interface AppTextInputProps {
   placeHolder?: string;
@@ -149,6 +148,7 @@ const AppTextInput = (props: AppTextInputProps) => {
               onPress={() => onClickShow()}
             >
               <Image
+                testID="left-image"
                 style={[styles.imagestyle]}
                 source={Images.next}
                 resizeMode="contain"

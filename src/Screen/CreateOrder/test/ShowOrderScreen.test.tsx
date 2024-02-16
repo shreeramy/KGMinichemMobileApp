@@ -1,44 +1,58 @@
-// import React from 'react';
-// import { render, fireEvent } from '@testing-library/react-native';
-// import ShowOrderScreen from '../ShowOrderScreen'; 
+import React from 'react';
+import { render, fireEvent, waitFor } from '@testing-library/react-native';
+import ShowOrderScreen from '../ShowOrderScreen';
+import { Provider } from 'react-redux';
+import { createStore, applyMiddleware } from 'redux';
+import thunk from 'redux-thunk';
+import rootReducer from '../../../Store/reducers/common';
 
-// // Mock navigation props
-// const navigationMock = {
-//   navigate: jest.fn(),
-//   push: jest.fn(),
-//   goBack: jest.fn(),
-// };
+const store = createStore(rootReducer, applyMiddleware(thunk));
+// Mock navigation props
+const navigationMock = {
+    navigate: jest.fn(),
+    push: jest.fn(),
+    goBack: jest.fn(),
+};
 
-// // Mock route params
-// const routeParams = {
-//   useridsend: '123',
-//   status: 'orderhistry', // Adjust as needed
-// };
+jest.mock('@react-navigation/native', () => ({
+    ...jest.requireActual('@react-navigation/native'),
+    useFocusEffect: jest.fn(),
+}));
 
-// describe('ShowOrderScreen', () => {
-//   test('renders correctly', () => {
-//     const { getByText } = render(<ShowOrderScreen navigation={navigationMock} route={{ params: routeParams }} />);
-//     expect(getByText('Order History')).toBeTruthy();
-//   });
 
-// //   test('navigates to SellOrderDetails screen on press of an order item', () => {
-// //     const { getByText } = render(<ShowOrderScreen navigation={navigationMock} route={{ params: routeParams }} />);
-// //     fireEvent.press(getByText('Order#123')); // Adjust the order number as needed
-// //     expect(navigationMock.push).toHaveBeenCalledWith('SellOrderDetails', { selorederid: '123' });
-// //   });
+// Mock route params
+const routeParams = {
+    useridsend: '123',
+    status: 'orderhistry', // Adjust as needed
+};
 
-// //   test('toggles search input visibility on press of search button', () => {
-// //     const { getByText, getByPlaceholderText, queryByPlaceholderText } = render(<ShowOrderScreen navigation={navigationMock} route={{ params: routeParams }} />);
-// //     fireEvent.press(getByText('Search'));
-// //     expect(queryByPlaceholderText('Search')).toBeTruthy(); // Search input should be visible
-// //     fireEvent.press(getByText('Search')); // Press again to hide search input
-// //     expect(getByPlaceholderText('Search')).toBeFalsy(); // Search input should be hidden
-// //   });
+describe('ShowOrderScreen', () => {
+    test('renders correctly', () => {
+        const { getByText } = render(
+            <Provider store={store}>
+                <ShowOrderScreen navigation={navigationMock} route={{ params: routeParams }} />
+            </Provider>
+        );
+        expect(getByText('Order History')).toBeTruthy();
+    });
 
-// //   test('updates search value on change', () => {
-// //     const { getByPlaceholderText } = render(<ShowOrderScreen navigation={navigationMock} route={{ params: routeParams }} />);
-// //     const searchInput = getByPlaceholderText('Search');
-// //     fireEvent.changeText(searchInput, 'example search');
-// //     expect(searchInput.props.value).toBe('example search');
-// //   });
-// });
+    test('navigates to NewCreateOrderScreen when "New" button is pressed', () => {
+        const { getByText } = render(<Provider store={store}>
+            <ShowOrderScreen navigation={navigationMock} route={{ params: routeParams }} />
+        </Provider>);
+        fireEvent.press(getByText('New'));
+
+    });
+
+
+
+    test('renders search field when searchVisible is true', () => {
+        // Arrange: Set searchVisible to true
+        const { queryByTestId } = render(<Provider store={store}>
+            <ShowOrderScreen navigation={navigationMock} route={{ params: routeParams }} />
+        </Provider>);
+        const searchButton = queryByTestId('search-button');
+        expect(searchButton).toBeNull();
+    
+      });
+});

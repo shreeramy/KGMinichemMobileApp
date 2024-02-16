@@ -10,6 +10,7 @@ const AppScrollview = (props: appScrollviewProps) => {
   const { children, style } = props
   return (
     <ScrollView
+      testID='app-scrollview'
       style={style}
       showsVerticalScrollIndicator={false}
       showsHorizontalScrollIndicator={false}

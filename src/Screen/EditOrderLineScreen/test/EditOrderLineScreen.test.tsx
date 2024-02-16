@@ -1,57 +1,49 @@
-// import React from 'react';
-// import { render, fireEvent } from '@testing-library/react-native';
-// import EditOrderLineScreen from '../EditOrderLineScreen';
+import React from 'react';
+import { render, fireEvent } from '@testing-library/react-native';
+import EditOrderLineScreen from '../EditOrderLineScreen';
 
-// describe('EditOrderLineScreen', () => {
-//     const mockRouteParams = {
-//         item: {
-//           name: 'Sample Product',
-//           product_uom_qty: 2,
-//           product_uom: ['Unit'],
-//           price_unit: 10,
-//           id: 1,
-//           product_id: [1],
-//           order_id: [1],
-//         },
-//       };
+jest.mock('@react-native-async-storage/async-storage', () => ({
+    getItem: jest.fn(),
+}));
 
-//       test('renders without crashing', () => {
-//         render(<EditOrderLineScreen route={{ params: mockRouteParams }} />);
-//       });
+describe('EditOrderLineScreen', () => {
+    const mockRouteParams = {
+        item: {
+            name: 'Sample Product',
+            product_uom_qty: 2,
+            product_uom: ['Unit'],
+            price_unit: 10,
+            id: 1,
+            product_id: [1],
+            order_id: [1],
+        },
+    };
 
-// //   test('updates product name when input changes', () => {
-// //     const { getByPlaceholderText } = render(<EditOrderLineScreen />);
-// //     const productNameInput = getByPlaceholderText('Enter product name');
-// //     fireEvent.changeText(productNameInput, 'New Product Name');
-// //     expect(productNameInput.props.value).toBe('New Product Name');
-// //   });
+    test('renders without crashing', () => {
+        const { getByPlaceholderText, getByText } = render(<EditOrderLineScreen route={{ params: mockRouteParams }} />);
+        expect(getByPlaceholderText('Enter product name')).toBeTruthy();
+        expect(getByPlaceholderText('Enter Qty')).toBeTruthy();
+        expect(getByPlaceholderText('Enter Unit of Measure')).toBeTruthy();
+        expect(getByPlaceholderText('Enter price')).toBeTruthy();
+        expect(getByText('Update Order')).toBeTruthy();
+    });
 
-// //   test('updates quantity when input changes', () => {
-// //     const { getByPlaceholderText } = render(<EditOrderLineScreen />);
-// //     const quantityInput = getByPlaceholderText('Enter Qty');
-// //     fireEvent.changeText(quantityInput, '5');
-// //     expect(quantityInput.props.value).toBe('5');
-// //   });
+    test('updates state when input changes', () => {
+        const { getByPlaceholderText } = render(<EditOrderLineScreen route={{ params: mockRouteParams }} />);
+        const productNameInput = getByPlaceholderText('Enter product name');
+        const qtyInput = getByPlaceholderText('Enter Qty');
+        const uomInput = getByPlaceholderText('Enter Unit of Measure');
+        const priceInput = getByPlaceholderText('Enter price');
 
-// //   test('updates unit of measure when input changes', () => {
-// //     const { getByPlaceholderText } = render(<EditOrderLineScreen />);
-// //     const uomInput = getByPlaceholderText('Enter Unit of Measure');
-// //     fireEvent.changeText(uomInput, 'kg');
-// //     expect(uomInput.props.value).toBe('kg');
-// //   });
+        fireEvent.changeText(productNameInput, 'New Product Name');
+        fireEvent.changeText(qtyInput, '5');
+        fireEvent.changeText(uomInput, 'Unit');
+        fireEvent.changeText(priceInput, '10');
 
-// //   test('updates price when input changes', () => {
-// //     const { getByPlaceholderText } = render(<EditOrderLineScreen />);
-// //     const priceInput = getByPlaceholderText('Enter price');
-// //     fireEvent.changeText(priceInput, '10.99');
-// //     expect(priceInput.props.value).toBe('10.99');
-// //   });
+        expect(productNameInput.props.value).toBe('New Product Name');
+        expect(qtyInput.props.value).toBe('5');
+        expect(uomInput.props.value).toBe('Unit');
+        expect(priceInput.props.value).toBe('10');
+    });
 
-// //   test('calls updateOrderLine1 when button is pressed', () => {
-// //     const mockUpdateOrderLine1 = jest.fn();
-// //     const { getByText } = render(<EditOrderLineScreen updateOrderLine1={mockUpdateOrderLine1} />);
-// //     const button = getByText('Update Order');
-// //     fireEvent.press(button);
-// //     expect(mockUpdateOrderLine1).toHaveBeenCalled();
-// //   });
-// });
+});

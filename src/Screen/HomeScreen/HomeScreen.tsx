@@ -66,17 +66,6 @@ const HomeScreen = (props: HomeScreenProps) => {
     },
 
   ];
-  const retrieveData = async () => {
-    try {
-      const value = await AsyncStorage.getItem("userId");
-      if (value !== null) {
-      } else {
-        console.log("No data found.");
-      }
-    } catch (error) {
-      console.log("Error retrieving data: ", error);
-    }
-  };
 
   const [loggedIn, setLoggedIn] = useState<boolean>();
   const [toggleForTimer, setToggleForTimer] = useState(false)
@@ -92,13 +81,7 @@ const HomeScreen = (props: HomeScreenProps) => {
   const [lastCheckout, setLastCheckout] = useState<string>('')
   const [lastCheckoutDate, setLastCheckoutDate] = useState<string>('')
   const [lastCheckinDate, setLastCheckinDate] = useState<string>('')
-  const [lastCheckoutFromEmploy, setLastCheckoutFromEmploy] = useState<string>('')
   const [lastCheckIn, setLastCheckedIn] = useState<string>('')
-
-  const odooHost = "http://kg.wangoes.com";
-  const odooDatabase = "kg.wangoes.com";
-  const jsonRpcEndpoint = `${odooHost}/jsonrpc`;
-
 
   async function searchRead1() {
     const uid = await AsyncStorage.getItem("userId");
@@ -121,7 +104,7 @@ const HomeScreen = (props: HomeScreenProps) => {
               ApiEndPoints.odooDatabase,
               uid,
               odooPassword,
-              "res.users", 
+              "res.users",
               "search_read",
               [
                 searchCriteria,
@@ -185,10 +168,6 @@ const HomeScreen = (props: HomeScreenProps) => {
     searchRead1()
   }, []);
 
-  useEffect(() => {
-    retrieveData();
-  }, []);
-
   const startTimer = () => {
     setTimerInterval(
       setInterval(() => {
@@ -224,11 +203,7 @@ const HomeScreen = (props: HomeScreenProps) => {
     setLoggedIn(true);
   };
 
-  const handleLogout = () => {
-    if (loggedIn) {
-      setLoggedIn(false);
-    }
-  };
+
 
   const formatTime = (timeInSeconds) => {
     const hours = Math.floor(timeInSeconds / 3600);
@@ -242,11 +217,7 @@ const HomeScreen = (props: HomeScreenProps) => {
   const year = currentDate.getFullYear();
   const month = (currentDate.getMonth() + 1).toString().padStart(2, "0"); // Month is 0-based, so add 1
   const day = currentDate.getDate().toString().padStart(2, "0");
-  const hours = currentDate.getHours().toString().padStart(2, "0");
-  const minutes = currentDate.getMinutes().toString().padStart(2, "0");
-  const seconds = currentDate.getSeconds().toString().padStart(2, "0");
 
-  const formattedDateTime = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 
   const convertLocalTimeToUTCTime = () => {
     let date = new Date().toISOString();
@@ -257,26 +228,9 @@ const HomeScreen = (props: HomeScreenProps) => {
   const formattedDateTime1 = formattedDateTimeFromUTC
   const senddatetime = formattedDateTimeFromUTC
 
-  const [timeDifferenceInSeconds, setTimeDifferenceInSeconds] = useState<
-    number | null
-  >(null);
+  const [timeDifferenceInSeconds, setTimeDifferenceInSeconds] = useState<number | null>(null);
   const [totalSeconds11, settotalSeconds1] = useState<number | null>(null);
-  function secondsToTime(secs: any) {
-    var hours = Math.floor(secs / (60 * 60));
 
-    var divisor_for_minutes = secs % (60 * 60);
-    var minutes = Math.floor(divisor_for_minutes / 60);
-
-    var divisor_for_seconds = divisor_for_minutes % 60;
-    var seconds = Math.ceil(divisor_for_seconds);
-
-    var obj = {
-      "h": hours + " hours",
-      "m": minutes + " minutes",
-      "s": seconds + " seconds"
-    };
-    return obj;
-  }
   const calculateTimeDifference = () => {
     const attendanceTimeString = lastCheckIn !== 'false' && lastCheckIn
     const currentTimeString = moment.utc(resultUTC).local().format('YYYY-MM-DD HH:mm:ss');
@@ -322,7 +276,6 @@ const HomeScreen = (props: HomeScreenProps) => {
     const odooPassword = await AsyncStorage.getItem("@odopassword");
     Loader.isLoading(true);
     if (uid) {
-      const searchCriteria = [["id", "!=", 0]];
       const userData = {
         employee_id: emplotId,
         check_in: senddatetime,
@@ -382,7 +335,6 @@ const HomeScreen = (props: HomeScreenProps) => {
 
   async function editattandece() {
     const uid = await AsyncStorage.getItem("userId");
-    const gettimedate = await AsyncStorage.getItem("formattedDateTime1");
     const odooPassword = await AsyncStorage.getItem("@odopassword");
     Loader.isLoading(true);
 
@@ -393,7 +345,6 @@ const HomeScreen = (props: HomeScreenProps) => {
 
 
     if (uid) {
-      const searchCriteria = [["id", "=", 174]];
       const response = await fetch(ApiEndPoints.jsonRpcEndpoint, {
         method: "POST",
         headers: {
@@ -409,7 +360,7 @@ const HomeScreen = (props: HomeScreenProps) => {
               ApiEndPoints.odooDatabase,
               uid,
               odooPassword,
-              "hr.attendance", 
+              "hr.attendance",
               "write",
               [attendanceId],
               { vals: userData },
@@ -428,7 +379,6 @@ const HomeScreen = (props: HomeScreenProps) => {
         const resultTime = moment.utc(resultUTC).tz('Asia/Kolkata').format('HH:mm:ss');
         const time12Hour = moment(resultTime, 'HH:mm:ss').format('hh:mm:ss');
         setshowtime(time12Hour)
-        const customdata = responseData.result;
       } else {
         Loader.isLoading(false);
         console.error("search_read........../", responseData.error);
@@ -440,102 +390,6 @@ const HomeScreen = (props: HomeScreenProps) => {
 
     return null;
   }
-
-  async function getEmployeesId() {
-    const uid = await AsyncStorage.getItem("userId");
-    const odooPassword = await AsyncStorage.getItem("@odopassword");
-    Loader.isLoading(true);
-    if (uid) {
-      const searchCriteria = [["user_id", "=", Number(uid)]];
-      const response = await fetch(ApiEndPoints.jsonRpcEndpoint, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          jsonrpc: "2.0",
-          method: "call",
-          params: {
-            service: "object",
-            method: "execute_kw",
-            args: [
-              ApiEndPoints.odooDatabase,
-              uid,
-              odooPassword,
-              "hr.employee", 
-              "search_read",
-              [searchCriteria],
-              {},
-            ],
-          },
-        }),
-      });
-
-      const responseData = await response.json();
-
-      if (responseData) {
-        Loader.isLoading(false);
-        const customdata = responseData.result;
-        setLastCheckoutFromEmploy(customdata[0].last_check_out)
-        customdata.forEach((element) => {
-          setemplotId(element.id)
-          setLastCheckout(element.last_check_out)
-          setLastCheckedIn(element.last_check_in)
-        });
-      } else {
-        Loader.isLoading(false);
-        console.error("search_read error://..", responseData.error);
-        return null;
-      }
-    }
-
-    return null;
-  }
-
-  async function sendlatlong() {
-    const uid = await AsyncStorage.getItem("userId");
-    const odooPassword = await AsyncStorage.getItem("@odopassword");
-    Loader.isLoading(true);
-    if (uid) {
-      const searchCriteria = [["id", "!=", 0]];
-      const userData = locationData;
-      const response = await fetch(ApiEndPoints.jsonRpcEndpoint, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          jsonrpc: "2.0",
-          method: "call",
-          params: {
-            service: "object",
-            method: "execute_kw",
-            args: [
-              ApiEndPoints.odooDatabase,
-              uid,
-              odooPassword,
-              "hr.attendance",
-              "create_location",
-              [1, userData],
-            ],
-          },
-        }),
-      });
-      const responseData = await response.json();
-      if (responseData) {
-        Loader.isLoading(false);
-        const customdata = responseData.result;
-      } else {
-        Loader.isLoading(false);
-        console.error("create faild:>>", responseData.error);
-        return null;
-      }
-
-    }
-
-    return null;
-  }
-
 
   const checkoutfun = () => {
     return (
@@ -629,7 +483,6 @@ const HomeScreen = (props: HomeScreenProps) => {
 
   return (
     <AppContainer>
-        
       <AppHeader
         {...props}
         isBackBtn={false}

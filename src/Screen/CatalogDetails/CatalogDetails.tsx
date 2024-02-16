@@ -21,8 +21,6 @@ interface CatalogDetilsProps {
 
 const CatalogDetails = (props: CatalogDetilsProps) => {
   const { navigation, text, commonActions, route } = props;
-  const [getitem, setgetitem] = useState("");
-
   const [attribute_line_ids, setattribute_line_ids] = useState(
     route?.params?.attributelineids
   );

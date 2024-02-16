@@ -155,23 +155,6 @@ const AppDrawer = ({ ...props }) => {
     );
   };
 
-  React.useEffect(() => {
-    retrieveData();
-  }, []);
-
-  const retrieveData = async (key) => {
-    try {
-      const value = await AsyncStorage.getItem("userId");
-      if (value !== null) {
-        console.log("Retrieved data: ", value);
-      } else {
-        console.log("No data found.");
-      }
-    } catch (error) {
-      console.log("Error retrieving data: ", error);
-    }
-  };
-
   const logout = async () => {
     try {
       await AsyncStorage.removeItem("userId");

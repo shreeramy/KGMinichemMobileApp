@@ -1,20 +1,29 @@
-// import React from 'react';
-// import { render } from '@testing-library/react-native';
-// import OrderHistory from '../OrderHistory';
+import React from 'react';
+import { render } from '@testing-library/react-native';
+import OrderHistory from '../OrderHistory';
+import { Provider } from 'react-redux';
+import { createStore, applyMiddleware } from 'redux';
+import thunk from 'redux-thunk';
+import rootReducer from '../../../Store/reducers/common';
 
-// describe('OrderHistory component', () => {
-//   test('renders correctly', () => {
-//     const { getByText, getAllByTestId } = render(<OrderHistory />);
+const store = createStore(rootReducer, applyMiddleware(thunk));
 
-//     // Check if the "Order History" text is rendered
-//     expect(getByText('Order History')).toBeTruthy();
+describe('OrderHistory component', () => {
+    test('renders correctly', () => {
+        const { getByText, getAllByTestId } = render(
+            <Provider store={store}>
 
-//     // Check if all items are rendered
-//     const items = getAllByTestId('order-history-item');
-//     expect(items.length).toBe(5); // Assuming there are 5 items in the data array
 
-//     // You can add more assertions to test other elements and functionalities
-//   });
+                <OrderHistory /> </Provider>);
 
-//   // Add more test cases as needed
-// });
+
+        expect(getByText('Order History')).toBeTruthy();
+
+
+        const items = getAllByTestId('order-history-item');
+        expect(items.length).toBe(5);
+
+    });
+
+
+});

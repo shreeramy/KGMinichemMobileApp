@@ -8,12 +8,10 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const RootComponent = () => {
   const [isLogin, setIsLogin] = useState<boolean | null>(null);
-  const [isLoader, setLoader] = useState(true)
 
   useEffect(() => {
     const checkSession = async () => {
       try {
-        setLoader(true);
         Loader.isLoading(true);
         const response = await AsyncStorage.getItem("userId");
         console.log("response", response)
@@ -25,7 +23,6 @@ const RootComponent = () => {
       } catch (error) {
         console.error("Error checking user session:", error);
       } finally {
-        setLoader(false);
         Loader.isLoading(false);
       }
     };

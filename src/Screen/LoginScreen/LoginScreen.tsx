@@ -1,14 +1,20 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { CommonActions } from '@react-navigation/native';
 import React, { useState } from "react";
 import {
-  Text,
-  View,
   Image,
   KeyboardAvoidingView,
+  Text,
+  View,
 } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { SvgIcon } from "../../Component/SvgIcons";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
+import {
+  AppButton,
+  AppContainer,
+  AppScrollview,
+  AppTextInput,
+} from "../../Component";
 import {
   Const,
   Images,
@@ -18,14 +24,7 @@ import {
   Utility,
 } from "../../Helper";
 import * as OdooApi from "../OdooApi";
-import {
-  AppButton,
-  AppContainer,
-  AppScrollview,
-  AppTextInput,
-} from "../../Component";
 import styles from "./LoginScreenStyle";
-import { CommonActions } from '@react-navigation/native';
 
 interface LoginScreenProps {
   navigation?: any;
@@ -79,9 +78,11 @@ const LoginScreen = (props: LoginScreenProps) => {
             </View>
             <View style={styles.signdot}>
               <Text style={{ fontSize: 22, fontWeight: "bold" }}>Sign In</Text>
-              <SvgIcon Icon={Images.logndots} height={55} width={50} onPress={function () {
-
-              }} />
+              <Image
+                source={Images.logndots}
+                style={styles.dotimg}
+                resizeMode="contain"
+              />
             </View>
 
             <View style={{ marginTop: Responsive.heightPx(2) }}>
