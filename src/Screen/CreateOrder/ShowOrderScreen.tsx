@@ -41,7 +41,7 @@ const ShowOrderScreen = (props: ShowOrderScreenProps) => {
   const { navigation, text, commonActions, route } = props;
   const [email, setemail] = useState("");
 
-  // console.log("customerdata", customerdata)
+
   const [customerdataWithoutLimit, setCustomerdataWithoutLimit] = useState([]);
   const [search, setSearch] = useState("");
   console.log("search.length:::::::", search)
@@ -62,6 +62,8 @@ const ShowOrderScreen = (props: ShowOrderScreenProps) => {
   const filterDataFromRoute = route?.params?.filterSearchCriteria !== undefined ? route?.params?.filterSearchCriteria : []
   // console.log("FilterData in order------::::", filterDataFromRoute)
   const [customerdata, setcustomerdata] = useState([]);
+  const [customerName, setcustomerName] = useState();
+  // console.log("customerdata", customerdata)
   const [customerFilterData, setCustomerFilterData] = useState([]);
   const [noteSetPage, setNotSetPage] = useState(true)
   // const [filterData, setFilterData] = useState([...filterDataFromRoute]);
@@ -254,18 +256,18 @@ const ShowOrderScreen = (props: ShowOrderScreenProps) => {
 
         const limit = 10;
         const offset = (pageNumber - 1) * 10;
-
+        let fields = ["id", "name", "date_order", "state", "user_id", "order_line", "partner_id", "l10n_in_gst_treatment", "validity_date", "delivery_status", "invoice_status", "payment_mode"]
         const searchData = await OdooApi.searchRead(
           uid,
           "sale.order",
           searchCriteria,
           limit,
-          offset
+          offset,
+          fields
         );
         // console.log("searchData===", searchData)
 
         if (searchData) {
-
           setcustomerdata((prevData: any) => {
             if (pageNumber === 1) {
               console.log("pageNumber ig condition:::")
@@ -280,6 +282,7 @@ const ShowOrderScreen = (props: ShowOrderScreenProps) => {
               // return [...uniqueData];
             }
           }
+
           )
 
         } else {
@@ -592,6 +595,7 @@ const ShowOrderScreen = (props: ShowOrderScreenProps) => {
 
           <TouchableOpacity
             onPress={() => navigation.navigate(Screen.NewCreateOrderScreen)}
+
           >
             <View
               style={{

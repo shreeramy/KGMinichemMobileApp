@@ -174,7 +174,7 @@ const Profile = (props: ProfileProps) => {
     const userData = {
       name: name,
       email: Email,
-      phone: Mobile,
+      mobile: Mobile,
       street: Address,
       city: City,
       state_id: value,
@@ -182,6 +182,7 @@ const Profile = (props: ProfileProps) => {
       country_id: Number(countrysendvalue),
       vat: gstNumber,
       image_1920: imageResponse,
+      image_512: imageResponse,
     };
 
     if (uid !== null) {

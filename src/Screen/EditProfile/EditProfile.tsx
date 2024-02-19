@@ -189,7 +189,7 @@ const EditProfile = (props: EditProfileProps) => {
                       borderRadius: Responsive.widthPx(30),
                     }}
                     source={{
-                      uri: `data:image/png;base64,${customer?.image_1920}`,
+                      uri: `data:image/png;base64,${customer?.image_512}`,
                     }}
                   />
                   <View style={{ marginTop: 5 }}>

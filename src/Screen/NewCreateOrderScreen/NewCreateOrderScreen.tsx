@@ -55,6 +55,7 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
   const { navigation, text, commonActions, route } = props;
   const getcustomeId = route?.params?.sendcustomerId;
   const sendCustomerName = route?.params?.sendcustomerName;
+  console.log("sendCustomerName::", sendCustomerName)
   const [orederdate, setorederdate] = useState("");
   const [createorder, setcreateorder] = useState([]);
   const refRBSheet: any = useRef();
@@ -62,13 +63,17 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
   const PaymentModesheet: any = useRef();
   const refRBSheet2: any = useRef();
   const refRBSheet3: any = useRef();
-  const [roll, setroll] = React.useState(sendCustomerName || "Select Customer");
+  // const [roll, setroll] = React.useState(sendCustomerName || "Select Customer");
+  const [roll, setroll] = React.useState("Select Customer");
   const [cutomerId, setcutomerId] = React.useState(getcustomeId);
   const [proname, setproname] = React.useState("Select Product");
+  console.log("proname", proname)
   const [gstsendvalue, setgstsendvalue] = React.useState("");
   const [gstinpro, setgstinpro] = React.useState("GSTIN");
   const [PaymentMode, setPaymentMode] = React.useState("Payment Mode");
   const [customerdata, setcustomerdata] = useState([]);
+  const [isButtonDisabled, setIsButtonDisabled] = useState(true);
+  // console.log("customerdata==>", customerdata)
   const [productdata, setproductdata] = useState([]);
   const regex = /\(([^)]+)\)/;
   // useEffect(() => {
@@ -163,6 +168,7 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
   console.log("")
 
   const [addval, setaddval] = useState([]);
+  // console.log("addVal::", addval && addval.length)
   React.useEffect(() => {
     retrieveData();
     getmatricunit();
@@ -176,10 +182,10 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
     return backScreen;
   }, []);
 
-  React.useEffect(() => {
-    getcustomer();
-    // searchReadData()
-  }, []);
+  // React.useEffect(() => {
+  //   getcustomer();
+  //   // searchReadData()
+  // }, []);
 
   const handleDateChange = (event, selectedDate) => {
     const currentDate = selectedDate || date;
@@ -283,6 +289,7 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
       setText1("");
       setText2("");
       setText3("");
+      setproname('Select Product')
       console.log("?orde_addv>>?//", addval);
       console.log(">>>???", arrval);
     }
@@ -344,7 +351,7 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
         Utility.showSuccessToast("sellorder created successfully");
         navigation.navigate(Screen.ShowOrderScreen);
         const customdata = responseData.result;
-        setcustomerdata(customdata);
+        // setcustomerdata(customdata);
         // console.log("create salallorder_Suucess:", responseData.result);
       } else {
         Loader.isLoading(false);
@@ -451,18 +458,20 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
   //   }
   // };
 
-  // useEffect(() => {
-  //   searchRead1()
-  // }, [])
+  useEffect(() => {
+    searchRead1()
+  }, [])
 
-  async function searchRead1(e: any) {
+  async function searchRead1() {
     console.log('searchRead1-->', 'searchRead1');
     const uid = await AsyncStorage.getItem("userId");
+    const uIDInt = parseInt(uid)
+    console.log("uIDInt", uIDInt)
     const odooPassword = await AsyncStorage.getItem("@odopassword");
     Loader.isLoading(true);
 
     if (uid) {
-      const searchCriteria = [["name", "ilike", e]];
+      const searchCriteria = [["id", "!=", 0], ["create_uid", "=", uIDInt]];
       const response = await fetch(ApiEndPoints.jsonRpcEndpoint, {
         method: "POST",
         headers: {
@@ -481,7 +490,7 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
               "res.partner", // Replace with the desired model name
               "search_read",
               [searchCriteria],
-              {},
+              { "fields": ["id", "name"] },
             ],
           },
         }),
@@ -570,62 +579,62 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
   };
 
   // Function to perform a search_read operation
-  async function getcustomer() {
-    const uid = await AsyncStorage.getItem("userId");
-    const odooPassword = await AsyncStorage.getItem("@odopassword");
-    Loader.isLoading(true);
+  // async function getcustomer() {
+  //   const uid = await AsyncStorage.getItem("userId");
+  //   const odooPassword = await AsyncStorage.getItem("@odopassword");
+  //   Loader.isLoading(true);
 
-    if (uid) {
-      const searchCriteria = [["id", "!=", 0]];
-      // if (name){
-      //   searchCriteria.append(["name", "=", name])
-      // }
-      // const searchCriteria = [];
-      // Replace with your search criteria
+  //   if (uid) {
+  //     const searchCriteria = [["id", "!=", 0]];
+  //     // if (name){
+  //     //   searchCriteria.append(["name", "=", name])
+  //     // }
+  //     // const searchCriteria = [];
+  //     // Replace with your search criteria
 
-      const response = await fetch(ApiEndPoints.jsonRpcEndpoint, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          jsonrpc: "2.0",
-          method: "call",
-          params: {
-            service: "object",
-            method: "execute_kw",
-            args: [
-              ApiEndPoints.odooDatabase,
-              uid,
-              odooPassword,
-              "res.partner", // Replace with the desired model name
-              "search_read",
-              [searchCriteria],
-              {},
-            ],
-          },
-        }),
-      });
+  //     const response = await fetch(ApiEndPoints.jsonRpcEndpoint, {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify({
+  //         jsonrpc: "2.0",
+  //         method: "call",
+  //         params: {
+  //           service: "object",
+  //           method: "execute_kw",
+  //           args: [
+  //             ApiEndPoints.odooDatabase,
+  //             uid,
+  //             odooPassword,
+  //             "res.partner", // Replace with the desired model name
+  //             "search_read",
+  //             [searchCriteria],
+  //             {},
+  //           ],
+  //         },
+  //       }),
+  //     });
 
-      const responseData = await response.json();
-      // console.log("responseData.result in getcustomer", responseData)
-      if (responseData.result) {
+  //     const responseData = await response.json();
+  //     // console.log("responseData.result in getcustomer", responseData)
+  //     if (responseData.result) {
 
-        Loader.isLoading(false);
-        const customdata = responseData.result;
-        setcustomerdata(customdata);
-        // console.log("search_read result:::::", responseData.result);
-      } else {
-        // console.error("search_read error://..", responseData.error);
-        Loader.isLoading(false);
-        return null;
-      }
+  //       Loader.isLoading(false);
+  //       const customdata = responseData.result;
+  //       setcustomerdata(customdata);
+  //       // console.log("search_read result:::::", responseData.result);
+  //     } else {
+  //       // console.error("search_read error://..", responseData.error);
+  //       Loader.isLoading(false);
+  //       return null;
+  //     }
 
-      // return responseData.result;
-    }
-    Loader.isLoading(false);
-    return null;
-  }
+  //     // return responseData.result;
+  //   }
+  //   Loader.isLoading(false);
+  //   return null;
+  // }
 
   const Getunitname = () => (
     <View style={{ backgroundColor: "#fff" }}>
@@ -750,7 +759,7 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
           <FlatList
             data={customerdata}
             renderItem={({ item }) => {
-              // console.log("item::::::", item)
+              console.log("item::::::", item)
               return (
 
                 <TouchableOpacity
@@ -1015,7 +1024,9 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
               "product.product", // Replace with the desired model name
               "search_read",
               [searchCriteria],
-              {},
+              {
+                "fields": ["id", "uom_id", "display_name"]
+              },
             ],
           },
         }),
@@ -1638,6 +1649,7 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
                     justifyContent: "center",
                     alignItems: "center",
                   }}
+                  disabled={proname === "Select Product"}
                   onPress={() => {
                     addItem();
                     // setText1("");
@@ -1646,7 +1658,7 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
                 >
                   <View
                     style={{
-                      backgroundColor: Color.botton_Color,
+                      backgroundColor: proname === "Select Product" ? 'grey' : Color.botton_Color,
                       width: Responsive.widthPx(25),
                       alignItems: "center",
                       justifyContent: "center",
@@ -1662,6 +1674,7 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
                     justifyContent: "center",
                     alignItems: "center",
                   }}
+                  disabled={addval && addval.length == 0}
                   onPress={() => {
                     addItem();
                     callfinesproduct();
@@ -1673,7 +1686,8 @@ const NewCreateOrderScreenstyle = (props: NewCreateOrderScreenstyleProps) => {
                 >
                   <View
                     style={{
-                      backgroundColor: Color.botton_Color,
+                      backgroundColor: addval && addval.length == 0 ? 'grey' : Color.botton_Color,
+                      // backgroundColor: Color.botton_Color,
                       width: Responsive.widthPx(25),
                       alignItems: "center",
                       justifyContent: "center",
