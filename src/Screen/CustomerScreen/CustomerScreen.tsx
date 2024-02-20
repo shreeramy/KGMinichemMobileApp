@@ -78,21 +78,29 @@ const CustomerScreen = (props: CustomerScreenProps) => {
     try {
       setLoading(true);
       const uid = await AsyncStorage.getItem("userId");
+      const uIDInt = parseInt(uid)
+      console.log("uIDInt", uIDInt)
 
-      if (uid && !noMoreData) {
-        const searchCriteria = [["id", "!=", 0]];
+      if (uIDInt && !noMoreData) {
+        const searchCriteria = [["id", "!=", 0], ["create_uid", "=", uIDInt]];
+        const fields = ["id", "name", "image_512", "mobile", "email", "vat", "country_id", "state_id", "street", "zip", "city"]
         const list = ["id"];
 
         const limit = 10;
         const offset = (pageNumber - 1) * 10;
 
         const searchData = await OdooApi.searchRead(
-          uid,
+          uIDInt,
           "res.partner",
           searchCriteria,
           limit,
-          offset
+          offset,
+          fields
         );
+        console.log("searchData in custenerrfhbadsjkhj====>", searchData)
+        if (searchData && searchData.length <= 10) {
+          setNoMoreData(true)
+        }
         if (searchData) {
           setcustomerdata((prevData: any) => {
             if (pageNumber === 1) {
@@ -247,7 +255,7 @@ const CustomerScreen = (props: CustomerScreenProps) => {
                   <View style={{ alignItems: "center", flexDirection: "row" }}>
                     <Image resizeMode="contain" source={Images.Call} />
                     <View style={{ marginLeft: 5 }}>
-                      <Text style={styles.listtext}>{item.phone}</Text>
+                      <Text style={styles.listtext}>{item.mobile}</Text>
                     </View>
                   </View>
                 </View>

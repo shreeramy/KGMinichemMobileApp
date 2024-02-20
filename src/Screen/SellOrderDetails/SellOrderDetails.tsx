@@ -41,13 +41,13 @@ const SellOrderDetails = (props: SellOrderDetailsProps) => {
   const [productdata, setproductdata] = useState([]);
 
   React.useEffect(() => {
-    ProductCatalogapi();
+    // ProductCatalogapi();
     fetchUserData();
     fetchOrderlineData();
     const backScreen = navigation.addListener("focus", () => {
       fetchUserData();
       fetchOrderlineData();
-      ProductCatalogapi();
+      // ProductCatalogapi();
     });
     return backScreen;
   }, []);
@@ -79,14 +79,16 @@ const SellOrderDetails = (props: SellOrderDetailsProps) => {
               "product.product", 
               "search_read",
               [searchCriteria],
-              {},
+              {
+                "fields": ["id", "uom_id", "display_name"]
+              },
             ],
           },
         }),
       });
 
       const responseData = await response.json();
-
+      console.log("responseData.result::", responseData.result)
       if (responseData.result.length > 0) {
         Loader.isLoading(false);
         const customdata = responseData.result;
@@ -118,10 +120,14 @@ const SellOrderDetails = (props: SellOrderDetailsProps) => {
       const uid = await AsyncStorage.getItem("userId");
       if (uid) {
         const searchCriteria = [["id", "=", saleorederId]];
+        let fields = ["id", "name", "order_line", "date_order", "state", "user_id", "partner_id", "l10n_in_gst_treatment", "validity_date", "delivery_status", "invoice_status", "payment_mode"]
         const result = await OdooApi.searchRead(
           uid,
           "sale.order",
-          searchCriteria
+          searchCriteria,
+          1,
+          0,
+          fields
         );
 
         if (result) {
@@ -143,10 +149,14 @@ const SellOrderDetails = (props: SellOrderDetailsProps) => {
       const uid = await AsyncStorage.getItem("userId");
       if (uid) {
         const searchCriteria = [["order_id", "=", saleorederId]];
+        let fields = ["id", "name", "product_uom_qty", "product_uom", "price_unit", "price_subtotal", "product_id", "order_id"]
         const result = await OdooApi.searchRead(
           uid,
           "sale.order.line",
-          searchCriteria
+          searchCriteria,
+          0,
+          0,
+          fields
         );
 
         if (result) {
@@ -232,7 +242,7 @@ const SellOrderDetails = (props: SellOrderDetailsProps) => {
               <Text style={styles.listtextheading}>Paid via</Text>
               <View style={styles.item1}>
                 <Text style={styles.listtext}>
-                  {customerdata[0]?.amount_paid}
+                  {customerdata[0]?.payment_mode}
                 </Text>
               </View>
             </View>
