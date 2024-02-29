@@ -1740,6 +1740,26 @@
   resolved "https://registry.npmjs.org/@react-native-community/geolocation/-/geolocation-3.1.0.tgz"
   integrity sha512-Aj76wMeCLz9kczpe7W2IXxSRNj+hRR7sqyfXq9ZaJIWNH23jeJfzMpovclg+e1uM8Vr8jCYEcZyD4rKub6Vc/Q==
 
+"@react-native-community/push-notification-ios@^1.10.1":
+  version "1.11.0"
+  resolved "https://registry.npmjs.org/@react-native-community/push-notification-ios/-/push-notification-ios-1.11.0.tgz"
+  integrity sha512-nfkUs8P2FeydOCR4r7BNmtGxAxI22YuGP6RmqWt6c8EEMUpqvIhNKWkRSFF3pHjkgJk2tpRb9wQhbezsqTyBvA==
+  dependencies:
+    invariant "^2.2.4"
+
+"@react-native-firebase/app@^18.8.0", "@react-native-firebase/app@18.9.0":
+  version "18.9.0"
+  resolved "https://registry.npmjs.org/@react-native-firebase/app/-/app-18.9.0.tgz"
+  integrity sha512-kMY4HVWxfz0YjQ5n9oyW9uifI5CkQfLfj2FEeQrI9mCwaCNuRw04x9Yc8LeFpew7NPEDVfty7tlL3WEjDpvNEw==
+  dependencies:
+    opencollective-postinstall "^2.0.3"
+    superstruct "^0.6.2"
+
+"@react-native-firebase/messaging@^18.9.0":
+  version "18.9.0"
+  resolved "https://registry.npmjs.org/@react-native-firebase/messaging/-/messaging-18.9.0.tgz"
+  integrity sha512-Jl62EI1WEpM7TZG4BXXeKAphkiFlyNh57yiBJRRY4N5/c8GXxP4GoB7UZVyQjhD55RuqrVfosFG63uBtd7Hsvg==
+
 "@react-native/assets@1.0.0":
   version "1.0.0"
   resolved "https://registry.npmjs.org/@react-native/assets/-/assets-1.0.0.tgz"
@@ -2916,6 +2936,16 @@ clone-deep@^0.2.4:
     lazy-cache "^1.0.3"
     shallow-clone "^0.1.2"
 
+clone-deep@^2.0.1:
+  version "2.0.2"
+  resolved "https://registry.npmjs.org/clone-deep/-/clone-deep-2.0.2.tgz"
+  integrity sha512-SZegPTKjCgpQH63E+eN6mVEEPdQBOUzjyJm5Pora4lrwWRFS8I0QAxV/KD6vV/i0WuijHZWQC1fMsPEdxfdVCQ==
+  dependencies:
+    for-own "^1.0.0"
+    is-plain-object "^2.0.4"
+    kind-of "^6.0.0"
+    shallow-clone "^1.0.0"
+
 clone-deep@^4.0.1:
   version "4.0.1"
   resolved "https://registry.npmjs.org/clone-deep/-/clone-deep-4.0.1.tgz"
@@ -4047,6 +4077,13 @@ for-own@^0.1.3:
   version "0.1.5"
   resolved "https://registry.npmjs.org/for-own/-/for-own-0.1.5.tgz"
   integrity sha512-SKmowqGTJoPzLO1T0BBJpkfp3EMacCMOuH40hOUbrbzElVktk4DioXVM99QkLCyKoiuOmyjgcWMpVz2xjE7LZw==
+  dependencies:
+    for-in "^1.0.1"
+
+for-own@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.npmjs.org/for-own/-/for-own-1.0.0.tgz"
+  integrity sha512-0OABksIGrxKK8K4kynWkQ7y1zounQxP+CWnyclVwj81KW3vlLlGUx57DKGcP/LH216GzqnstnPocF16Nxs0Ycg==
   dependencies:
     for-in "^1.0.1"
 
@@ -5320,7 +5357,12 @@ kind-of@^3.0.2:
   dependencies:
     is-buffer "^1.1.5"
 
-kind-of@^6.0.2:
+kind-of@^5.0.0:
+  version "5.1.0"
+  resolved "https://registry.npmjs.org/kind-of/-/kind-of-5.1.0.tgz"
+  integrity sha512-NGEErnH6F2vUuXDh+OlbcKW7/wOcfdRHaZ7VWtqCztfHri/++YKmP51OdWeGPuqCOba6kk2OTe5d02VmTB80Pw==
+
+kind-of@^6.0.0, kind-of@^6.0.1, kind-of@^6.0.2:
   version "6.0.3"
   resolved "https://registry.npmjs.org/kind-of/-/kind-of-6.0.3.tgz"
   integrity sha512-dcS1ul+9tmeD95T+x28/ehLgd9mENa3LsvDTtzm3vyBEO7RPptvAD+t44WVXaUjTBRcrpFeFlC8WCruUR456hw==
@@ -6315,6 +6357,11 @@ open@^6.2.0:
   dependencies:
     is-wsl "^1.1.0"
 
+opencollective-postinstall@^2.0.3:
+  version "2.0.3"
+  resolved "https://registry.npmjs.org/opencollective-postinstall/-/opencollective-postinstall-2.0.3.tgz"
+  integrity sha512-8AV/sCtuzUeTo8gQK5qDZzARrulB3egtLzFgteqB2tcT4Mw7B8Kt7JcDHmltjz6FOAHsvTevk70gZEbhM4ZS9Q==
+
 optionator@^0.9.1:
   version "0.9.3"
   resolved "https://registry.npmjs.org/optionator/-/optionator-0.9.3.tgz"
@@ -6868,6 +6915,11 @@ react-native-permissions@^3.10.1:
   resolved "https://registry.npmjs.org/react-native-permissions/-/react-native-permissions-3.10.1.tgz"
   integrity sha512-Gc5BxxpjZn4QNUDiVeHOO0vXh3AH7ToolmwTJozqC6DsxV7NAf3ttap+8BSmzDR8WxuAM3Cror+YNiBhHJx7/w==
 
+react-native-push-notification@^8.1.1:
+  version "8.1.1"
+  resolved "https://registry.npmjs.org/react-native-push-notification/-/react-native-push-notification-8.1.1.tgz"
+  integrity sha512-XpBtG/w+a6WXTxu6l1dNYyTiHnbgnvjoc3KxPTxYkaIABRmvuJZkFxqruyGvfCw7ELAlZEAJO+dthdTabCe1XA==
+
 react-native-raw-bottom-sheet@^2.2.0:
   version "2.2.0"
   resolved "https://registry.npmjs.org/react-native-raw-bottom-sheet/-/react-native-raw-bottom-sheet-2.2.0.tgz"
@@ -6933,7 +6985,7 @@ react-native-web@*, "react-native-web@>= 0.11", react-native-web@0.9.x:
     postcss-value-parser "^4.2.0"
     styleq "^0.1.3"
 
-react-native@*, "react-native@^0.0.0-0 || >=0.60 <1.0", react-native@^0.71.0, "react-native@>= 0.30.0", "react-native@>= 0.64.3", react-native@>=0.20.0, react-native@>=0.40.0, react-native@>=0.42.0, react-native@>=0.45.0, react-native@>=0.50.0, react-native@>=0.59, react-native@>=0.63.3, react-native@>=0.65.0, react-native@>=v0.40.0, react-native@0.71.0:
+react-native@*, "react-native@^0.0.0-0 || >=0.60 <1.0", react-native@^0.71.0, "react-native@>= 0.30.0", "react-native@>= 0.64.3", react-native@>=0.20.0, react-native@>=0.33, react-native@>=0.40.0, react-native@>=0.42.0, react-native@>=0.45.0, react-native@>=0.50.0, react-native@>=0.58.4, react-native@>=0.59, react-native@>=0.63.3, react-native@>=0.65.0, react-native@>=v0.40.0, react-native@0.71.0:
   version "0.71.0"
   resolved "https://registry.npmjs.org/react-native/-/react-native-0.71.0.tgz"
   integrity sha512-b5oCS/cPVqXT5E2K+0CfQMERAoRu6/6g1no9XRAcjQ4b5JG608WgDh5QgXPHaMSVhAvsJ1DuRoU8C/xqTjQITA==
@@ -7007,7 +7059,7 @@ react-test-renderer@>=16.8.0:
     react-shallow-renderer "^16.15.0"
     scheduler "^0.23.0"
 
-react@*, "react@^16.0.0 || ^17.0.0 || ^18.0.0", react@^16.13.1, react@^16.3.0, "react@^16.8 || ^17.0 || ^18.0", "react@^16.8.0 || ^17.0.0 || ^18.0.0", "react@^16.9.0 || ^17.0.0 || ^18", react@^18.0.0, react@^18.2.0, "react@>= 15.2.1", "react@>= 17.0.1", react@>=16, react@>=16.13.1, react@>=16.8, react@>=16.8.0, react@>=17.0.0, react@16.x.x, react@18.2.0:
+react@*, "react@^16.0.0 || ^17.0.0 || ^18.0.0", react@^16.13.1, react@^16.3.0, "react@^16.8 || ^17.0 || ^18.0", "react@^16.8.0 || ^17.0.0 || ^18.0.0", "react@^16.9.0 || ^17.0.0 || ^18", react@^18.0.0, react@^18.2.0, "react@>= 15.2.1", "react@>= 17.0.1", react@>=16, react@>=16.13.1, react@>=16.6.3, react@>=16.8, react@>=16.8.0, react@>=17.0.0, react@16.x.x, react@18.2.0:
   version "18.2.0"
   resolved "https://registry.npmjs.org/react/-/react-18.2.0.tgz"
   integrity sha512-/3IjMdb2L9QbBdWiW5e3P2/npwMBaU9mHCSCUzNln0ZCYbcfTsGbTJrU/kGemdH2IWmB2ioZ+zkxtmq6g09fGQ==
@@ -7446,6 +7498,15 @@ shallow-clone@^0.1.2:
     lazy-cache "^0.2.3"
     mixin-object "^2.0.1"
 
+shallow-clone@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.npmjs.org/shallow-clone/-/shallow-clone-1.0.0.tgz"
+  integrity sha512-oeXreoKR/SyNJtRJMAKPDSvd28OqEwG4eR/xc856cRGBII7gX9lvAqDxusPm0846z/w/hWYjI1NpKwJ00NHzRA==
+  dependencies:
+    is-extendable "^0.1.1"
+    kind-of "^5.0.0"
+    mixin-object "^2.0.1"
+
 shallow-clone@^3.0.0:
   version "3.0.1"
   resolved "https://registry.npmjs.org/shallow-clone/-/shallow-clone-3.0.1.tgz"
@@ -7802,6 +7863,14 @@ sudo-prompt@^9.0.0:
   version "9.2.1"
   resolved "https://registry.npmjs.org/sudo-prompt/-/sudo-prompt-9.2.1.tgz"
   integrity sha512-Mu7R0g4ig9TUuGSxJavny5Rv0egCEtpZRNMrZaYS1vxkiIxGiGUwoezU3LazIQ+KE04hTrTfNPgxU5gzi7F5Pw==
+
+superstruct@^0.6.2:
+  version "0.6.2"
+  resolved "https://registry.npmjs.org/superstruct/-/superstruct-0.6.2.tgz"
+  integrity sha512-lvA97MFAJng3rfjcafT/zGTSWm6Tbpk++DP6It4Qg7oNaeM+2tdJMuVgGje21/bIpBEs6iQql1PJH6dKTjl4Ig==
+  dependencies:
+    clone-deep "^2.0.1"
+    kind-of "^6.0.1"
 
 supports-color@^5.3.0, supports-color@^5.5.0:
   version "5.5.0"

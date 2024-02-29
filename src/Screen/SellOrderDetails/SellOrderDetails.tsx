@@ -119,6 +119,7 @@ const SellOrderDetails = (props: SellOrderDetailsProps) => {
     try {
       const uid = await AsyncStorage.getItem("userId");
       if (uid) {
+        console.log("saleOrderId",saleorederId )
         const searchCriteria = [["id", "=", saleorederId]];
         let fields = ["id", "name", "order_line", "date_order", "state", "user_id", "partner_id", "l10n_in_gst_treatment", "validity_date", "delivery_status", "invoice_status", "payment_mode"]
         const result = await OdooApi.searchRead(

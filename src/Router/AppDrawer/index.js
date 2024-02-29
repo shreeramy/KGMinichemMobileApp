@@ -18,6 +18,7 @@ import {
   Screen
 } from "../../Helper";
 import { ApiEndPoints, ApiServices } from "../../NetworkCall";
+import messaging from '@react-native-firebase/messaging';
 
 const drawerList = [
   {
@@ -41,7 +42,7 @@ const drawerList = [
     headingicon: Images.Order,
   },
   {
-    key: Screen.HomeScreen,
+    key: Screen.NotificationScreen,
     name: "Order status & notification",
     headingicon: Images.Orderstatus,
   },
@@ -155,9 +156,20 @@ const AppDrawer = ({ ...props }) => {
     );
   };
 
+  const clearFCMToken = async () => {
+    try {
+      await messaging().deleteToken();
+      console.log('FCM token cleared successfully');
+    } catch (error) {
+      console.error('Error clearing FCM token:', error);
+    }
+  };
+
   const logout = async () => {
     try {
       await AsyncStorage.removeItem("userId");
+      await AsyncStorage.removeItem("token");
+      clearFCMToken();
       props.navigation.replace("LoginScreen");
     } catch (error) {
       console.error("Error clearing user session:", error);

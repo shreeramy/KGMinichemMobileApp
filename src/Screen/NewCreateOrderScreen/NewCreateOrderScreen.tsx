@@ -1,7 +1,8 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import messaging from '@react-native-firebase/messaging';
 import moment from "moment";
-import React, { useEffect, useRef, useState } from "react";
+import React, { createContext, useEffect, useRef, useState } from "react";
 import {
   ActivityIndicator,
   FlatList,
@@ -20,6 +21,7 @@ import {
   AppButton,
   AppContainer
 } from "../../Component";
+import displayNotification from "../../Component/displayNotification";
 import {
   Color,
   Const,
@@ -31,7 +33,6 @@ import {
 } from "../../Helper";
 import { ApiEndPoints } from "../../NetworkCall";
 import styles from "./NewCreateOrderScreenstyle";
-import * as OdooApi from '../OdooApi';
 
 interface NewCreateOrderScreenProps {
   navigation?: any;
@@ -40,6 +41,8 @@ interface NewCreateOrderScreenProps {
   route?: any;
 }
 var arrval = [];
+const GlobalListContext = createContext([]);
+
 const NewCreateOrderScreen = (props: NewCreateOrderScreenProps) => {
   const { navigation, text, commonActions, route } = props;
   const getcustomeId = route?.params?.sendcustomerId;
@@ -65,6 +68,7 @@ const NewCreateOrderScreen = (props: NewCreateOrderScreenProps) => {
   // console.log("customerdata==>", customerdata)
   const [productdata, setproductdata] = useState([]);
   const [page, setPage] = useState(1);
+  const [notifications, setNotifications] = useState([]);
   const [gstin, setgstin] = useState([
     {
       name: "Registered Business-Regular",
@@ -256,6 +260,10 @@ const NewCreateOrderScreen = (props: NewCreateOrderScreenProps) => {
         order_line: arrval,
       };
       console.log("arrval---------->", arrval);
+      console.log("data", ApiEndPoints.odooDatabase,
+        uid,
+        odooPassword,)
+      console.log("userdata", userData);
 
       const response = await fetch(ApiEndPoints.jsonRpcEndpoint, {
         method: "POST",
@@ -280,7 +288,7 @@ const NewCreateOrderScreen = (props: NewCreateOrderScreenProps) => {
           },
         }),
       });
-
+      console.log("response", response);
       const responseData = await response.json();
 
       if (responseData.result) {
@@ -288,6 +296,7 @@ const NewCreateOrderScreen = (props: NewCreateOrderScreenProps) => {
         Utility.showSuccessToast("sellorder created successfully");
         navigation.navigate(Screen.ShowOrderScreen);
         const customdata = responseData.result;
+        sendOrderPlacedNotification();
         // setcustomerdata(customdata);
         // console.log("create salallorder_Suucess:", responseData.result);
       } else {
@@ -302,6 +311,93 @@ const NewCreateOrderScreen = (props: NewCreateOrderScreenProps) => {
 
     return null;
   }
+
+
+  async function sendFcmToken() {
+    try {
+      const existingToken = await AsyncStorage.getItem(`token`);
+      console.log("existingToken", existingToken);
+      console.log("customerId", cutomerId);
+      const token = await messaging().getToken();
+      // if (existingToken) {
+      //   console.log("Token already exists for customerId:", cutomerId);
+      //   return;
+      // } else {
+      const uid = await AsyncStorage.getItem("userId");
+      const odooPassword = await AsyncStorage.getItem("@odopassword");
+      console.log("token", token);
+      Loader.isLoading(true);
+
+      if (uid) {
+        const response = await fetch(ApiEndPoints.jsonRpcEndpoint, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            jsonrpc: "2.0",
+            method: "call",
+            params: {
+              service: "object",
+              method: "execute_kw",
+              args: [ApiEndPoints.odooDatabase, uid, odooPassword, "res.partner", "write", [cutomerId],
+                {
+                  "vals": {
+                    "mail_firebase_tokens": [
+                      [
+                        0,
+                        0,
+                        {
+                          "user_id": uid,
+                          "os": "Android",
+                          "token": token
+                        }
+                      ]
+                    ]
+
+                  }
+                }]
+            },
+          }),
+        });
+
+        const responseData = await response.json();
+
+        if (responseData.result) {
+          await AsyncStorage.setItem(`token`, token + cutomerId);
+          Loader.isLoading(false);
+          Utility.showSuccessToast("Token sent successfully");
+          await messaging().deleteToken();
+        } else {
+          Loader.isLoading(false);
+          Utility.showDangerToast("Token not sent");
+          console.error("create failed:", responseData.error);
+        }
+      }
+      // }
+
+
+    } catch (error) {
+      console.error("Error sending token:", error);
+      Loader.isLoading(false);
+      Utility.showDangerToast("Error sending token");
+    }
+  }
+
+  async function registerForPushNotifications() {
+    const token = await messaging().getToken();
+    return token;
+  }
+
+  const sendOrderPlacedNotification = async () => {
+    try {
+      const deviceToken = await registerForPushNotifications(); // Get the device token
+      console.log("Token:", deviceToken);
+      await displayNotification("KgMinichem", 'Order has been placed Successfully')
+    } catch (error) {
+      console.error("Error sending order placed notification:", error);
+    }
+  };
 
   // &&&&&&&&&&&&&&&&&&&&&&&&&&&&&******************&&&&&&&&&&&&********
 
@@ -452,7 +548,7 @@ const NewCreateOrderScreen = (props: NewCreateOrderScreenProps) => {
   }
 
 
-  async function getmatricunit(e: any) {
+  async function getmatricunit() {
     const uid = await AsyncStorage.getItem("userId");
     const odooPassword = await AsyncStorage.getItem("@odopassword");
     // Loader.isLoading(true);
@@ -713,58 +809,58 @@ const NewCreateOrderScreen = (props: NewCreateOrderScreenProps) => {
 
   const ProductDataList = () => (
     <View style={{ backgroundColor: "#fff" }}>
-    {productdata.length === 0 ?
-          <View>
-            <ActivityIndicator size="large" color="#0000ff" />
-          </View>
-          :
-      <FlatList
-        data={productdata}
-        renderItem={({ item }) => (
-          <TouchableOpacity
+      {productdata.length === 0 ?
+        <View>
+          <ActivityIndicator size="large" color="#0000ff" />
+        </View>
+        :
+        <FlatList
+          data={productdata}
+          renderItem={({ item }) => (
+            <TouchableOpacity
 
-            onPress={() => {
+              onPress={() => {
 
-              refRBSheet2.current.close(
-                setproname(item?.display_name),
-                setSelectUnit(item?.uom_id[1]),
-                setSelectUnitid(item?.uom_id[0]),
-                console.log("Chcking item", item),
-                setText1(item?.id)
-              );
-            }}
-            style={{
-              width: Responsive.widthPx(100),
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <View
+                refRBSheet2.current.close(
+                  setproname(item?.display_name),
+                  setSelectUnit(item?.uom_id[1]),
+                  setSelectUnitid(item?.uom_id[0]),
+                  console.log("Chcking item", item),
+                  setText1(item?.id)
+                );
+              }}
               style={{
-                width: Responsive.widthPx(90),
+                width: Responsive.widthPx(100),
                 justifyContent: "center",
                 alignItems: "center",
-                borderColor: Color.text_input_borderColor,
-                marginTop: Responsive.heightPx(1),
-                borderRadius: Responsive.widthPx(3),
               }}
             >
-              <Text
+              <View
                 style={{
-                  color: Color.text_color,
-                  marginHorizontal: 12,
-                  marginVertical: 5,
+                  width: Responsive.widthPx(90),
+                  justifyContent: "center",
+                  alignItems: "center",
+                  borderColor: Color.text_input_borderColor,
+                  marginTop: Responsive.heightPx(1),
+                  borderRadius: Responsive.widthPx(3),
                 }}
               >
-                {/* {item.name} */}
-                {item?.display_name}
-              </Text>
-            </View>
-          </TouchableOpacity>
-        )}
-        numColumns={1}
-      />
-              }
+                <Text
+                  style={{
+                    color: Color.text_color,
+                    marginHorizontal: 12,
+                    marginVertical: 5,
+                  }}
+                >
+                  {/* {item.name} */}
+                  {item?.display_name}
+                </Text>
+              </View>
+            </TouchableOpacity>
+          )}
+          numColumns={1}
+        />
+      }
     </View>
   );
 
@@ -1133,6 +1229,8 @@ const NewCreateOrderScreen = (props: NewCreateOrderScreenProps) => {
             <AppButton onPress={toggleModal} label={"Add Product"} />
           </View>
         </View>
+
+
         <View style={{ flex: 1, }}>
           <Modal isVisible={isModalVisible}>
             <View style={styles.modalContainer}>
@@ -1378,8 +1476,10 @@ const NewCreateOrderScreen = (props: NewCreateOrderScreenProps) => {
                   disabled={addval && addval.length == 0}
                   onPress={() => {
                     addItem();
-                    callfinesproduct();
+                    sendFcmToken();
+                    // callfinesproduct();
                     toggleModal();
+
                   }}
                 >
                   <View

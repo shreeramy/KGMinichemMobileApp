@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "915661554073",
+    "project_id": "kgminichem",
+    "storage_bucket": "kgminichem.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:915661554073:android:7e30c6906462072411d308",
+        "android_client_info": {
+          "package_name": "com.minichem"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDCMQ5KeEc91hF6VSPdBpqSMWjskdHSkTU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

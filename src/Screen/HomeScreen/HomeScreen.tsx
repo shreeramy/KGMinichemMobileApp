@@ -20,6 +20,7 @@ import {
 } from "../../Helper";
 import { ApiEndPoints } from "../../NetworkCall";
 import styles from "./HomeScreenStyles";
+import messaging from '@react-native-firebase/messaging';
 interface HomeScreenProps {
   navigation?: any;
   text?: any;
@@ -167,6 +168,7 @@ const HomeScreen = (props: HomeScreenProps) => {
   useEffect(() => {
     searchRead1()
   }, []);
+  
 
   const startTimer = () => {
     setTimerInterval(
@@ -391,6 +393,11 @@ const HomeScreen = (props: HomeScreenProps) => {
     return null;
   }
 
+   async function getToken () {
+    let token = await messaging().getToken();
+    console.log("Firebase device token", token);
+  }
+
   const checkoutfun = () => {
     return (
       <View>
@@ -567,7 +574,7 @@ const HomeScreen = (props: HomeScreenProps) => {
         </View>
 
         <View style={styles.btnview}>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={getToken}>
             <View style={styles.btntextview}>
               <Text style={styles.btntext}>Overview</Text>
             </View>

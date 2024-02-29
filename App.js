@@ -5,7 +5,6 @@ import {Provider} from 'react-redux';
 import RootComponent from './src/Router/RootComponent';
 import store from './src/Store/store';
 
-
 export default function App() {
   return (
     <Provider store={store}>

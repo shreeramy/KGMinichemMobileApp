@@ -1,6 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-const odooHost = "http://kg.wangoes.com";
-const odooDatabase = "kg.wangoes.com";
+const odooHost = "http://192.168.1.3:8016/";
+const odooDatabase = "odoo16";
 const jsonRpcEndpoint = `${odooHost}/jsonrpc`;
 
 const ApiEndPoints = {
@@ -25,7 +25,7 @@ export async function authenticate(username, password) {
         },
       }),
     });
-
+    console.log("login api response", response)
     const data = await response.json();
     if (data.error) {
       console.error("Authentication error:", data.error);

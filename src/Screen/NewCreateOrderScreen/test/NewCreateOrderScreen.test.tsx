@@ -7,12 +7,21 @@ import thunk from 'redux-thunk';
 import rootReducer from '../../../Store/reducers/common';
 import * as OdooApi from '../../OdooApi';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import ApiEndPoints from '../../../NetworkCall/ApiEndPoints';
+
 
 const store = createStore(rootReducer, applyMiddleware(thunk));
 
 jest.mock('@react-native-async-storage/async-storage', () => ({
     getItem: jest.fn(),
+}));
+
+jest.mock('@react-native-firebase/messaging', () => ({
+  getToken: jest.fn(),
+}));
+
+jest.mock('react-native-push-notification', () => ({
+  configure: jest.fn(),
+  localNotification: jest.fn(),
 }));
 
 global.fetch = jest.fn().mockResolvedValueOnce({
