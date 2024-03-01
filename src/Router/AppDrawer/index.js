@@ -15,7 +15,8 @@ import {
   Fonts,
   Images,
   Responsive,
-  Screen
+  Screen,
+  Utility
 } from "../../Helper";
 import { ApiEndPoints, ApiServices } from "../../NetworkCall";
 import messaging from '@react-native-firebase/messaging';
@@ -165,11 +166,61 @@ const AppDrawer = ({ ...props }) => {
     }
   };
 
+  async function deleteFcmToken() {
+    try {
+      const token = await messaging().getToken();
+      const uid = await AsyncStorage.getItem("userId");
+      const uidNumber = uid !== null ? parseInt(uid, 10) : console.log("UserId is null");
+      console.log("userid" , uid)
+      const odooPassword = await AsyncStorage.getItem("@odopassword");
+      console.log("token", token);
+
+      if (uid) {
+        const response = await fetch(ApiEndPoints.jsonRpcEndpoint, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            jsonrpc: "2.0",
+            method: "call",
+            params: {
+              service: "object",
+              method: "execute_kw",
+              args: [ApiEndPoints.odooDatabase, uid, odooPassword, "res.users", "delete_token_logout", [uidNumber,{
+                "token": token
+                }], {}]
+            },
+          }),
+        });
+
+        const responseData = await response.json();
+
+        if (responseData.id === null) {
+          __DEV__ ?
+          Utility.showSuccessToast("Token removed successfully") :
+          console.log("Token removed successfully");
+        } else {
+          __DEV__ ?
+          Utility.showDangerToast("Token not removed") :
+          console.log("Token not removed");
+          console.error("create failed:", responseData.error);
+        }
+      }
+    } catch (error) {
+      console.error("Error sending token:", error);
+    }
+  }
+
   const logout = async () => {
     try {
+
+      const token = await messaging().getToken();
+      console.log("logout token" , token);
+      await deleteFcmToken();
+      await clearFCMToken();
       await AsyncStorage.removeItem("userId");
       await AsyncStorage.removeItem("token");
-      clearFCMToken();
       props.navigation.replace("LoginScreen");
     } catch (error) {
       console.error("Error clearing user session:", error);

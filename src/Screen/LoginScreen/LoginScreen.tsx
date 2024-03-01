@@ -25,6 +25,8 @@ import {
 } from "../../Helper";
 import * as OdooApi from "../OdooApi";
 import styles from "./LoginScreenStyle";
+import { ApiEndPoints } from "../../NetworkCall";
+import messaging from '@react-native-firebase/messaging';
 
 interface LoginScreenProps {
   navigation?: any;
@@ -53,6 +55,7 @@ const LoginScreen = (props: LoginScreenProps) => {
           routes: [{ name: Screen.HomeScreen }],
         })
       );
+      sendFcmToken()
       console.log("Authentication successful");
       Loader.isLoading(false);
     } else {
@@ -61,6 +64,69 @@ const LoginScreen = (props: LoginScreenProps) => {
       console.error("Authentication failed");
     }
   };
+
+  async function sendFcmToken() {
+    try {
+      const token = await messaging().getToken();
+      const uid = await AsyncStorage.getItem("userId");
+      const uidNumber = uid !== null ? parseInt(uid, 10) : console.log("UserId is null");
+      console.log("userid", uid)
+      const odooPassword = await AsyncStorage.getItem("@odopassword");
+      console.log("token", token);
+      Loader.isLoading(true);
+
+      if (uid) {
+        const response = await fetch(ApiEndPoints.jsonRpcEndpoint, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            jsonrpc: "2.0",
+            method: "call",
+            params: {
+              service: "object",
+              method: "execute_kw",
+              args: [ApiEndPoints.odooDatabase, uid, odooPassword, "res.users", "write", [uidNumber],
+              {
+                "vals": {
+                  "mail_firebase_tokens": [
+                    [
+                      0,
+                      0,
+                      {
+                        "token": token
+                      }
+                    ]
+                  ]
+
+                }
+              }]
+            },
+          }),
+        });
+
+        const responseData = await response.json();
+
+        if (responseData.result) {
+          Loader.isLoading(false);
+          __DEV__ ?
+            Utility.showSuccessToast("Token sent successfully") : console.log("Token sent successfully");
+        } else {
+          Loader.isLoading(false);
+          __DEV__ ?
+          Utility.showDangerToast("Token not sent") : 
+          console.log("Token not sent");
+          console.log("create failed:", responseData.error);
+        }
+      }
+
+    } catch (error) {
+      console.error("Error sending token:", error);
+      Loader.isLoading(false);
+    }
+  }
+
 
   return (
     <AppContainer>

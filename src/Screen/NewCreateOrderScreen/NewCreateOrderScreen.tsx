@@ -312,78 +312,6 @@ const NewCreateOrderScreen = (props: NewCreateOrderScreenProps) => {
     return null;
   }
 
-
-  async function sendFcmToken() {
-    try {
-      const existingToken = await AsyncStorage.getItem(`token`);
-      console.log("existingToken", existingToken);
-      console.log("customerId", cutomerId);
-      const token = await messaging().getToken();
-      // if (existingToken) {
-      //   console.log("Token already exists for customerId:", cutomerId);
-      //   return;
-      // } else {
-      const uid = await AsyncStorage.getItem("userId");
-      const odooPassword = await AsyncStorage.getItem("@odopassword");
-      console.log("token", token);
-      Loader.isLoading(true);
-
-      if (uid) {
-        const response = await fetch(ApiEndPoints.jsonRpcEndpoint, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            jsonrpc: "2.0",
-            method: "call",
-            params: {
-              service: "object",
-              method: "execute_kw",
-              args: [ApiEndPoints.odooDatabase, uid, odooPassword, "res.partner", "write", [cutomerId],
-                {
-                  "vals": {
-                    "mail_firebase_tokens": [
-                      [
-                        0,
-                        0,
-                        {
-                          "user_id": uid,
-                          "os": "Android",
-                          "token": token
-                        }
-                      ]
-                    ]
-
-                  }
-                }]
-            },
-          }),
-        });
-
-        const responseData = await response.json();
-
-        if (responseData.result) {
-          await AsyncStorage.setItem(`token`, token + cutomerId);
-          Loader.isLoading(false);
-          Utility.showSuccessToast("Token sent successfully");
-          await messaging().deleteToken();
-        } else {
-          Loader.isLoading(false);
-          Utility.showDangerToast("Token not sent");
-          console.error("create failed:", responseData.error);
-        }
-      }
-      // }
-
-
-    } catch (error) {
-      console.error("Error sending token:", error);
-      Loader.isLoading(false);
-      Utility.showDangerToast("Error sending token");
-    }
-  }
-
   async function registerForPushNotifications() {
     const token = await messaging().getToken();
     return token;
@@ -1476,8 +1404,7 @@ const NewCreateOrderScreen = (props: NewCreateOrderScreenProps) => {
                   disabled={addval && addval.length == 0}
                   onPress={() => {
                     addItem();
-                    sendFcmToken();
-                    // callfinesproduct();
+                    callfinesproduct();
                     toggleModal();
 
                   }}
