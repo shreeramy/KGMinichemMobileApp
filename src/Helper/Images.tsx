@@ -65,7 +65,9 @@ const Images = {
   inactiveNotification: require("../Assets/Images/inactiveNotification.png"),
   checkin: require("../Assets/Images/checkin.png"),
   noimg: require("../Assets/Images/noimg.jpeg"),
-  pdf: require("../Assets/Images/pdf.webp")
+  pdf: require("../Assets/Images/pdf.webp"),
+  visibility: require("../Assets/Images/open_eye.png"),
+  visibilityoff: require("../Assets/Images/closed_eye.png")
 };
 
 export default Images;

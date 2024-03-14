@@ -793,14 +793,12 @@ const NewCreateOrderScreen = (props: NewCreateOrderScreenProps) => {
   );
 
   async function ProductCatalogapi() {
-
     const uid = await AsyncStorage.getItem("userId");
     const odooPassword = await AsyncStorage.getItem("@odopassword");
     Loader.isLoading(true);
-
+  
     if (uid) {
-
-      const searchCriteria = [["id", "!=", 0]];
+      const searchCriteria = [["sale_ok", "=", true]]; // Filter criteria for sale_ok=true
       const response = await fetch(ApiEndPoints.jsonRpcEndpoint, {
         method: "POST",
         headers: {
@@ -820,19 +818,17 @@ const NewCreateOrderScreen = (props: NewCreateOrderScreenProps) => {
               "search_read",
               [searchCriteria],
               {
-                "fields": ["id", "uom_id", "display_name"]
+                fields: ["id", "uom_id", "display_name", "sale_ok"],
               },
             ],
           },
         }),
       });
-      console.log("products--> ", response)
-
+      console.log("products--> ", response);
+  
       const responseData = await response.json();
-      console.log("productsData--> ", responseData)
-
+  
       if (responseData.result.length > 0) {
-
         Loader.isLoading(false);
         const customdata = responseData.result;
         setproductdata(customdata);
@@ -842,10 +838,11 @@ const NewCreateOrderScreen = (props: NewCreateOrderScreenProps) => {
         return null;
       }
     }
-
+  
     return null;
   }
-
+  
+  
   const ItemSeparatorComponent = () => {
     return (
       <View
