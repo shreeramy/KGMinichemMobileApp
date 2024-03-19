@@ -133,6 +133,7 @@ const SettingScreen = (props: SettingScreenProps) => {
             value={currentPassword}
             onChangeText={setCurrentPassword}
             style={styles.input}
+
           />
           <TouchableOpacity onPress={() => setHideCurrentPassword(!hideCurrentPassword)} style={styles.iconContainer}>
             <Image

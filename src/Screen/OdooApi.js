@@ -1,5 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-const odooHost = "http://kg.wangoes.com/";
+const odooHost = "http://kg.wangoes.com";
 const odooDatabase = "kg.wangoes.com";
 const jsonRpcEndpoint = `${odooHost}/jsonrpc`;
 
@@ -25,7 +25,46 @@ export async function authenticate(username, password) {
         },
       }),
     });
-    console.log("login api response", response)
+    console.log("login api response", response);
+    const data = await response.json();
+    if (data.error) {
+      console.error("Authentication error:", data.error);
+      return null;
+    }
+
+    return data.result;
+  } catch (error) {
+    console.error("Authentication error:", error);
+    return null;
+  }
+}
+
+export async function checkUserAuthenticate(username, password, uid) {
+  try {
+    const response = await fetch(ApiEndPoints.jsonRpcEndpoint, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        jsonrpc: "2.0",
+        method: "call",
+        params: {
+          service: "object",
+          method: "execute_kw",
+          args: [
+            ApiEndPoints.odooDatabase,
+            uid,
+            password,
+            "res.users",
+            "search_read",
+            [[["login", "=", username]]],
+            { fields: ["name", "id", "allow_mobile_login"] },
+          ],
+        },
+      }),
+    });
+    console.log("login api response", response);
     const data = await response.json();
     if (data.error) {
       console.error("Authentication error:", data.error);
@@ -119,7 +158,6 @@ export async function get_all_product_details(uid, searchCriteria) {
     const responseData = await response.json();
 
     if (responseData.result) {
-
       return responseData.result;
     } else {
       console.error("get_all_product_details error:", responseData.error);

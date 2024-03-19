@@ -2,6 +2,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { CommonActions } from '@react-navigation/native';
 import React, { useState } from "react";
 import {
+  Alert,
   Image,
   KeyboardAvoidingView,
   Text,
@@ -37,31 +38,44 @@ interface LoginScreenProps {
 const loc_global: any = global;
 const LoginScreen = (props: LoginScreenProps) => {
   const { navigation, text, commonActions } = props;
-  const [email, setemail] = useState("admin");
-  const [userpassword, setuserpassword] = useState("admin");
+  const [email, setemail] = useState("");
+  const [userpassword, setuserpassword] = useState("");
   const password = userpassword;
 
   const loginApi = async () => {
     Loader.isLoading(true);
     const authenticationResult = await OdooApi.authenticate(email, password);
     console.log("authenticationResult", authenticationResult)
-    if (authenticationResult) {
-      const stringValue = JSON.stringify(authenticationResult);
-      loc_global.userData = await AsyncStorage.setItem("userId", stringValue);
-      await AsyncStorage.setItem("@odopassword", password);
-      navigation.dispatch(
-        CommonActions.reset({
-          index: 0,
-          routes: [{ name: Screen.HomeScreen }],
-        })
-      );
-      sendFcmToken()
-      console.log("Authentication successful");
-      Loader.isLoading(false);
-    } else {
+    if (authenticationResult === false){
       Utility.showDangerToast("Authentication failed");
       Loader.isLoading(false);
       console.error("Authentication failed");
+    }
+    else if (authenticationResult) {
+      const stringValue = JSON.stringify(authenticationResult);
+      loc_global.userData = await AsyncStorage.setItem("userId", stringValue);
+      await AsyncStorage.setItem("@odopassword", password);
+      const checkMobileAuth = await OdooApi.checkUserAuthenticate(email, password, stringValue);
+      if (checkMobileAuth && checkMobileAuth[0].allow_mobile_login) {
+        navigation.dispatch(
+          CommonActions.reset({
+            index: 0,
+            routes: [{ name: Screen.HomeScreen }],
+          })
+        );
+        sendFcmToken()
+        console.log("Authentication successful");
+      } else {
+        Alert.alert(
+          "Authorization Error",
+          "User is not authorized. Please contact the admin.",
+          [
+            { text: "OK" }
+          ]
+        );
+      }
+
+      Loader.isLoading(false);
     }
   };
 
@@ -115,8 +129,8 @@ const LoginScreen = (props: LoginScreenProps) => {
         } else {
           Loader.isLoading(false);
           __DEV__ ?
-          Utility.showDangerToast("Token not sent") : 
-          console.log("Token not sent");
+            Utility.showDangerToast("Token not sent") :
+            console.log("Token not sent");
           console.log("create failed:", responseData.error);
         }
       }

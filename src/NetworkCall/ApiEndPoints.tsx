@@ -1,6 +1,6 @@
 
 const image_url = "";
-const odooHost = "http://kg.wangoes.com/";
+const odooHost = "http://kg.wangoes.com";
 const odooDatabase = "kg.wangoes.com";
 const jsonRpcEndpoint = `${odooHost}/jsonrpc`;
 

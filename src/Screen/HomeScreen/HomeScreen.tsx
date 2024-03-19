@@ -5,6 +5,7 @@ import {
   FlatList,
   Image,
   ImageBackground,
+  PermissionsAndroid,
   Text,
   TouchableOpacity,
   View
@@ -21,6 +22,8 @@ import {
 import { ApiEndPoints } from "../../NetworkCall";
 import styles from "./HomeScreenStyles";
 import messaging from '@react-native-firebase/messaging';
+import NotificationsPermissions from "../../Component/NotificationPermission";
+
 interface HomeScreenProps {
   navigation?: any;
   text?: any;
@@ -167,8 +170,22 @@ const HomeScreen = (props: HomeScreenProps) => {
 
   useEffect(() => {
     searchRead1()
+    requestUserPermission();
   }, []);
-  
+
+
+  async function requestUserPermission() {
+    PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS);
+    const authStatus = await messaging().requestPermission();
+    const enabled =
+      authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+      authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+
+    if (enabled) {
+      console.log('Authorization status:', authStatus);
+    }
+
+  }
 
   const startTimer = () => {
     setTimerInterval(
@@ -200,12 +217,6 @@ const HomeScreen = (props: HomeScreenProps) => {
 
     }
   }, [!loggedIn]);
-
-  const handleLogin = () => {
-    setLoggedIn(true);
-  };
-
-
 
   const formatTime = (timeInSeconds) => {
     const hours = Math.floor(timeInSeconds / 3600);
@@ -393,7 +404,7 @@ const HomeScreen = (props: HomeScreenProps) => {
     return null;
   }
 
-   async function getToken () {
+  async function getToken() {
     let token = await messaging().getToken();
     console.log("Firebase device token", token);
   }

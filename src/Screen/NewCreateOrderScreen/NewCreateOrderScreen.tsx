@@ -7,6 +7,7 @@ import {
   ActivityIndicator,
   FlatList,
   Image,
+  PermissionsAndroid,
   Platform,
   Text,
   TextInput,
@@ -319,8 +320,6 @@ const NewCreateOrderScreen = (props: NewCreateOrderScreenProps) => {
 
   const sendOrderPlacedNotification = async () => {
     try {
-      const deviceToken = await registerForPushNotifications(); // Get the device token
-      console.log("Token:", deviceToken);
       await displayNotification("KgMinichem", 'Order has been placed Successfully')
     } catch (error) {
       console.error("Error sending order placed notification:", error);
