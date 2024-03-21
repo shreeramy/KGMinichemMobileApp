@@ -13,6 +13,7 @@ import {
 } from "../../Helper";
 import { ApiEndPoints } from "../../NetworkCall";
 import styles from './Notificationstyle';
+import { useFocusEffect } from '@react-navigation/native';
 
 interface NotificationScreenProps {
   navigation?: any;
@@ -24,17 +25,19 @@ interface NotificationScreenProps {
 const NotificationScreen = (props: NotificationScreenProps) => {
   const { navigation, text, commonActions, route } = props;
   const [notificationdata, setnotificationdata] = useState([]);
-  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     getNotifications();
   }, []);
 
+  useFocusEffect(() => {
+    getNotifications();
+  });
+
   async function getNotifications() {
     try {
       const uid = await AsyncStorage.getItem("userId");
       const uidNumber = uid !== null ? parseInt(uid, 10) : console.log("UserId is null");
-      console.log("userid", uid)
       const odooPassword = await AsyncStorage.getItem("@odopassword");
 
       if (uid) {

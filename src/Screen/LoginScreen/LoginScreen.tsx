@@ -46,7 +46,7 @@ const LoginScreen = (props: LoginScreenProps) => {
     Loader.isLoading(true);
     const authenticationResult = await OdooApi.authenticate(email, password);
     console.log("authenticationResult", authenticationResult)
-    if (authenticationResult === false){
+    if (authenticationResult === false) {
       Utility.showDangerToast("Authentication failed");
       Loader.isLoading(false);
       console.error("Authentication failed");

@@ -7,7 +7,6 @@ import {
   ActivityIndicator,
   FlatList,
   Image,
-  PermissionsAndroid,
   Platform,
   Text,
   TextInput,
@@ -22,7 +21,6 @@ import {
   AppButton,
   AppContainer
 } from "../../Component";
-import displayNotification from "../../Component/displayNotification";
 import {
   Color,
   Const,
@@ -297,7 +295,7 @@ const NewCreateOrderScreen = (props: NewCreateOrderScreenProps) => {
         Utility.showSuccessToast("sellorder created successfully");
         navigation.navigate(Screen.ShowOrderScreen);
         const customdata = responseData.result;
-        sendOrderPlacedNotification();
+        // sendOrderPlacedNotification();
         // setcustomerdata(customdata);
         // console.log("create salallorder_Suucess:", responseData.result);
       } else {
@@ -318,13 +316,13 @@ const NewCreateOrderScreen = (props: NewCreateOrderScreenProps) => {
     return token;
   }
 
-  const sendOrderPlacedNotification = async () => {
-    try {
-      await displayNotification("KgMinichem", 'Order has been placed Successfully')
-    } catch (error) {
-      console.error("Error sending order placed notification:", error);
-    }
-  };
+  // const sendOrderPlacedNotification = async () => {
+  //   try {
+  //     await displayNotification("KgMinichem", 'Order has been placed Successfully')
+  //   } catch (error) {
+  //     console.error("Error sending order placed notification:", error);
+  //   }
+  // };
 
   // &&&&&&&&&&&&&&&&&&&&&&&&&&&&&******************&&&&&&&&&&&&********
 
