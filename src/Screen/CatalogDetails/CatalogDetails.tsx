@@ -35,7 +35,7 @@ const CatalogDetails = (props: CatalogDetilsProps) => {
   const renderItem = ({ item }) => (
     <View style={styles.item1}>
       <TouchableOpacity
-        onPress={() => navigation.navigate(Screen.ShowOrderScreen)}
+        onPress={() => navigation.navigate(Screen.NewCreateOrderScreen, { productVariant: item })}
       >
         <View>
           <View

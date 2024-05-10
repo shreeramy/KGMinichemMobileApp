@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { FlatList, Image, Text, TouchableOpacity, View } from 'react-native';
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
@@ -24,15 +24,17 @@ interface NotificationScreenProps {
 
 const NotificationScreen = (props: NotificationScreenProps) => {
   const { navigation, text, commonActions, route } = props;
-  const [notificationdata, setnotificationdata] = useState([]);
+  const [notificationdata, setnotificationdata] = useState<any>([]);
 
   useEffect(() => {
     getNotifications();
   }, []);
 
-  useFocusEffect(() => {
-    getNotifications();
-  });
+  useFocusEffect(
+    useCallback(() => {
+      getNotifications();
+    }, [])
+  );
 
   async function getNotifications() {
     try {
@@ -62,6 +64,7 @@ const NotificationScreen = (props: NotificationScreenProps) => {
         if (responseData.result) {
           Loader.isLoading(false);
           const notificationdata = responseData.result;
+          console.log("notification", notificationdata)
           setnotificationdata(notificationdata);
         } else {
           console.error("search_read error://..", responseData.error);
@@ -71,6 +74,24 @@ const NotificationScreen = (props: NotificationScreenProps) => {
     } catch (error) {
       console.error("Error getting notifications:", error);
     }
+  }
+
+
+  function addHoursAndMinutes(dateString, hours, minutes) {
+    const [datePart, timePart] = dateString.split(' ');
+    const [year, month, day] = datePart.split('-');
+    const [hoursStr, minutesStr, secondsStr] = timePart.split(':');
+
+    const date = new Date(year, month - 1, day, hoursStr, minutesStr, secondsStr);
+    date.setTime(date.getTime() + (hours * 60 * 60 * 1000));
+    date.setTime(date.getTime() + (minutes * 60 * 1000));
+
+    const formattedDate = `${date.getFullYear()}-${padZero(date.getMonth() + 1)}-${padZero(date.getDate())} ${padZero(date.getHours())}:${padZero(date.getMinutes())}:${padZero(date.getSeconds())}`;
+    return formattedDate;
+  }
+
+  function padZero(num) {
+    return num < 10 ? `0${num}` : num;
   }
 
   return (
@@ -95,16 +116,16 @@ const NotificationScreen = (props: NotificationScreenProps) => {
         </View>
         <FlatList
           data={notificationdata}
-          keyExtractor={(item) => item.date.toString()}
+          // keyExtractor={(item) => item.date.toString()}
           renderItem={({ item }) => (
             <View style={styles.item}>
               <View style={{ marginLeft: 15 }}>
                 <Text style={styles.listtext}>{item.name}</Text>
                 <View style={{ alignItems: "center", flexDirection: "row" }}>
-                <Image resizeMode="contain" source={Images.Orderstatus} />
+                  <Image resizeMode="contain" source={Images.Orderstatus} />
                   <View style={{ marginLeft: 5 }}>
                     <Text style={styles.listtext}>{item.body}</Text>
-                    <Text style={styles.listtext}>{item.date}</Text>
+                    <Text style={styles.listtext}>{addHoursAndMinutes(item.date, 5, 30)}</Text>
 
                   </View>
                 </View>
@@ -118,7 +139,7 @@ const NotificationScreen = (props: NotificationScreenProps) => {
         //   loading ? <ActivityIndicator size="large" color="#0000ff" /> : null
         // }
         />
-   
+
       </View>
     </AppContainer>
   );

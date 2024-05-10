@@ -43,14 +43,6 @@ const RootComponent = () => {
     
   };
 
-  const getFCMTokenRefresh = () => {
-    messaging().onTokenRefresh((fcmToken) => {
-      console.log('FCM Token refreshed:', fcmToken);
-      // Send the refreshed token to your server
-    });
-  };
-  
-
   const firebaseConfig = {
     apiKey: 'AAAA1TGugZk:APA91bF-8eLI3iM7Lr9vfoXz6IqoxG7X2rOur5GyVrPakVj7qOlC36iiFVp7maAHXXRB_ulE_ViopCatsIjcSinn17UmiJzKdFrocXP1ex0WW-yGnzgjhsz38ik7Iijlc-m0mfPhSd0c',
     authDomain: 'kgminichem.firebaseapp.com',
@@ -63,7 +55,6 @@ const RootComponent = () => {
   useEffect(() => {
     firebase.initializeApp(firebaseConfig)
     getFCMToken();
-    getFCMTokenRefresh();
     sendPushNotification();
   }, []);
 

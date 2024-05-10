@@ -230,7 +230,7 @@ const ShowOrderScreen = (props: ShowOrderScreenProps) => {
           </TouchableOpacity>
 
           <TouchableOpacity
-            onPress={() => navigation.navigate(Screen.NewCreateOrderScreen)}
+            onPress={() => navigation.navigate(Screen.NewCreateOrderScreen , { productVariant: '' })}
 
           >
             <View
