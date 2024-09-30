@@ -1,6 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-const odooHost = "http://kg.wangoes.com";
-const odooDatabase = "kg.wangoes.com";
+const odooHost = "https://erp.krishangopalmines.com";
+const odooDatabase = "demo";
 const jsonRpcEndpoint = `${odooHost}/jsonrpc`;
 
 const ApiEndPoints = {
